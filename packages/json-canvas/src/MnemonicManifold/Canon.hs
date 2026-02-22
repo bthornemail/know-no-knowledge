@@ -19,6 +19,7 @@ import Data.Text (Text)
 import qualified Data.Text as T
 
 import MnemonicManifold.Spec (Triple(..), Versions(..))
+import MnemonicManifold.Brackets (bracketDepth)
 
 data Evidence = Evidence
   { evDocBytes :: Int
@@ -34,6 +35,9 @@ data CanonTriple = CanonTriple
   , ctTriple :: Triple
   , ctEvidence :: Evidence
   , ctOrder :: Maybe Int
+  , ctSubjectRefDepth :: Int
+  , ctPredicateRefDepth :: Int
+  , ctObjectRefDepth :: Int
   } deriving (Eq, Show)
 
 data InputContext = InputContext
@@ -129,14 +133,23 @@ parseCanonTriple ctx fallbackEv = A.withObject "canon" $ \o -> do
   docId <- parseDocId o
   versions <- parseVersions o
   order <- o .:? "order"
+  subjectDepth0 <- o .:? "subject_ref_depth"
+  predicateDepth0 <- o .:? "predicate_ref_depth"
+  objectDepth0 <- o .:? "object_ref_depth"
   triple <- parseSPORecord o <|> parseNestedSPO o <|> parseEventTriple o
   evidence <- parseEvidence o <|> pure fallbackEv
+  let sd = fromMaybe (bracketDepth (tSubject triple)) subjectDepth0
+      pd = fromMaybe (bracketDepth (tPredicate triple)) predicateDepth0
+      od = fromMaybe (bracketDepth (tObject triple)) objectDepth0
   pure $ CanonTriple
     { ctDoc = fromMaybe (icDocId ctx) docId
     , ctVersions = versions
     , ctTriple = triple
     , ctEvidence = evidence
     , ctOrder = order
+    , ctSubjectRefDepth = sd
+    , ctPredicateRefDepth = pd
+    , ctObjectRefDepth = od
     }
 
 parseDocId :: A.Object -> A.Parser (Maybe Text)

@@ -11,6 +11,7 @@ library
     Desktop.TreeCanvas
     MnemonicManifold.Canon
     MnemonicManifold.Emit
+    MnemonicManifold.Brackets
     MnemonicManifold.Ids
     MnemonicManifold.JsonText
     MnemonicManifold.SHA256

@@ -37,6 +37,7 @@ import MnemonicManifold.Spec
 import MnemonicManifold.JsonText
 import MnemonicManifold.Ids (shortHashHex16)
 import MnemonicManifold.SHA256 (sha256U64BE)
+import MnemonicManifold.Brackets (stripBalancedBrackets)
 
 data EmitOptions = EmitOptions
   { eoEmitStatic :: Bool
@@ -51,6 +52,7 @@ emitStaticFanoEvents =
   , EvAddNode (refFeatureNode refSubjectNodeId "ref.subject" 300)
   , EvAddNode (refFeatureNode refObjectNodeId "ref.object" 380)
   , EvAddNode (refFeatureNode refPredicateNodeId "ref.predicate" 460)
+  , EvAddNode (refFeatureNode groupOrderNodeId "group_order" 540)
   ]
   where
     pointNode (p, i) =
@@ -100,6 +102,7 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
   lineEdges <>
   orderEdges <>
   refEdges <>
+  groupOrderEdges <>
   centroidEvents
   where
     Evidence{..} = ctEvidence
@@ -179,21 +182,23 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
     refEdges :: [CanvasEvent]
     refEdges =
       catMaybes
-        [ mkRefEdge "subject" (tSubject ctTriple) refSubjectNodeId
-        , mkRefEdge "object" (tObject ctTriple) refObjectNodeId
-        , mkRefEdge "predicate" (tPredicate ctTriple) refPredicateNodeId
+        [ mkRefEdge "subject" ctSubjectRefDepth (tSubject ctTriple) refSubjectNodeId
+        , mkRefEdge "object" ctObjectRefDepth (tObject ctTriple) refObjectNodeId
+        , mkRefEdge "predicate" ctPredicateRefDepth (tPredicate ctTriple) refPredicateNodeId
         ]
 
-    mkRefEdge :: Text -> Text -> NodeId -> Maybe CanvasEvent
-    mkRefEdge field raw target =
-      case parseBracketRef raw of
-        Nothing -> Nothing
-        Just (innerRaw, refKey) ->
-          let refU64 = sha256U64BE (TE.encodeUtf8 refKey)
+    mkRefEdge :: Text -> Int -> Text -> NodeId -> Maybe CanvasEvent
+    mkRefEdge field depth raw target
+      | depth <= 0 = Nothing
+      | otherwise =
+          let (_d, innerRaw) = stripBalancedBrackets raw
+              refKey = T.strip innerRaw
+              refU64 = sha256U64BE (TE.encodeUtf8 refKey)
               payload = jsonObj $
                 [ ("kind", jsonText "mnemonic.feature.ref")
                 , ("field", jsonText field)
-                , ("target", jsonText innerRaw)
+                , ("depth", jsonInt depth)
+                , ("target_text", jsonText refKey)
                 , ("ref_key", jsonText refKey)
                 , ("ref_u64", jsonWord64 refU64)
                 ] ++
@@ -201,13 +206,23 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
               eid = EdgeId ("MM:E:" <> shortHashHex16 (unNodeId clauseNodeId <> ":FEATURE:ref:" <> field))
           in Just (EvAddEdge (withEdgeLabel (Just payload) (edge eid clauseNodeId target)))
 
-    parseBracketRef :: Text -> Maybe (Text, Text)
-    parseBracketRef t
-      | T.length t >= 2 && T.head t == '[' && T.last t == ']' =
-          let inner = T.dropEnd 1 (T.drop 1 t)
-              refKey = T.strip inner
-          in Just (inner, refKey)
-      | otherwise = Nothing
+    groupOrderEdges :: [CanvasEvent]
+    groupOrderEdges =
+      let d = maximum [ctSubjectRefDepth, ctPredicateRefDepth, ctObjectRefDepth]
+      in if d <= 0
+           then []
+           else
+             let payload = jsonObj
+                   [ ("kind", jsonText "mnemonic.feature.group_order")
+                   , ("value", jsonInt d)
+                   , ("depths", jsonObj
+                       [ ("subject", jsonInt ctSubjectRefDepth)
+                       , ("predicate", jsonInt ctPredicateRefDepth)
+                       , ("object", jsonInt ctObjectRefDepth)
+                       ])
+                   ]
+                 eid = EdgeId ("MM:E:" <> shortHashHex16 (unNodeId clauseNodeId <> ":FEATURE:group_order"))
+             in [EvAddEdge (withEdgeLabel (Just payload) (edge eid clauseNodeId groupOrderNodeId))]
 
     centroidEvents :: [CanvasEvent]
     centroidEvents
@@ -243,3 +258,6 @@ refObjectNodeId = NodeId "MM:FEATURE:ref.object"
 
 refPredicateNodeId :: NodeId
 refPredicateNodeId = NodeId "MM:FEATURE:ref.predicate"
+
+groupOrderNodeId :: NodeId
+groupOrderNodeId = NodeId "MM:FEATURE:group_order"
