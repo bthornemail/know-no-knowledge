@@ -137,6 +137,18 @@ Flags:
 - `--strict` / `--no-strict`: fail on unknown/invalid input lines (default: true)
 - `--centroid`: emit an observer node with derived closure fields
 
+### `md extract` - Extract NDJSON/JSON fences from Markdown
+
+Scan a directory for `.md` files and extract fenced blocks into **pure NDJSON** files under `build/extract/ndjson/` (plus an optional aggregate `all.ndjson`).
+
+```bash
+json-canvas md extract \
+  --root docs \
+  --out build/extract \
+  --strict \
+  --langs ndjson,jsonl,jsonlines,json,hash
+```
+
 Find large nodes:
 ```bash
 json-canvas list diagram.json --filter "width*height>10000"

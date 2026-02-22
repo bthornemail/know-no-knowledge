@@ -1,0 +1,7 @@
+{"object":"B","order":1,"predicate":"p","subject":"A"}
+{"object":"[[B]]","order":2,"predicate":"p","subject":"[A]"}
+{"event":"paragraph","t":123,"text":"Hello"}
+{"object":"Y","predicate":"q","subject":"X"}
+{"event":"note","text":"Z"}
+{"block_index":3,"doc":"md-sample.md","event":"hash","line":22,"value":"aoc.article.iv.p95"}
+

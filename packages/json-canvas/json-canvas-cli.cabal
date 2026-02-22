@@ -8,6 +8,7 @@ library
   hs-source-dirs:      src
   exposed-modules:
     Desktop.CanvasEDSL
+    Desktop.MdExtract
     Desktop.TreeCanvas
     MnemonicManifold.Canon
     MnemonicManifold.Emit
@@ -24,7 +25,8 @@ library
     directory,
     filepath,
     text,
-    time
+    time,
+    vector
   default-language:   Haskell2010
 
 executable json-canvas
@@ -48,6 +50,17 @@ test-suite mnemonic-manifold-tests
   type:               exitcode-stdio-1.0
   hs-source-dirs:     test
   main-is:            TestMnemonicManifold.hs
+  build-depends:
+    base >= 4.17 && < 4.20,
+    bytestring,
+    text,
+    json-canvas-cli
+  default-language:   Haskell2010
+
+test-suite md-extract-tests
+  type:               exitcode-stdio-1.0
+  hs-source-dirs:     test
+  main-is:            TestMdExtract.hs
   build-depends:
     base >= 4.17 && < 4.20,
     bytestring,

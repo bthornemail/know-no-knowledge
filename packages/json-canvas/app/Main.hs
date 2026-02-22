@@ -15,6 +15,7 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
 import Data.Maybe (catMaybes, fromMaybe, isJust)
+import Data.Char (isSpace)
 import System.Environment (getArgs, getProgName)
 import System.Exit (exitFailure, exitSuccess)
 import System.IO (hPutStrLn, stderr)
@@ -34,6 +35,7 @@ import Data.Version (showVersion)
 import Paths_json_canvas_cli (version)
 import MnemonicManifold.Canon (decodeCanonTriples)
 import MnemonicManifold.Emit (EmitOptions(..), emitStaticFanoEvents, emitClauseEvents)
+import Desktop.MdExtract (ExtractConfig(..), ExtractMode(..), extractNdjsonFromTree)
 
 -- | Command line options
 data Options = Options
@@ -55,7 +57,22 @@ data Command
   | FromTree TreeOptions
   | WatchTree WatchOptions
   | MnemonicManifold MnemonicManifoldCommand
+  | Md MdCommand
   deriving (Show)
+
+data MdCommand
+  = MdExtract MdExtractOptions
+  deriving (Show)
+
+data MdExtractOptions = MdExtractOptions
+  { mdRoot :: FilePath
+  , mdOut :: FilePath
+  , mdStrict :: Bool
+  , mdMode :: ExtractMode
+  , mdLangs :: String
+  , mdAggregate :: Bool
+  , mdLooseNdjson :: Bool
+  } deriving (Show)
 
 data MnemonicManifoldCommand
   = MMEmit MMEmitOptions
@@ -223,8 +240,33 @@ parseCommand = subparser
   <> command "from-tree" (info (FromTree <$> parseFromTree) (progDesc "Generate canvas from directory tree"))
   <> command "watch" (info (WatchTree <$> parseWatch) (progDesc "Watch directory for changes"))
   <> command "mnemonic-manifold" (info (MnemonicManifold <$> parseMnemonicManifold) (progDesc "Mnemonic-manifold pipeline"))
+  <> command "md" (info (Md <$> parseMd) (progDesc "Markdown utilities"))
   <> command "help" (info (pure $ Create defaultCreateOptions) (progDesc "Show help"))
   )
+
+parseMd :: Parser MdCommand
+parseMd = subparser
+  ( command "extract" (info (MdExtract <$> parseMdExtract) (progDesc "Extract fenced NDJSON/JSON blocks from Markdown"))
+  )
+
+parseMdExtract :: Parser MdExtractOptions
+parseMdExtract = MdExtractOptions
+  <$> strOption (long "root" <> value "." <> metavar "DIR" <> help "Root directory to scan for .md files")
+  <*> strOption (long "out" <> value "build/extract" <> metavar "DIR" <> help "Output directory")
+  <*> switch (long "strict" <> help "Fail on invalid JSON/unclosed fences")
+  <*> option autoMode (long "mode" <> value ModeNdjsonOnly <> help "Mode: ndjson-only|all")
+  <*> strOption (long "langs" <> value "ndjson,jsonl,jsonlines,json,hash" <> help "Comma-separated fence langs to extract")
+  <*> asum
+        [ flag' True (long "aggregate" <> help "Write aggregated ndjson/all.ndjson (default: true)")
+        , flag' False (long "no-aggregate" <> help "Disable writing aggregated ndjson/all.ndjson")
+        , pure True
+        ]
+  <*> switch (long "loose-ndjson" <> help "Also parse loose JSON lines outside fences")
+  where
+    autoMode = maybeReader $ \s -> case s of
+      "ndjson-only" -> Just ModeNdjsonOnly
+      "all" -> Just ModeAll
+      _ -> Nothing
 
 parseMnemonicManifold :: Parser MnemonicManifoldCommand
 parseMnemonicManifold = subparser
@@ -487,6 +529,28 @@ runCommand opts@Options{..} = case optCommand of
   FromTree treeOpts -> runFromTree treeOpts
   WatchTree watchOpts -> runWatchTree watchOpts
   MnemonicManifold mmCmd -> runMnemonicManifold mmCmd
+  Md mdCmd -> runMd mdCmd
+
+runMd :: MdCommand -> IO ()
+runMd = \case
+  MdExtract MdExtractOptions{..} -> do
+    let cfg = ExtractConfig
+          { ecRoot = mdRoot
+          , ecOut = mdOut
+          , ecStrict = mdStrict
+          , ecMode = mdMode
+          , ecLangs = map (T.pack . trim) (splitComma mdLangs)
+          , ecAggregate = mdAggregate
+          , ecLooseNdjson = mdLooseNdjson
+          }
+    extractNdjsonFromTree cfg
+  where
+    splitComma s = case break (== ',') s of
+      (a, "") -> [a]
+      (a, _ : rest) -> a : splitComma rest
+
+    trim = f . f
+      where f = reverse . dropWhile isSpace
 
 runMnemonicManifold :: MnemonicManifoldCommand -> IO ()
 runMnemonicManifold = \case
