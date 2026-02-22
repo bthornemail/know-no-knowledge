@@ -3,11 +3,14 @@
 module Main (main) where
 
 import qualified Data.ByteString.Lazy as BL
+import Control.Monad (when)
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
+import System.Directory (copyFile, createDirectoryIfMissing, doesDirectoryExist, doesFileExist, removePathForcibly)
+import System.FilePath ((</>))
 import System.Exit (exitFailure)
 
-import Desktop.MdExtract (extractNdjsonFromMarkdown)
+import Desktop.MdExtract (ExtractConfig (..), ExtractMode (..), extractNdjsonFromMarkdown, extractNdjsonFromTree)
 
 assertEq :: String -> BL.ByteString -> BL.ByteString -> IO ()
 assertEq label expected actual =
@@ -51,4 +54,37 @@ main = do
     Left _ -> pure ()
     Right _ -> do
       putStrLn "FAIL: strict should reject unclosed fence"
+      exitFailure
+
+  -- Canvas pointers (tree extraction)
+  canvasGolden <- BL.readFile "test/vectors/md-canvas-pointers.golden.ndjson"
+  let tmpBase = "dist-newstyle" </> "tmp-md-extract-canvas"
+      root = tmpBase </> "root"
+      out = tmpBase </> "out"
+  exists <- doesDirectoryExist tmpBase
+  when exists $ removePathForcibly tmpBase
+  createDirectoryIfMissing True root
+  copyFile "test/vectors/md-canvas-sample.md" (root </> "md-canvas-sample.md")
+
+  extractNdjsonFromTree
+    ExtractConfig
+      { ecRoot = root
+      , ecOut = out
+      , ecStrict = True
+      , ecMode = ModeAll
+      , ecLangs = ["canvas"]
+      , ecAggregate = False
+      , ecLooseNdjson = False
+      , ecCanonFilter = False
+      , ecEmitCanvasPointers = True
+      }
+
+  pointers <- BL.readFile (out </> "ndjson" </> "canvas.blocks.ndjson")
+  assertEq "canvas pointers golden" canvasGolden pointers
+
+  canvasOutExists <- doesFileExist (out </> "canvas" </> "md-canvas-sample.md.block0.canvas.json")
+  if canvasOutExists
+    then pure ()
+    else do
+      putStrLn "FAIL: expected extracted canvas JSON file to exist"
       exitFailure

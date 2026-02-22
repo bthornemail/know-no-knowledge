@@ -23,7 +23,6 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
 import qualified Data.Text.Encoding.Error as TEE
-import qualified Data.Text.IO as TIO
 import System.Directory
 import System.FilePath
 import qualified Data.ByteString as BS
@@ -149,6 +148,16 @@ data FenceInfo = FenceInfo
   , fiLines :: [LineInfo]
   } deriving (Eq, Show)
 
+data CanvasBlock = CanvasBlock
+  { cbBlockIndex :: Int
+  , cbValue :: Value
+  , cbContentStartLine :: Int
+  , cbContentEndLine :: Int
+  , cbSpanStart :: Int
+  , cbSpanLen :: Int
+  , cbRawBytes :: BS.ByteString
+  } deriving (Eq, Show)
+
 extractNdjsonFromBytes :: Bool -> Bool -> Bool -> [Text] -> FilePath -> BS.ByteString -> Either Text (BL.ByteString, [(Int, Value)], [Value])
 extractNdjsonFromBytes strictMode looseNdjson canonFilter allowedLangs relPath rawBytes = do
   let docBytes = BS.length rawBytes
@@ -163,13 +172,16 @@ extractNdjsonFromBytes strictMode looseNdjson canonFilter allowedLangs relPath r
       then extractLooseNdjsonRecords strictMode relPath docBytes docLines lineInfos inFenceLines
       else Right []
 
+  canvasBlocks <-
+    if "canvas" `elem` langs
+      then extractCanvasBlocks strictMode relPath fences
+      else Right []
+  let canvasValues = [(cbBlockIndex cb, cbValue cb) | cb <- canvasBlocks]
+      canvasPointers = [mkCanvasPointer relPath docBytes docLines cb | cb <- canvasBlocks]
+
   let allRecords = applyCanonFilter canonFilter (extracted <> looseRecs)
       ndjsonOut = BL.unlines (map A.encode allRecords)
-      canvasBlocks = if "canvas" `elem` langs then extractCanvasValues strictMode relPath rawBytes fences else Right []
-      canvasPointers = if "canvas" `elem` langs then extractCanvasPointers relPath docBytes docLines rawBytes fences else Right []
-  cb <- canvasBlocks
-  cp <- canvasPointers
-  pure (ndjsonOut, cb, cp)
+  pure (ndjsonOut, canvasValues, canvasPointers)
 
 splitLines :: FilePath -> BS.ByteString -> [LineInfo]
 splitLines _ bs = go 1 0 bs
@@ -422,50 +434,42 @@ attachEvidence evidence = \case
       else Right (A.Object (KM.insert "evidence" evidence o))
   _ -> Left "extracted record must be a JSON object"
 
-extractCanvasValues :: Bool -> FilePath -> BS.ByteString -> [FenceInfo] -> Either Text [(Int, Value)]
-extractCanvasValues strictMode relPath _rawBytes fences = do
+extractCanvasBlocks :: Bool -> FilePath -> [FenceInfo] -> Either Text [CanvasBlock]
+extractCanvasBlocks strictMode relPath fences = do
   let canvasFences = [ f | f <- fences, fiLang f == "canvas" ]
   fmap catMaybes $ traverse one canvasFences
   where
     one FenceInfo{..} = do
-      let b = blockBytes fiLines
-      case A.eitherDecodeStrict' b of
-        Left err ->
-          if strictMode then Left (T.pack relPath <> ":" <> T.pack (show fiOpenLine) <> ": invalid canvas JSON: " <> T.pack err) else Right Nothing
-        Right v ->
-          case v of
-            A.Object _ -> Right (Just (fiBlockIndex, v))
-            _ ->
-              if strictMode then Left (T.pack relPath <> ":" <> T.pack (show fiOpenLine) <> ": canvas block must be a JSON object") else Right Nothing
-
-extractCanvasPointers :: FilePath -> Int -> Int -> BS.ByteString -> [FenceInfo] -> Either Text [Value]
-extractCanvasPointers relPath docBytes docLines _rawBytes fences =
-  fmap catMaybes $ traverse one [ f | f <- fences, fiLang f == "canvas" ]
-  where
-    one FenceInfo{..} =
       case fiLines of
         [] -> Right Nothing
-        (x:_) ->
+        (x:_) -> do
           let endLi = last fiLines
               spanStart = liStart x
               spanLen = (liStart endLi + liLen endLi) - spanStart
-              outRel = "canvas/" <> T.pack (addExtension (relPath <> ".block" <> show fiBlockIndex) "canvas.json")
-              canvasBytes = A.encode (sndOrNull (A.eitherDecodeStrict' (blockBytes fiLines)))
-              shaHex = "sha256:" <> hex (sha256 (BL.toStrict canvasBytes))
-              ev = mkEvidence relPath docBytes docLines "canvas" fiBlockIndex fiContentStartLine fiContentEndLine Nothing Nothing spanStart spanLen
-              v = A.object
-                    [ "event" .= ("canvas.block" :: Text)
-                    , "doc" .= relPath
-                    , "block_index" .= fiBlockIndex
-                    , "canvas_path" .= outRel
-                    , "canvas_sha256" .= shaHex
-                    , "evidence" .= ev
-                    ]
-          in Right (Just v)
+              b = blockBytes fiLines
+          case A.eitherDecodeStrict' b of
+            Left err ->
+              if strictMode then Left (T.pack relPath <> ":" <> T.pack (show fiOpenLine) <> ": invalid canvas JSON: " <> T.pack err) else Right Nothing
+            Right v ->
+              case v of
+                A.Object _ ->
+                  Right (Just (CanvasBlock fiBlockIndex v fiContentStartLine fiContentEndLine spanStart spanLen b))
+                _ ->
+                  if strictMode then Left (T.pack relPath <> ":" <> T.pack (show fiOpenLine) <> ": canvas block must be a JSON object") else Right Nothing
 
-    sndOrNull = \case
-      Left _ -> A.object []
-      Right v -> v
+mkCanvasPointer :: FilePath -> Int -> Int -> CanvasBlock -> Value
+mkCanvasPointer relPath docBytes docLines CanvasBlock{..} =
+  let outRel = "canvas/" <> T.pack (addExtension (relPath <> ".block" <> show cbBlockIndex) "canvas.json")
+      shaHex = "sha256:" <> hex (sha256 cbRawBytes)
+      ev = mkEvidence relPath docBytes docLines "canvas" cbBlockIndex cbContentStartLine cbContentEndLine Nothing Nothing cbSpanStart cbSpanLen
+  in A.object
+        [ "event" .= ("canvas.block" :: Text)
+        , "doc" .= relPath
+        , "block_index" .= cbBlockIndex
+        , "canvas_path" .= outRel
+        , "canvas_sha256" .= shaHex
+        , "evidence" .= ev
+        ]
 
 hex :: BS.ByteString -> Text
 hex bs = T.concat (map byteHex (BS.unpack bs))
