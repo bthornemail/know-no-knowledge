@@ -129,7 +129,7 @@ parseCanonTriple ctx fallbackEv = A.withObject "canon" $ \o -> do
   docId <- parseDocId o
   versions <- parseVersions o
   order <- o .:? "order"
-  triple <- parseSPO o <|> parseNestedSPO o <|> parseEventTriple o
+  triple <- parseSPORecord o <|> parseNestedSPO o <|> parseEventTriple o
   evidence <- parseEvidence o <|> pure fallbackEv
   pure $ CanonTriple
     { ctDoc = fromMaybe (icDocId ctx) docId
@@ -156,8 +156,8 @@ parseVersions o = do
     , parserVersion = fromMaybe "canon.v1" parV
     }
 
-parseSPO :: A.Object -> A.Parser Triple
-parseSPO o =
+parseSPORecord :: A.Object -> A.Parser Triple
+parseSPORecord o =
   Triple
     <$> o .: "subject"
     <*> o .: "predicate"

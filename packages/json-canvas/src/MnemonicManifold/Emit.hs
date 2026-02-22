@@ -12,6 +12,8 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Bits (xor)
 import Data.Word (Word64)
+import qualified Data.Text.Encoding as TE
+import Data.Maybe (catMaybes)
 
 import MnemonicManifold.Canon (CanonTriple(..), Evidence(..))
 import MnemonicManifold.Spec
@@ -34,6 +36,7 @@ import MnemonicManifold.Spec
   )
 import MnemonicManifold.JsonText
 import MnemonicManifold.Ids (shortHashHex16)
+import MnemonicManifold.SHA256 (sha256U64BE)
 
 data EmitOptions = EmitOptions
   { eoEmitStatic :: Bool
@@ -43,7 +46,12 @@ data EmitOptions = EmitOptions
 emitStaticFanoEvents :: [CanvasEvent]
 emitStaticFanoEvents =
   map (EvAddNode . pointNode) (zip allPoints [0..]) <>
-  map (EvAddNode . lineNode) (zip allLines [0..])
+  map (EvAddNode . lineNode) (zip allLines [0..]) <>
+  [ EvAddNode orderFeatureNode
+  , EvAddNode (refFeatureNode refSubjectNodeId "ref.subject" 300)
+  , EvAddNode (refFeatureNode refObjectNodeId "ref.object" 380)
+  , EvAddNode (refFeatureNode refPredicateNodeId "ref.predicate" 460)
+  ]
   where
     pointNode (p, i) =
       let nid = pointNodeId p
@@ -66,12 +74,32 @@ emitStaticFanoEvents =
             ]
       in withColor (Just (PresetColor 5)) (textNode nid pos size payload)
 
+    orderFeatureNode =
+      let nid = orderFeatureNodeId
+          pos = (40, 260)
+          size = (240, 60)
+          payload = jsonObj
+            [ ("kind", jsonText "mnemonic.feature")
+            , ("name", jsonText "order")
+            ]
+      in withColor (Just (PresetColor 4)) (textNode nid pos size payload)
+
+    refFeatureNode nid name y =
+      let pos = (40, y)
+          size = (240, 60)
+          payload = jsonObj
+            [ ("kind", jsonText "mnemonic.feature")
+            , ("name", jsonText name)
+            ]
+      in withColor (Just (PresetColor 4)) (textNode nid pos size payload)
+
 emitClauseEvents :: EmitOptions -> CanonTriple -> [CanvasEvent]
 emitClauseEvents EmitOptions{..} CanonTriple{..} =
   [EvAddNode clauseNode] <>
   pointEdges <>
   lineEdges <>
   orderEdges <>
+  refEdges <>
   centroidEvents
   where
     Evidence{..} = ctEvidence
@@ -146,7 +174,40 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
               , ("value", jsonInt n)
               ]
             eid = EdgeId ("MM:E:" <> shortHashHex16 (unNodeId clauseNodeId <> ":FEATURE:order"))
-        in [EvAddEdge (withEdgeLabel (Just payload) (edge eid clauseNodeId clauseNodeId))]
+        in [EvAddEdge (withEdgeLabel (Just payload) (edge eid clauseNodeId orderFeatureNodeId))]
+
+    refEdges :: [CanvasEvent]
+    refEdges =
+      catMaybes
+        [ mkRefEdge "subject" (tSubject ctTriple) refSubjectNodeId
+        , mkRefEdge "object" (tObject ctTriple) refObjectNodeId
+        , mkRefEdge "predicate" (tPredicate ctTriple) refPredicateNodeId
+        ]
+
+    mkRefEdge :: Text -> Text -> NodeId -> Maybe CanvasEvent
+    mkRefEdge field raw target =
+      case parseBracketRef raw of
+        Nothing -> Nothing
+        Just (innerRaw, refKey) ->
+          let refU64 = sha256U64BE (TE.encodeUtf8 refKey)
+              payload = jsonObj $
+                [ ("kind", jsonText "mnemonic.feature.ref")
+                , ("field", jsonText field)
+                , ("target", jsonText innerRaw)
+                , ("ref_key", jsonText refKey)
+                , ("ref_u64", jsonWord64 refU64)
+                ] ++
+                [ ("order", jsonInt n) | Just n <- [ctOrder] ]
+              eid = EdgeId ("MM:E:" <> shortHashHex16 (unNodeId clauseNodeId <> ":FEATURE:ref:" <> field))
+          in Just (EvAddEdge (withEdgeLabel (Just payload) (edge eid clauseNodeId target)))
+
+    parseBracketRef :: Text -> Maybe (Text, Text)
+    parseBracketRef t
+      | T.length t >= 2 && T.head t == '[' && T.last t == ']' =
+          let inner = T.dropEnd 1 (T.drop 1 t)
+              refKey = T.strip inner
+          in Just (inner, refKey)
+      | otherwise = Nothing
 
     centroidEvents :: [CanvasEvent]
     centroidEvents
@@ -170,3 +231,15 @@ pointNodeId p = NodeId ("MM:POINT:" <> pointBitsText p)
 
 lineNodeId :: Text -> NodeId
 lineNodeId name = NodeId ("MM:LINE:" <> name)
+
+orderFeatureNodeId :: NodeId
+orderFeatureNodeId = NodeId "MM:FEATURE:order"
+
+refSubjectNodeId :: NodeId
+refSubjectNodeId = NodeId "MM:FEATURE:ref.subject"
+
+refObjectNodeId :: NodeId
+refObjectNodeId = NodeId "MM:FEATURE:ref.object"
+
+refPredicateNodeId :: NodeId
+refPredicateNodeId = NodeId "MM:FEATURE:ref.predicate"
