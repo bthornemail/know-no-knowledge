@@ -120,6 +120,23 @@ List only text nodes sorted by position:
 json-canvas list diagram.json --type text --sort x
 ```
 
+### `mnemonic-manifold emit` - Emit Canvas events from NDJSON
+
+Generate an NDJSON stream of `ulp.canvas.event.v0.1` events that includes static Fano point/line nodes plus per-record clause nodes and edges.
+
+```bash
+json-canvas mnemonic-manifold emit \
+  --in dev-docs/Artifacts/Canon/canon-core-octad.ndjson \
+  --out /tmp/mnemonic.canvas.ndjson \
+  --emit-static \
+  --strict
+```
+
+Flags:
+- `--emit-static` / `--no-emit-static`: include static Fano scaffolding (default: true)
+- `--strict` / `--no-strict`: fail on unknown/invalid input lines (default: true)
+- `--centroid`: emit an observer node with derived closure fields
+
 Find large nodes:
 ```bash
 json-canvas list diagram.json --filter "width*height>10000"

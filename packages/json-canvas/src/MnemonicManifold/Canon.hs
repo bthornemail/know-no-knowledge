@@ -9,7 +9,7 @@ module MnemonicManifold.Canon
 
 import qualified Data.Aeson as A
 import qualified Data.Aeson.Types as A
-import qualified Data.ByteString.Lazy as BL
+import qualified Data.ByteString.Lazy.Char8 as BL
 import qualified Data.Text as T
 import Data.Text (Text)
 import Data.Maybe (fromMaybe)

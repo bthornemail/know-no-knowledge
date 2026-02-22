@@ -85,8 +85,8 @@ hashO v o = hashDomainSeparated "O" o v
 pointValue :: Versions -> Triple -> Point -> Word64
 pointValue v Triple{..} (Point p) =
   let a = hashS v tSubject
-      b = hashP v tPredicate
-      c = hashO v tObject
+      b = hashO v tObject
+      c = hashP v tPredicate
       va = if testBit p 2 then a else 0
       vb = if testBit p 1 then b else 0
       vc = if testBit p 0 then c else 0
@@ -109,4 +109,3 @@ sabbath v tr = closureRatio v tr >= sabbathThreshold
 
 stopMetric :: Versions -> Triple -> Double
 stopMetric v tr = 1.0 - closureRatio v tr
-

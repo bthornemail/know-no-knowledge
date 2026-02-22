@@ -1,0 +1,54 @@
+cabal-version:      2.4
+name:               json-canvas-cli
+version:            0.1.0.0
+build-type:         Simple
+license:            NONE
+
+library
+  hs-source-dirs:      src
+  exposed-modules:
+    Desktop.CanvasEDSL
+    Desktop.TreeCanvas
+    MnemonicManifold.Canon
+    MnemonicManifold.Emit
+    MnemonicManifold.Ids
+    MnemonicManifold.JsonText
+    MnemonicManifold.SHA256
+    MnemonicManifold.Spec
+  build-depends:
+    base >= 4.17 && < 4.20,
+    aeson,
+    bytestring,
+    containers,
+    directory,
+    filepath,
+    text,
+    time
+  default-language:   Haskell2010
+
+executable json-canvas
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  build-depends:
+    base >= 4.17 && < 4.20,
+    aeson,
+    bytestring,
+    containers,
+    directory,
+    filepath,
+    optparse-applicative,
+    text,
+    time,
+    json-canvas-cli
+  default-language:   Haskell2010
+
+test-suite mnemonic-manifold-tests
+  type:               exitcode-stdio-1.0
+  hs-source-dirs:     test
+  main-is:            TestMnemonicManifold.hs
+  build-depends:
+    base >= 4.17 && < 4.20,
+    bytestring,
+    text,
+    json-canvas-cli
+  default-language:   Haskell2010

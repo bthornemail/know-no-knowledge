@@ -98,8 +98,8 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
            `withColor` Just (PresetColor 1)
 
     a = hashS ctVersions (tSubject ctTriple)
-    b = hashP ctVersions (tPredicate ctTriple)
-    c = hashO ctVersions (tObject ctTriple)
+    b = hashO ctVersions (tObject ctTriple)
+    c = hashP ctVersions (tPredicate ctTriple)
 
     pointEdges :: [CanvasEvent]
     pointEdges = flip map allPoints $ \p ->
@@ -110,8 +110,8 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
             , ("value_u64", jsonWord64 v)
             , ("generators", jsonObj
                 [ ("A_S_u64", jsonWord64 a)
-                , ("B_P_u64", jsonWord64 b)
-                , ("C_O_u64", jsonWord64 c)
+                , ("B_O_u64", jsonWord64 b)
+                , ("C_P_u64", jsonWord64 c)
                 ])
             , ("versions", jsonObj
                 [ ("lexicon", jsonText (lexiconVersion ctVersions))
@@ -157,4 +157,3 @@ pointNodeId p = NodeId ("MM:POINT:" <> pointBitsText p)
 
 lineNodeId :: Text -> NodeId
 lineNodeId name = NodeId ("MM:LINE:" <> name)
-
