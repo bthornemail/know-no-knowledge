@@ -9,6 +9,7 @@ library
   exposed-modules:
     Desktop.CanvasEDSL
     Desktop.MdExtract
+    Desktop.MdManifest
     Desktop.TreeCanvas
     MnemonicManifold.Canon
     MnemonicManifold.Emit

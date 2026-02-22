@@ -11,6 +11,7 @@ import System.FilePath ((</>))
 import System.Exit (exitFailure)
 
 import Desktop.MdExtract (ExtractConfig (..), ExtractMode (..), extractNdjsonFromMarkdown, extractNdjsonFromTree)
+import Desktop.MdManifest (ManifestOptions (..), writeManifest)
 
 assertEq :: String -> BL.ByteString -> BL.ByteString -> IO ()
 assertEq label expected actual =
@@ -58,6 +59,7 @@ main = do
 
   -- Canvas pointers (tree extraction)
   canvasGolden <- BL.readFile "test/vectors/md-canvas-pointers.golden.ndjson"
+  manifestGolden <- BL.readFile "test/vectors/md-manifest.golden.json"
   let tmpBase = "dist-newstyle" </> "tmp-md-extract-canvas"
       root = tmpBase </> "root"
       out = tmpBase </> "out"
@@ -73,7 +75,7 @@ main = do
       , ecStrict = True
       , ecMode = ModeAll
       , ecLangs = ["canvas"]
-      , ecAggregate = False
+      , ecAggregate = True
       , ecLooseNdjson = False
       , ecCanonFilter = False
       , ecEmitCanvasPointers = True
@@ -88,3 +90,25 @@ main = do
     else do
       putStrLn "FAIL: expected extracted canvas JSON file to exist"
       exitFailure
+
+  writeManifest
+    ManifestOptions
+      { moRoot = root
+      , moOut = out
+      , moMode = "all"
+      , moLangs = ["canvas"]
+      , moStrict = True
+      , moAggregate = True
+      , moLooseNdjson = False
+      , moCanonFilter = False
+      , moEmitCanvasPointers = True
+      , moEmitManifest = True
+      , moManifestPath = out </> "manifest.json"
+      , moIncludeGitHead = False
+      , moTimestamp = False
+      , moToolName = "json-canvas"
+      , moToolVersion = "0.1.0.0"
+      }
+
+  manifest <- BL.readFile (out </> "manifest.json")
+  assertEq "manifest golden" manifestGolden manifest

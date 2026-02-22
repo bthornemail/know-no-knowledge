@@ -36,6 +36,7 @@ import Paths_json_canvas_cli (version)
 import MnemonicManifold.Canon (decodeCanonTriples)
 import MnemonicManifold.Emit (EmitOptions(..), emitStaticFanoEvents, emitClauseEvents)
 import Desktop.MdExtract (ExtractConfig(..), ExtractMode(..), extractNdjsonFromTree)
+import Desktop.MdManifest (ManifestOptions(..), writeManifest)
 
 -- | Command line options
 data Options = Options
@@ -74,6 +75,10 @@ data MdExtractOptions = MdExtractOptions
   , mdLooseNdjson :: Bool
   , mdCanonFilter :: Bool
   , mdEmitCanvasPointers :: Bool
+  , mdEmitManifest :: Bool
+  , mdManifestPath :: Maybe FilePath
+  , mdIncludeGitHead :: Bool
+  , mdTimestamp :: Bool
   } deriving (Show)
 
 data MnemonicManifoldCommand
@@ -266,6 +271,10 @@ parseMdExtract = MdExtractOptions
   <*> switch (long "loose-ndjson" <> help "Also parse loose JSON lines outside fences")
   <*> switch (long "canon-filter" <> help "Only emit records compatible with mnemonic-manifold canon decoding")
   <*> switch (long "emit-canvas-pointers" <> help "Write ndjson/canvas.blocks.ndjson pointer records for extracted ```canvas blocks (requires --mode all and 'canvas' in --langs)")
+  <*> switch (long "emit-manifest" <> help "Write a content-addressed manifest.json alongside extracted outputs")
+  <*> optional (strOption (long "manifest-path" <> metavar "FILE" <> help "Manifest output path (default: <out>/manifest.json)"))
+  <*> switch (long "include-git-head" <> help "Include resolved .git HEAD commit hash in the manifest (optional metadata)")
+  <*> switch (long "timestamp" <> help "Set manifest time from SOURCE_DATE_EPOCH (fails if missing/invalid)")
   where
     autoMode = maybeReader $ \s -> case s of
       "ndjson-only" -> Just ModeNdjsonOnly
@@ -550,6 +559,28 @@ runMd = \case
           , ecEmitCanvasPointers = mdEmitCanvasPointers
           }
     extractNdjsonFromTree cfg
+    let manifestPath = fromMaybe (mdOut </> "manifest.json") mdManifestPath
+        mopts =
+          ManifestOptions
+            { moRoot = mdRoot
+            , moOut = mdOut
+            , moMode = case mdMode of
+                ModeNdjsonOnly -> "ndjson-only"
+                ModeAll -> "all"
+            , moLangs = map (T.pack . trim) (splitComma mdLangs)
+            , moStrict = mdStrict
+            , moAggregate = mdAggregate
+            , moLooseNdjson = mdLooseNdjson
+            , moCanonFilter = mdCanonFilter
+            , moEmitCanvasPointers = mdEmitCanvasPointers
+            , moEmitManifest = mdEmitManifest
+            , moManifestPath = manifestPath
+            , moIncludeGitHead = mdIncludeGitHead
+            , moTimestamp = mdTimestamp
+            , moToolName = "json-canvas"
+            , moToolVersion = T.pack (showVersion version)
+            }
+    writeManifest mopts
   where
     splitComma s = case break (== ',') s of
       (a, "") -> [a]
