@@ -28,9 +28,12 @@ import Data.Function (on)
 import qualified Data.Map as Map
 import Data.Aeson (encode, decode)
 import qualified Data.Aeson as A
+import Data.Foldable (asum)
 import Options.Applicative
 import Data.Version (showVersion)
 import Paths_json_canvas_cli (version)
+import MnemonicManifold.Canon (decodeCanonTriples)
+import MnemonicManifold.Emit (EmitOptions(..), emitStaticFanoEvents, emitClauseEvents)
 
 -- | Command line options
 data Options = Options
@@ -51,7 +54,20 @@ data Command
   | Stats StatsOptions
   | FromTree TreeOptions
   | WatchTree WatchOptions
+  | MnemonicManifold MnemonicManifoldCommand
   deriving (Show)
+
+data MnemonicManifoldCommand
+  = MMEmit MMEmitOptions
+  deriving (Show)
+
+data MMEmitOptions = MMEmitOptions
+  { mmIn :: FilePath
+  , mmOut :: FilePath
+  , mmEmitStatic :: Bool
+  , mmStrict :: Bool
+  , mmCentroid :: Bool
+  } deriving (Show)
 
 data CreateOptions = CreateOptions
   { createOutput :: FilePath
@@ -206,8 +222,29 @@ parseCommand = subparser
   <> command "stats" (info (Stats <$> parseStats) (progDesc "Show canvas statistics"))
   <> command "from-tree" (info (FromTree <$> parseFromTree) (progDesc "Generate canvas from directory tree"))
   <> command "watch" (info (WatchTree <$> parseWatch) (progDesc "Watch directory for changes"))
+  <> command "mnemonic-manifold" (info (MnemonicManifold <$> parseMnemonicManifold) (progDesc "Mnemonic-manifold pipeline"))
   <> command "help" (info (pure $ Create defaultCreateOptions) (progDesc "Show help"))
   )
+
+parseMnemonicManifold :: Parser MnemonicManifoldCommand
+parseMnemonicManifold = subparser
+  ( command "emit" (info (MMEmit <$> parseMMEmit) (progDesc "Emit Canvas NDJSON events from canon NDJSON"))
+  )
+
+parseMMEmit :: Parser MMEmitOptions
+parseMMEmit = MMEmitOptions
+  <$> strOption (long "in" <> value "-" <> metavar "FILE" <> help "Input NDJSON file ('-' for stdin)")
+  <*> strOption (long "out" <> value "-" <> metavar "FILE" <> help "Output Canvas event NDJSON ('-' for stdout)")
+  <*> parseDefaultTrue "emit-static" "no-emit-static" "Emit static Fano nodes/lines"
+  <*> parseDefaultTrue "strict" "no-strict" "Fail on unknown/invalid input lines"
+  <*> switch (long "centroid" <> help "Emit an observer node with derived closure fields")
+  where
+    parseDefaultTrue pos neg h =
+      asum
+        [ flag' True (long pos <> help (h ++ " (default: true)"))
+        , flag' False (long neg <> help ("Disable: " ++ h))
+        , pure True
+        ]
 
 defaultCreateOptions :: CreateOptions
 defaultCreateOptions = CreateOptions
@@ -449,6 +486,22 @@ runCommand opts@Options{..} = case optCommand of
   Stats statsOpts -> runStats statsOpts
   FromTree treeOpts -> runFromTree treeOpts
   WatchTree watchOpts -> runWatchTree watchOpts
+  MnemonicManifold mmCmd -> runMnemonicManifold mmCmd
+
+runMnemonicManifold :: MnemonicManifoldCommand -> IO ()
+runMnemonicManifold = \case
+  MMEmit MMEmitOptions{..} -> do
+    input <- if mmIn == "-" then BL.getContents else BL.readFile mmIn
+    let docId = T.pack (if mmIn == "-" then "stdin" else mmIn)
+    triples <- case decodeCanonTriples mmStrict docId input of
+      Left err -> die (T.unpack err)
+      Right ts -> pure ts
+    let opts = EmitOptions { eoEmitStatic = mmEmitStatic, eoCentroid = mmCentroid }
+        events =
+          (if mmEmitStatic then emitStaticFanoEvents else []) <>
+          concatMap (emitClauseEvents opts) triples
+        outBytes = encodeNDJSON events
+    if mmOut == "-" then BL.putStr outBytes else BL.writeFile mmOut outBytes
 
 -- | Create a new canvas
 runCreate :: Bool -> CreateOptions -> IO ()
