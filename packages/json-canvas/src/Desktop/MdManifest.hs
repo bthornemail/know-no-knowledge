@@ -33,6 +33,7 @@ import MnemonicManifold.JsonText
   ( jsonArray
   , jsonBool
   , jsonInt
+  , jsonInteger
   , jsonNull
   , jsonObj
   , jsonText
@@ -79,7 +80,7 @@ writeManifest ManifestOptions{..} = when moEmitManifest $ do
           , ("outputs", renderOutputs outputsAggregate outputFiles)
           , ("config", renderConfig)
           , ("tool", renderTool gitCommit)
-          , ("time", maybe jsonNull (T.pack . show) timeVal)
+          , ("time", maybe jsonNull jsonInteger timeVal)
           ]
       outBytes = BL.fromStrict (TE.encodeUtf8 manifestText) <> "\n"
   BL.writeFile moManifestPath outBytes

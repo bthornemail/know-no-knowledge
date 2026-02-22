@@ -4,6 +4,7 @@ module MnemonicManifold.JsonText
   ( jsonNull
   , jsonBool
   , jsonInt
+  , jsonInteger
   , jsonWord64
   , jsonText
   , jsonArray
@@ -25,6 +26,9 @@ jsonBool False = "false"
 
 jsonInt :: Int -> Text
 jsonInt = T.pack . show
+
+jsonInteger :: Integer -> Text
+jsonInteger = T.pack . show
 
 jsonWord64 :: Word64 -> Text
 jsonWord64 = T.pack . show
