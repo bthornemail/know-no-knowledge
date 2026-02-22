@@ -14,10 +14,10 @@ module MnemonicManifold.Spec
   , hashO
   , pointValue
   , lineInvariantHolds
-  , closureRatio
-  , sabbathThreshold
+  , closureSatisfiedLines
+  , closureTotalLines
   , sabbath
-  , stopMetric
+  , stopUnsatisfiedLines
   ) where
 
 import Data.Bits (xor, testBit)
@@ -96,16 +96,14 @@ lineInvariantHolds :: Versions -> Triple -> Line -> Bool
 lineInvariantHolds v tr (Line _ (p,q,r)) =
   pointValue v tr p `xor` pointValue v tr q `xor` pointValue v tr r == 0
 
-closureRatio :: Versions -> Triple -> Double
-closureRatio v tr =
-  let holds = length (filter id (map (lineInvariantHolds v tr) allLines))
-  in fromIntegral holds / fromIntegral (length allLines)
+closureTotalLines :: Int
+closureTotalLines = length allLines
 
-sabbathThreshold :: Double
-sabbathThreshold = 1.0
+closureSatisfiedLines :: Versions -> Triple -> Int
+closureSatisfiedLines v tr = length (filter id (map (lineInvariantHolds v tr) allLines))
 
 sabbath :: Versions -> Triple -> Bool
-sabbath v tr = closureRatio v tr >= sabbathThreshold
+sabbath v tr = closureSatisfiedLines v tr == closureTotalLines
 
-stopMetric :: Versions -> Triple -> Double
-stopMetric v tr = 1.0 - closureRatio v tr
+stopUnsatisfiedLines :: Versions -> Triple -> Int
+stopUnsatisfiedLines v tr = closureTotalLines - closureSatisfiedLines v tr

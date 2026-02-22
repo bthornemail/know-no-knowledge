@@ -33,6 +33,7 @@ data CanonTriple = CanonTriple
   , ctVersions :: Versions
   , ctTriple :: Triple
   , ctEvidence :: Evidence
+  , ctOrder :: Maybe Int
   } deriving (Eq, Show)
 
 data InputContext = InputContext
@@ -127,6 +128,7 @@ parseCanonTriple :: InputContext -> Evidence -> A.Value -> A.Parser CanonTriple
 parseCanonTriple ctx fallbackEv = A.withObject "canon" $ \o -> do
   docId <- parseDocId o
   versions <- parseVersions o
+  order <- o .:? "order"
   triple <- parseSPO o <|> parseNestedSPO o <|> parseEventTriple o
   evidence <- parseEvidence o <|> pure fallbackEv
   pure $ CanonTriple
@@ -134,6 +136,7 @@ parseCanonTriple ctx fallbackEv = A.withObject "canon" $ \o -> do
     , ctVersions = versions
     , ctTriple = triple
     , ctEvidence = evidence
+    , ctOrder = order
     }
 
 parseDocId :: A.Object -> A.Parser (Maybe Text)

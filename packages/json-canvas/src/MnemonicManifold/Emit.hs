@@ -27,9 +27,10 @@ import MnemonicManifold.Spec
   , hashO
   , pointValue
   , lineInvariantHolds
-  , closureRatio
   , sabbath
-  , stopMetric
+  , closureSatisfiedLines
+  , closureTotalLines
+  , stopUnsatisfiedLines
   )
 import MnemonicManifold.JsonText
 import MnemonicManifold.Ids (shortHashHex16)
@@ -70,6 +71,7 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
   [EvAddNode clauseNode] <>
   pointEdges <>
   lineEdges <>
+  orderEdges <>
   centroidEvents
   where
     Evidence{..} = ctEvidence
@@ -135,6 +137,17 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
           eid = EdgeId ("MM:E:" <> shortHashHex16 (unNodeId clauseNodeId <> ":L:" <> name))
       in EvAddEdge $ withEdgeLabel (Just payload) (edge eid clauseNodeId (lineNodeId name))
 
+    orderEdges :: [CanvasEvent]
+    orderEdges = case ctOrder of
+      Nothing -> []
+      Just n ->
+        let payload = jsonObj
+              [ ("kind", jsonText "mnemonic.feature.order")
+              , ("value", jsonInt n)
+              ]
+            eid = EdgeId ("MM:E:" <> shortHashHex16 (unNodeId clauseNodeId <> ":FEATURE:order"))
+        in [EvAddEdge (withEdgeLabel (Just payload) (edge eid clauseNodeId clauseNodeId))]
+
     centroidEvents :: [CanvasEvent]
     centroidEvents
       | not eoCentroid = []
@@ -142,8 +155,9 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
           let nid = NodeId ("MM:OBSERVER:" <> shortHashHex16 (unNodeId clauseNodeId))
               payload = jsonObj
                 [ ("kind", jsonText "mnemonic.observer")
-                , ("closure_ratio", T.pack (show (closureRatio ctVersions ctTriple)))
-                , ("stop_metric", T.pack (show (stopMetric ctVersions ctTriple)))
+                , ("closure_satisfied", jsonInt (closureSatisfiedLines ctVersions ctTriple))
+                , ("closure_total", jsonInt closureTotalLines)
+                , ("stop_unsatisfied", jsonInt (stopUnsatisfiedLines ctVersions ctTriple))
                 , ("sabbath", jsonBool (sabbath ctVersions ctTriple))
                 ]
               node = withColor (Just (PresetColor 6)) (textNode nid (evDocBytes, evDocLines + 40) (240, 80) payload)
