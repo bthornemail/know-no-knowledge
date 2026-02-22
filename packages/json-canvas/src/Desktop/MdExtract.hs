@@ -13,6 +13,7 @@ import Control.Monad (forM, forM_, when)
 import Data.Aeson (Value)
 import Data.Aeson ((.=))
 import qualified Data.Aeson as A
+import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Lazy.Char8 as BL
 import Data.Char (isSpace)
 import Data.List (sort)
@@ -39,13 +40,14 @@ data ExtractConfig = ExtractConfig
   , ecLangs :: [Text]
   , ecAggregate :: Bool
   , ecLooseNdjson :: Bool
+  , ecCanonFilter :: Bool
   } deriving (Eq, Show)
 
 -- | Extract NDJSON records from fenced blocks in a Markdown file.
 -- Output is canonicalized NDJSON: each emitted record is parsed as JSON then re-encoded with aeson.
-extractNdjsonFromMarkdown :: Bool -> Bool -> [Text] -> FilePath -> Text -> Either Text BL.ByteString
-extractNdjsonFromMarkdown strictMode looseNdjson allowedLangs relPath markdown =
-  fmap (BL.unlines . map A.encode) (extractValues strictMode looseNdjson allowedLangs relPath markdown)
+extractNdjsonFromMarkdown :: Bool -> Bool -> Bool -> [Text] -> FilePath -> Text -> Either Text BL.ByteString
+extractNdjsonFromMarkdown strictMode looseNdjson canonFilter allowedLangs relPath markdown =
+  fmap (BL.unlines . map A.encode . applyCanonFilter canonFilter) (extractValues strictMode looseNdjson allowedLangs relPath markdown)
 
 -- | Walk ecRoot and extract from all *.md files. Writes:
 --   <out>/ndjson/all.ndjson (if ecAggregate)
@@ -65,7 +67,7 @@ extractNdjsonFromTree ExtractConfig{..} = do
   perFile <- forM mdFiles $ \absPath -> do
     let rel = makeRelative ecRoot absPath
     content <- TIO.readFile absPath
-    case extractNdjsonFromMarkdown ecStrict ecLooseNdjson langsToUse rel content of
+    case extractNdjsonFromMarkdown ecStrict ecLooseNdjson ecCanonFilter langsToUse rel content of
       Left err ->
         if ecStrict
           then ioError (userError (T.unpack err))
@@ -210,9 +212,18 @@ parseJsonBlock :: Bool -> FilePath -> Int -> Int -> [Text] -> Either Text [Value
 parseJsonBlock strictMode relPath blockIndex startLine ls =
   case A.eitherDecodeStrict' (encodeUtf8 (T.unlines ls)) of
     Left err ->
-      if strictMode
-        then Left (mkErr startLine ("invalid JSON block: " <> T.pack err))
-        else Right []
+      -- Some repos label NDJSON as ```json. If parsing as a single JSON
+      -- value fails, fall back to line-by-line parsing.
+      case parseNdjsonLines strictMode relPath blockIndex startLine ls of
+        Right vals | not (null vals) -> Right vals
+        Right _ ->
+          if strictMode
+            then Left (mkErr startLine ("invalid JSON block: " <> T.pack err))
+            else Right []
+        Left _ ->
+          if strictMode
+            then Left (mkErr startLine ("invalid JSON block: " <> T.pack err))
+            else Right []
     Right v ->
       case v of
         A.Array arr -> Right (V.toList arr)
@@ -268,7 +279,10 @@ extractLooseNdjsonValues strictMode relPath = go 1 False []
                    else go (lineNo + 1) False acc rest
 
     looksLikeJson t =
-      (T.isPrefixOf "{" t && T.isSuffixOf "}" t) || (T.isPrefixOf "[" t && T.isSuffixOf "]" t)
+      -- Heuristic for "loose NDJSON": only attempt JSON parsing on lines that
+      -- look like JSON objects (to avoid catching editorial markup like `{, Start ...}`).
+      T.isPrefixOf "{" t && T.isSuffixOf "}" t && ("\":"
+        `T.isInfixOf` t)
 
     mkErr l msg = T.pack relPath <> ":" <> T.pack (show l) <> ": " <> msg
 
@@ -286,3 +300,29 @@ extractCanvasBlocks strictMode relPath markdown = do
           if st then Left (T.pack rp <> ":" <> T.pack (show fStartLine) <> ": canvas block must be a JSON object") else Right (i, v)
         _ ->
           if st then Left (T.pack rp <> ":" <> T.pack (show fStartLine) <> ": canvas block must be a single JSON object") else Right (i, A.object [])
+
+applyCanonFilter :: Bool -> [Value] -> [Value]
+applyCanonFilter False = id
+applyCanonFilter True = filter isCanonClause
+
+isCanonClause :: Value -> Bool
+isCanonClause = \case
+  A.Object o -> isHash o || isSPO o || isNestedSPO o || isEventClause o
+  _ -> False
+  where
+    hasAll o ks = all (`KM.member` o) ks
+    hasAny o ks = any (`KM.member` o) ks
+
+    isHash o =
+      case KM.lookup "event" o of
+        Just (A.String "hash") -> True
+        _ -> False
+
+    isSPO o = hasAll o ["subject","predicate","object"]
+
+    isNestedSPO o =
+      case KM.lookup "triple" o of
+        Just (A.Object t) -> hasAll t ["subject","predicate","object"]
+        _ -> False
+
+    isEventClause o = hasAll o ["event"] && hasAny o ["text","quote","description"]

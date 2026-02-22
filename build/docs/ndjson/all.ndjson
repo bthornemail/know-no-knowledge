@@ -1,0 +1,781 @@
+{"object":"greeting to all to whom these Presents shall come","order":1,"predicate":"send","subject":"we, the undersigned Delegates of the States affixed to our Names"}
+{"object":"certain articles of Confederation and perpetual Union between the States","order":2,"predicate":"did on the fifteenth day of November in the year of our Lord One Thousand Seven Hundred and Seventy seven agree to","subject":"The Delegates of the United States of America in Congress assembled"}
+{"object":"'The United States of America'","order":3,"predicate":"shall be","subject":"The Stile of this confederacy"}
+{"object":"its sovereignty, freedom and independence, and every Power, Jurisdiction and right, which is not by this confederation expressly delegated to the United States, in Congress assembled","order":4,"predicate":"retains","subject":"Each state"}
+{"object":"a firm league of friendship with each other, for their common defence, the security of their Liberties, and their mutual and general welfare","order":5,"predicate":"hereby severally enter into","subject":"The said states"}
+{"object":"themselves to assist each other, against all force offered to, or attacks made upon them, or any of them, on account of religion, sovereignty, trade, or any other pretence whatever","order":6,"predicate":"binding","subject":"[The said states]"}
+{"object":"all privileges and immunities of free citizens in the several states","order":7,"predicate":"shall be entitled to","subject":"the free inhabitants of each of these states, paupers, vagabonds and fugitives from Justice excepted"}
+{"object":"free ingress and regress to and from any other state","order":8,"predicate":"shall have","subject":"the people of each state"}
+{"object":"all the privileges of trade and commerce, subject to the same duties, impositions and restrictions as the inhabitants thereof respectively","order":9,"predicate":"shall enjoy therein","subject":"[the people of each state]"}
+{"object":"the removal of property imported into any state, to any other State of which the Owner is an inhabitant","order":10,"predicate":"shall not extend so far as to prevent","subject":"such restrictions"}
+{"object":"any state, on the property of the united states, or either of them","order":11,"predicate":"shall be laid by","subject":"no imposition, duties or restriction"}
+{"object":"the state having jurisdiction of his offence","order":12,"predicate":"shall upon demand of the Governor or executive power of the state from which he fled, be delivered up, and removed to","subject":"If any Person guilty of, or charged with, treason, felony, or other high misdemeanor in any state, shall flee from Justice, and be found in any of the united states, he"}
+{"object":"each of these states to the records, acts and judicial proceedings of the courts and magistrates of every other state","order":13,"predicate":"shall be given in","subject":"Full faith and credit"}
+{"object":"in such manner as the legislature of each state shall direct, to meet in Congress on the first Monday in November, in every year","order":14,"predicate":"shall be annually appointed","subject":"delegates"}
+{"object":"each state to recall its delegates, or any of them, at any time within the year, and to send others in their stead, for the remainder of the Year","order":15,"predicate":"reserved to","subject":"a power"}
+{"object":"Congress by less than two, nor by more than seven Members","order":16,"predicate":"shall be represented in","subject":"No State"}
+{"object":"delegate for more than three years, in any term of six years","order":17,"predicate":"shall be capable of being","subject":"no person"}
+{"object":"its own delegates in a meeting of the states, and while they act as members of the committee of the states","order":19,"predicate":"shall maintain","subject":"Each State"}
+{"object":"one vote","order":20,"predicate":"shall have","subject":"each state"}
+{"object":"any Court, or place out of Congress","order":21,"predicate":"shall not be impeached or questioned in","subject":"Freedom of speech and debate in Congress"}
+{"object":"their persons from arrests and imprisonments, during the time of their going to and from, and attendance on congress, except for treason, felony, or breach of the peace","order":22,"predicate":"shall be protected in","subject":"the members of congress"}
+{"object":"any embassy to, or receive any embassy from, or enter into any conference, agreement, alliance, or treaty, with any King prince or state","order":23,"predicate":"shall send","subject":"No State, without the Consent of the united States, in congress assembled"}
+{"object":"any present, emolument, office, or title of any kind whatever, from any king, prince, or foreign state","order":24,"predicate":"accept of","subject":"nor shall any person holding any office of profit or trust under the united states, or any of them"}
+{"object":"any title of nobility","order":25,"predicate":"grant","subject":"nor shall the united states, in congress assembled, or any of them"}
+{"object":"any treaty, confederation, or alliance whatever between them, without the consent of the united states, in congress assembled","order":26,"predicate":"shall enter into","subject":"No two or more states"}
+{"object":"any imposts or duties, which may interfere with any stipulations in treaties, entered into by the united States in congress assembled, with any king, prince, or State","order":27,"predicate":"shall lay","subject":"No State"}
+{"object":"any state, except such number only, as shall be deemed necessary by the united states, in congress assembled, for the defence of such state, or its trade","order":28,"predicate":"shall be kept up in time of peace, by","subject":"No vessels of war"}
+{"object":"any state, in time of peace, except such number only as shall be deemed requisite to garrison the forts necessary for the defence of such state","order":29,"predicate":"be kept up, by","subject":"nor shall any body of forces"}
+{"object":"a well regulated and disciplined militia, sufficiently armed and accoutred","order":30,"predicate":"shall always keep up","subject":"every state"}
+{"object":"a due number of field pieces and tents, and a proper quantity of arms, ammunition, and camp equipage","order":31,"predicate":"shall provide and constantly have ready for use, in public stores","subject":"[every state]"}
+{"object":"any war without the consent of the united States in congress assembled","order":32,"predicate":"shall engage in","subject":"No State"}
+{"object":"commissions to any ships or vessels of war, nor letters of marque or reprisal, except it be after a declaration of war by the united states in congress assembled","order":33,"predicate":"grant","subject":"nor shall any state"}
+{"object":"for that occasion, and kept so long as the danger shall continue, or until the united states in congress assembled shall determine otherwise","order":34,"predicate":"may be fitted out","subject":"vessels of war"}
+{"object":"the legislature of each state respectively by whom such forces shall be raised","order":35,"predicate":"shall be appointed by","subject":"all officers of or under the rank of colonel"}
+{"object":"the state which first made appointment","order":36,"predicate":"shall be filled up by","subject":"all vacancies"}
+{"object":"a common treasury, which shall be supplied by the several states, in proportion to the value of all land within each state","order":37,"predicate":"shall be defrayed out of","subject":"All charges of war, and all other expenses that shall be incurred for the common defence or general welfare, and allowed by the united states in congress assembled"}
+{"object":"the authority and direction of the legislatures of the several states within the time agreed upon by the united states in congress assembled","order":38,"predicate":"shall be laid and levied by","subject":"The taxes for paying that proportion"}
+{"object":"the sole and exclusive right and power of determining on peace and war, except in the cases mentioned in the sixth article","order":39,"predicate":"shall have","subject":"The united states, in congress assembled"}
+{"object":"a judge of any of the said courts","order":46,"predicate":"shall be appointed","subject":"no member of congress"}
+{"object":"the last resort on appeal, in all disputes and differences now subsisting, or that hereafter may arise between two or more states concerning boundary, jurisdiction, or any other cause whatever","order":47,"predicate":"shall also be","subject":"The united states, in congress assembled"}
+{"object":"the manner following","order":48,"predicate":"shall always be exercised in","subject":"which authority"}
+{"object":"the legislative or executive authority of the other state in controversy","order":49,"predicate":"shall be given, by order of congress, to","subject":"Whenever the legislative or executive authority, or lawful agent of any state in controversy with another, shall present a petition to congress, stating the matter in question, and praying for a hearing, notice thereof"}
+{"object":"the appearance of the parties by their lawful agents","order":50,"predicate":"assigned for","subject":"a day"}
+{"object":"commissioners or judges to constitute a court for hearing and determining the matter in question","order":51,"predicate":"shall then be directed to appoint, by joint consent","subject":"who"}
+{"object":"three persons out of each of the united states","order":52,"predicate":"shall name","subject":"if they cannot agree, congress"}
+{"object":"one","order":53,"predicate":"shall alternately strike out","subject":"each party"}
+{"object":"thirteen","order":54,"predicate":"shall be reduced to","subject":"the number"}
+{"object":"lot","order":55,"predicate":"shall, in the presence of congress, be drawn out by","subject":"not less than seven, nor more than nine names, as congress shall direct"}
+{"object":"commissioners or judges, to hear and finally determine the controversy","order":56,"predicate":"shall be","subject":"the persons whose names shall be so drawn, or any five of them"}
+{"object":"the determination","order":57,"predicate":"shall agree in","subject":"a major part of the judges, who shall hear the cause"}
+{"object":"three persons out of each State","order":58,"predicate":"shall proceed to nominate","subject":"if either party shall neglect to attend at the day appointed, without showing reasons which congress shall judge sufficient, or being present, shall refuse to strike, the congress"}
+{"object":"such party absent or refusing","order":59,"predicate":"shall strike in behalf of","subject":"the secretary of congress"}
+{"object":"final and conclusive","order":60,"predicate":"shall be","subject":"the judgment and sentence of the court, to be appointed in the manner before prescribed"}
+{"object":"sentence, or judgment, which shall in like manner be final and decisive","order":61,"predicate":"shall nevertheless proceed to pronounce","subject":"if any of the parties shall refuse to submit to the authority of such court, or to appear or defend their claim or cause, the court"}
+{"object":"congress, and lodged among the acts of congress, for the security of the parties concerned","order":62,"predicate":"being in either case transmitted to","subject":"the judgment or sentence and other proceedings"}
+{"object":"an oath to be administered by one of the judges of the supreme or superior court of the State where the cause shall be tried","order":63,"predicate":"shall take","subject":"every commissioner, before he sits in judgment"}
+{"object":"territory for the benefit of the united states","order":64,"predicate":"shall be deprived of","subject":"no State"}
+{"object":"in the same manner as is before prescribed for deciding disputes respecting territorial jurisdiction between different states","order":65,"predicate":"shall, on the petition of either party to the congress of the united states, be finally determined","subject":"All controversies concerning the private right of soil claimed under different grants of two or more states"}
+{"object":"the sole and exclusive right and power of regulating the alloy and value of coin struck by their own authority, or by that of the respective states","order":66,"predicate":"shall also have","subject":"The united states, in congress assembled"}
+{"object":"a committee, to sit in the recess of congress, to be denominated 'A Committee of the States'","order":75,"predicate":"shall have authority to appoint","subject":"The united States, in congress assembled"}
+{"object":"the office of president more than one year in any term of three years","order":78,"predicate":"be allowed to serve in","subject":"no person"}
+{"object":"binding","order":86,"predicate":"shall be","subject":"which requisition"}
+{"object":"the regimental officers, raise the men, and clothe, arm, and equip them, in a soldier-like manner, at the expense of the united states","order":87,"predicate":"shall appoint","subject":"the legislature of each state"}
+{"object":"the place appointed, and within the time agreed on by the united states, in congress assembled","order":88,"predicate":"shall march to","subject":"the officers and men so clothed, armed, and equipped"}
+{"object":"the same manner as the quota of such state","order":89,"predicate":"shall be raised, officered, clothed, armed, and equipped in","subject":"if the united states, in congress assembled, shall, on consideration of circumstances, judge proper that any state should not raise men, or should raise a smaller number than its quota, and that any other state should raise a greater number of men than the quota thereof, such extra number"}
+{"object":"they judge can be safely spared","order":90,"predicate":"shall raise, officer, clothe, arm, and equip, as many of such extra number as","subject":"they"}
+{"object":"the place appointed, and within the time agreed on by the united states in congress assembled","order":91,"predicate":"shall march to","subject":"The officers and men so clothed, armed, and equipped"}
+{"object":"a war, nor grant letters of marque and reprisal in time of peace, nor enter into any treaties or alliances, nor coin money, nor regulate the value thereof, unless nine states assent to the same","order":92,"predicate":"shall never engage in","subject":"The united states, in congress assembled"}
+{"object":"the votes of a majority of the united states in congress assembled","order":93,"predicate":"be determined, unless by","subject":"nor shall a question on any other point, except for adjourning from day to day"}
+{"object":"any time within the year, and to any place within the united states, so that no period of adjournment be for a longer duration than the space of six Months","order":94,"predicate":"shall have power to adjourn to","subject":"The congress of the united states"}
+{"object":"the Journal of their proceedings monthly, except such parts thereof relating to treaties, alliances, or military operations, as in their judgment require secrecy","order":95,"predicate":"shall publish","subject":"[The congress of the united states]"}
+{"object":"the Journal, when it is desired by any delegate","order":96,"predicate":"shall be entered on","subject":"the yeas and nays of the delegates of each State, on any question"}
+{"object":"a transcript of the said Journal, except such parts as are above excepted, to lay before the legislatures of the several states","order":97,"predicate":"shall be furnished with","subject":"the delegates of a State, or any of them, at his or their request"}
+{"object":"such of the powers of congress as the united states, in congress assembled, by the consent of nine states, shall, from time to time, think expedient to vest them with","order":98,"predicate":"shall be authorized to execute, in the recess of congress","subject":"The committee of the states, or any nine of them"}
+{"object":"the said committee, for the exercise of which, by the articles of confederation, the voice of nine states, in the congress of the united states assembled, is requisite","order":99,"predicate":"be delegated to","subject":"no power"}
+{"object":"all the advantages of this union","order":100,"predicate":"shall be admitted into, and entitled to","subject":"Canada acceding to this confederation, and joining in the measures of the united states"}
+{"object":"the same, unless such admission be agreed to by nine states","order":101,"predicate":"shall be admitted into","subject":"no other colony"}
+{"object":"a charge against the united States","order":102,"predicate":"shall be deemed and considered as","subject":"All bills of credit emitted, monies borrowed, and debts contracted by or under the authority of congress, before the assembling of the united states, in pursuance of the present confederation"}
+{"object":"for payment and satisfaction whereof","order":103,"predicate":"are hereby solemnly pledged","subject":"the said united states and the public faith"}
+{"object":"the determinations of the united states, in congress assembled, on all questions which by this confederation are submitted to them","order":104,"predicate":"shall abide by","subject":"Every State"}
+{"object":"every state","order":105,"predicate":"shall be inviolably observed by","subject":"The Articles of this confederation"}
+{"object":"perpetual","order":106,"predicate":"shall be","subject":"the union"}
+{"object":"any of them, unless such alteration be agreed to in a congress of the united states, and be afterwards confirmed by the legislatures of every state","order":107,"predicate":"be made in","subject":"nor shall any alteration at any time hereafter"}
+{"object":"the Great Governor of the World to incline the hearts of the legislatures we respectively represent in congress, to approve of, and to authorize us to ratify the said articles of confederation and perpetual union","order":108,"predicate":"hath pleased","subject":"it"}
+{"object":"each and every of the said articles of confederation and perpetual union, and all and singular the matters and things therein contained","order":109,"predicate":"do, by these presents, in the name and in behalf of our respective constituents, fully and entirely ratify and confirm","subject":"we, the undersigned delegates, by virtue of the power and authority to us given for that purpose"}
+{"object":"the faith of our respective constituents, that they shall abide by the determinations of the united states in congress assembled, on all questions, which by the said confederation are submitted to them","order":110,"predicate":"do further solemnly plight and engage","subject":"We"}
+{"object":"the states we respectively represent","order":111,"predicate":"shall be inviolably observed by","subject":"that the articles thereof"}
+{"object":"perpetual","order":112,"predicate":"shall be","subject":"that the union"}
+{"object":"our hands, in Congress","order":113,"predicate":"have hereunto set","subject":"we"}
+
+{"object":"12 amendments to the Constitution","order":1,"predicate":"proposed","subject":"The First Congress of the United States"}
+{"object":"the Rotunda in the National Archives Museum","order":2,"predicate":"is on display in","subject":"The 1789 Joint Resolution of Congress proposing the amendments"}
+{"object":"three-fourths of the state legislatures on December 15, 1791","order":3,"predicate":"were ratified by","subject":"Ten of the proposed 12 amendments"}
+{"object":"the first 10 amendments of the Constitution, or the U.S. Bill of Rights","order":4,"predicate":"constitute","subject":"The ratified Articles (Articles 3–12)"}
+{"object":"the 27th Amendment to the Constitution","order":5,"predicate":"was ratified as","subject":"Article 2"}
+{"object":"","order":6,"predicate":"was never ratified","subject":"Article 1"}
+{"object":"a desire that further declaratory and restrictive clauses should be added","order":7,"predicate":"expressed","subject":"The Conventions of a number of the States"}
+{"object":"the beneficent ends of its institution","order":8,"predicate":"will best ensure","subject":"extending the ground of public confidence in the Government"}
+{"object":"the Legislatures of the several States, as amendments to the Constitution of the United States","order":9,"predicate":"be proposed to","subject":"the following Articles"}
+{"object":"all intents and purposes, as part of the said Constitution","order":10,"predicate":"to be valid to","subject":"all, or any of which Articles, when ratified by three fourths of the said Legislatures"}
+{"object":"one Representative for every thirty thousand","order":11,"predicate":"shall be","subject":"there"}
+{"object":"one hundred","order":12,"predicate":"shall amount to","subject":"the number"}
+{"object":"Congress","order":13,"predicate":"shall be so regulated by","subject":"the proportion"}
+{"object":"not less than one hundred Representatives","order":14,"predicate":"shall be","subject":"there"}
+{"object":"two hundred","order":16,"predicate":"shall amount to","subject":"the number of Representatives"}
+{"object":"Congress","order":17,"predicate":"shall be so regulated by","subject":"the proportion"}
+{"object":"two hundred Representatives","order":18,"predicate":"shall not be less than","subject":"there"}
+{"object":"","order":20,"predicate":"shall take effect","subject":"No law, varying the compensation for the services of the Senators and Representatives"}
+{"object":"an establishment of religion, or prohibiting the free exercise thereof","order":21,"predicate":"shall make no law respecting","subject":"Congress"}
+{"object":"the freedom of speech, or of the press","order":22,"predicate":"abridging","subject":"[Congress shall make no law]"}
+{"object":"the right of the people peaceably to assemble","order":23,"predicate":"abridging","subject":"[Congress shall make no law]"}
+{"object":"[the right] to petition the Government for a redress of grievances","order":24,"predicate":"abridging","subject":"[Congress shall make no law]"}
+{"object":"","order":25,"predicate":"shall not be infringed","subject":"the right of the people to keep and bear Arms"}
+{"object":"any house, without the consent of the Owner","order":26,"predicate":"shall be quartered in","subject":"No Soldier"}
+{"object":"but in a manner to be prescribed by law","order":27,"predicate":"in time of war","subject":"[No Soldier shall be quartered]"}
+{"object":"","order":28,"predicate":"shall not be violated","subject":"The right of the people to be secure in their persons, houses, papers, and effects, against unreasonable searches and seizures"}
+{"object":"","order":29,"predicate":"shall issue","subject":"no Warrants"}
+{"object":"probable cause, supported by Oath or affirmation","order":30,"predicate":"but upon","subject":"[Warrants shall issue]"}
+{"object":"the place to be searched, and the persons or things to be seized","order":31,"predicate":"particularly describing","subject":"[Warrants]"}
+{"object":"a capital, or otherwise infamous crime","order":32,"predicate":"shall be held to answer for","subject":"No person"}
+{"object":"a presentment or indictment of a Grand Jury","order":33,"predicate":"unless on","subject":"[No person shall be held to answer]"}
+{"object":"","order":34,"predicate":"are excepted","subject":"cases arising in the land or naval forces, or in the Militia, when in actual service in time of War or public danger"}
+{"object":"the same offence to be twice put in jeopardy of life or limb","order":35,"predicate":"be subject for","subject":"nor shall any person"}
+{"object":"any criminal case to be a witness against himself","order":36,"predicate":"be compelled in","subject":"nor shall any person"}
+{"object":"life, liberty, or property, without due process of law","order":37,"predicate":"be deprived of","subject":"nor shall any person"}
+{"object":"public use, without just compensation","order":38,"predicate":"be taken for","subject":"nor shall private property"}
+{"object":"the right to a speedy and public trial","order":39,"predicate":"shall enjoy","subject":"the accused"}
+{"object":"law","order":41,"predicate":"shall have been previously ascertained by","subject":"which district"}
+{"object":"","order":46,"predicate":"shall be preserved","subject":"the right of trial by jury"}
+{"object":"any Court of the United States","order":47,"predicate":"shall be otherwise re-examined in","subject":"no fact tried by a jury"}
+{"object":"","order":48,"predicate":"shall not be required","subject":"Excessive bail"}
+{"object":"","order":49,"predicate":"imposed","subject":"nor excessive fines"}
+{"object":"","order":50,"predicate":"inflicted","subject":"nor cruel and unusual punishments"}
+{"object":"others retained by the people","order":51,"predicate":"shall not be construed to deny or disparage","subject":"The enumeration in the Constitution, of certain rights"}
+{"object":"the States respectively, or to the people","order":52,"predicate":"are reserved to","subject":"The powers not delegated to the United States by the Constitution, nor prohibited by it to the States"}
+{"object":"a transcription of the first ten amendments to the Constitution in their original form","order":53,"predicate":"is","subject":"The following text"}
+{"object":"December 15, 1791","order":54,"predicate":"were ratified","subject":"These amendments"}
+{"object":"what is known as the 'Bill of Rights'","order":55,"predicate":"form","subject":"[These amendments]"}
+{"object":"an establishment of religion, or prohibiting the free exercise thereof","order":56,"predicate":"shall make no law respecting","subject":"Congress"}
+{"object":"the freedom of speech, or of the press","order":57,"predicate":"abridging","subject":"[Congress shall make no law]"}
+{"object":"the right of the people peaceably to assemble","order":58,"predicate":"abridging","subject":"[Congress shall make no law]"}
+{"object":"[the right] to petition the Government for a redress of grievances","order":59,"predicate":"abridging","subject":"[Congress shall make no law]"}
+{"object":"","order":60,"predicate":"shall not be infringed","subject":"the right of the people to keep and bear Arms"}
+{"object":"any house, without the consent of the Owner","order":61,"predicate":"shall be quartered in","subject":"No Soldier"}
+{"object":"but in a manner to be prescribed by law","order":62,"predicate":"in time of war","subject":"[No Soldier shall be quartered]"}
+{"object":"","order":63,"predicate":"shall not be violated","subject":"The right of the people to be secure in their persons, houses, papers, and effects, against unreasonable searches and seizures"}
+{"object":"","order":64,"predicate":"shall issue","subject":"no Warrants"}
+{"object":"probable cause, supported by Oath or affirmation","order":65,"predicate":"but upon","subject":"[Warrants shall issue]"}
+{"object":"the place to be searched, and the persons or things to be seized","order":66,"predicate":"particularly describing","subject":"[Warrants]"}
+{"object":"a capital, or otherwise infamous crime","order":67,"predicate":"shall be held to answer for","subject":"No person"}
+{"object":"a presentment or indictment of a Grand Jury","order":68,"predicate":"unless on","subject":"[No person shall be held to answer]"}
+{"object":"","order":69,"predicate":"are excepted","subject":"cases arising in the land or naval forces, or in the Militia, when in actual service in time of War or public danger"}
+{"object":"the same offence to be twice put in jeopardy of life or limb","order":70,"predicate":"be subject for","subject":"nor shall any person"}
+{"object":"any criminal case to be a witness against himself","order":71,"predicate":"be compelled in","subject":"nor shall any person"}
+{"object":"life, liberty, or property, without due process of law","order":72,"predicate":"be deprived of","subject":"nor shall any person"}
+{"object":"public use, without just compensation","order":73,"predicate":"be taken for","subject":"nor shall private property"}
+{"object":"the right to a speedy and public trial","order":74,"predicate":"shall enjoy","subject":"the accused"}
+{"object":"law","order":76,"predicate":"shall have been previously ascertained by","subject":"which district"}
+{"object":"","order":81,"predicate":"shall be preserved","subject":"the right of trial by jury"}
+{"object":"any Court of the United States","order":82,"predicate":"shall be otherwise re-examined in","subject":"no fact tried by a jury"}
+{"object":"","order":83,"predicate":"shall not be required","subject":"Excessive bail"}
+{"object":"","order":84,"predicate":"imposed","subject":"nor excessive fines"}
+{"object":"","order":85,"predicate":"inflicted","subject":"nor cruel and unusual punishments"}
+{"object":"others retained by the people","order":86,"predicate":"shall not be construed to deny or disparage","subject":"The enumeration in the Constitution, of certain rights"}
+{"object":"the States respectively, or to the people","order":87,"predicate":"are reserved to","subject":"The powers not delegated to the United States by the Constitution, nor prohibited by it to the States"}
+
+{"object":"that they should declare the causes which impel them to the separation","order":1,"predicate":"requires","subject":"a decent respect to the opinions of mankind"}
+{"object":"these truths to be self-evident","order":2,"predicate":"hold","subject":"We"}
+{"object":"equal","order":3,"predicate":"are created","subject":"all men"}
+{"object":"certain unalienable Rights","order":4,"predicate":"are endowed by their Creator with","subject":"they"}
+{"object":"Life, Liberty and the pursuit of Happiness","order":5,"predicate":"are","subject":"among these"}
+{"object":"Men","order":6,"predicate":"are instituted among","subject":"Governments"}
+{"object":"their just powers from the consent of the governed","order":7,"predicate":"deriving","subject":"[Governments]"}
+{"object":"these ends","order":8,"predicate":"becomes destructive of","subject":"any Form of Government"}
+{"object":"the Right of the People to alter or to abolish it","order":9,"predicate":"is","subject":"it"}
+{"object":"new Government","order":10,"predicate":"to institute","subject":"[the People]"}
+{"object":"that Governments long established should not be changed for light and transient causes","order":11,"predicate":"will dictate","subject":"Prudence"}
+{"object":"that mankind are more disposed to suffer, while evils are sufferable, than to right themselves by abolishing the forms to which they are accustomed","order":12,"predicate":"hath shewn","subject":"all experience"}
+{"object":"a design to reduce them under absolute Despotism","order":13,"predicate":"evinces","subject":"a long train of abuses and usurpations"}
+{"object":"their right","order":14,"predicate":"is","subject":"it"}
+{"object":"their duty","order":15,"predicate":"is","subject":"it"}
+{"object":"such Government","order":16,"predicate":"to throw off","subject":"[the people]"}
+{"object":"new Guards for their future security","order":17,"predicate":"to provide","subject":"[the people]"}
+{"object":"the patient sufferance of these Colonies","order":18,"predicate":"has been","subject":"Such"}
+{"object":"the necessity which constrains them to alter their former Systems of Government","order":19,"predicate":"is now","subject":"such"}
+{"object":"a history of repeated injuries and usurpations","order":20,"predicate":"is","subject":"The history of the present King of Great Britain"}
+{"object":"in direct object the establishment of an absolute Tyranny over these States","order":21,"predicate":"having","subject":"all"}
+{"object":"a candid world","order":22,"predicate":"be submitted to","subject":"let Facts"}
+{"object":"his Assent to Laws, the most wholesome and necessary for the public good","order":23,"predicate":"has refused","subject":"He"}
+{"object":"his Governors to pass Laws of immediate and pressing importance","order":24,"predicate":"has forbidden","subject":"He"}
+{"object":"them","order":25,"predicate":"has utterly neglected to attend to","subject":"he"}
+{"object":"other Laws for the accommodation of large districts of people","order":26,"predicate":"has refused to pass","subject":"He"}
+{"object":"legislative bodies at places unusual, uncomfortable, and distant from the depository of their public Records","order":27,"predicate":"has called together","subject":"He"}
+{"object":"Representative Houses repeatedly","order":28,"predicate":"has dissolved","subject":"He"}
+{"object":"for a long time, after such dissolutions, to cause others to be elected","order":29,"predicate":"has refused","subject":"He"}
+{"object":"the People at large for their exercise","order":30,"predicate":"have returned to","subject":"the Legislative powers"}
+{"object":"exposed to all the dangers of invasion from without, and convulsions within","order":31,"predicate":"remaining","subject":"the State"}
+{"object":"the population of these States","order":32,"predicate":"has endeavoured to prevent","subject":"He"}
+{"object":"the Laws for Naturalization of Foreigners","order":33,"predicate":"obstructing","subject":"[He]"}
+{"object":"others to encourage their migrations hither","order":34,"predicate":"refusing to pass","subject":"[He]"}
+{"object":"the conditions of new Appropriations of Lands","order":35,"predicate":"raising","subject":"[He]"}
+{"object":"the Administration of Justice","order":36,"predicate":"has obstructed","subject":"He"}
+{"object":"Judges dependent on his Will alone","order":37,"predicate":"has made","subject":"He"}
+{"object":"a multitude of New Offices","order":38,"predicate":"has erected","subject":"He"}
+{"object":"swarms of Officers to harrass our people, and eat out their substance","order":39,"predicate":"has sent hither","subject":"[He]"}
+{"object":"Standing Armies without the Consent of our legislatures","order":40,"predicate":"has kept among us","subject":"He"}
+{"object":"the Military independent of and superior to the Civil power","order":41,"predicate":"has affected to render","subject":"He"}
+{"object":"others to subject us to a jurisdiction foreign to our constitution","order":42,"predicate":"has combined with","subject":"He"}
+{"object":"his Assent to their Acts of pretended Legislation","order":43,"predicate":"giving","subject":"[He]"}
+{"object":"large bodies of armed troops among us","order":44,"predicate":"Quartering","subject":"[He is responsible for]"}
+{"object":"them, by a mock Trial, from punishment for any Murders which they should commit on the Inhabitants of these States","order":45,"predicate":"protecting","subject":"[He is responsible for]"}
+{"object":"our Trade with all parts of the world","order":46,"predicate":"cutting off","subject":"[He is responsible for]"}
+{"object":"Taxes on us without our Consent","order":47,"predicate":"imposing","subject":"[He is responsible for]"}
+{"object":"in many cases, of the benefits of Trial by Jury","order":48,"predicate":"depriving us","subject":"[He is responsible for]"}
+{"object":"beyond Seas to be tried for pretended offences","order":49,"predicate":"transporting us","subject":"[He is responsible for]"}
+{"object":"the free System of English Laws in a neighbouring Province","order":50,"predicate":"abolishing","subject":"[He is responsible for]"}
+{"object":"an Arbitrary government","order":51,"predicate":"establishing therein","subject":"[He is responsible for]"}
+{"object":"its Boundaries","order":52,"predicate":"enlarging","subject":"[He is responsible for]"}
+{"object":"our Charters","order":53,"predicate":"taking away","subject":"[He is responsible for]"}
+{"object":"our most valuable Laws","order":54,"predicate":"abolishing","subject":"[He is responsible for]"}
+{"object":"the Forms of our Governments","order":55,"predicate":"altering fundamentally","subject":"[He is responsible for]"}
+{"object":"our own Legislatures","order":56,"predicate":"suspending","subject":"[He is responsible for]"}
+{"object":"in all cases whatsoever","order":57,"predicate":"declaring themselves invested with power to legislate for us","subject":"[He is responsible for]"}
+{"object":"Government here","order":58,"predicate":"has abdicated","subject":"He"}
+{"object":"his Protection","order":59,"predicate":"declaring us out of","subject":"[He]"}
+{"object":"War against us","order":60,"predicate":"waging","subject":"[He]"}
+{"object":"our seas","order":61,"predicate":"has plundered","subject":"He"}
+{"object":"our Coasts","order":62,"predicate":"has ravaged","subject":"[He]"}
+{"object":"our towns","order":63,"predicate":"has burnt","subject":"[He]"}
+{"object":"the lives of our people","order":64,"predicate":"has destroyed","subject":"[He]"}
+{"object":"large Armies of foreign Mercenaries","order":65,"predicate":"is at this time transporting","subject":"He"}
+{"object":"our fellow Citizens taken Captive on the high Seas to bear Arms against their Country","order":66,"predicate":"has constrained","subject":"He"}
+{"object":"domestic insurrections amongst us","order":67,"predicate":"has excited","subject":"He"}
+{"object":"the inhabitants of our frontiers, the merciless Indian Savages","order":68,"predicate":"has endeavoured to bring on","subject":"[He]"}
+{"object":"Redress in the most humble terms","order":69,"predicate":"have Petitioned for","subject":"We"}
+{"object":"repeated injury","order":70,"predicate":"have been answered only by","subject":"Our repeated Petitions"}
+{"object":"the ruler of a free people","order":71,"predicate":"is unfit to be","subject":"A Prince, whose character is thus marked by every act which may define a Tyrant"}
+{"object":"attentions to our Brittish brethren","order":72,"predicate":"have been wanting in","subject":"We"}
+{"object":"them from time to time of attempts by their legislature to extend an unwarrantable jurisdiction over us","order":73,"predicate":"have warned","subject":"We"}
+{"object":"them of the circumstances of our emigration and settlement here","order":74,"predicate":"have reminded","subject":"We"}
+{"object":"their native justice and magnanimity","order":75,"predicate":"have appealed to","subject":"We"}
+{"object":"them by the ties of our common kindred to disavow these usurpations","order":76,"predicate":"have conjured","subject":"we"}
+{"object":"the voice of justice and of consanguinity","order":77,"predicate":"have been deaf to","subject":"They"}
+{"object":"the necessity","order":78,"predicate":"must acquiesce in","subject":"We"}
+{"object":"them, as we hold the rest of mankind, Enemies in War, in Peace Friends","order":79,"predicate":"hold","subject":"[We]"}
+{"object":"that these United Colonies are, and of Right ought to be Free and Independent States","order":80,"predicate":"do solemnly publish and declare","subject":"We, therefore, the Representatives of the united States of America"}
+{"object":"all Allegiance to the British Crown","order":81,"predicate":"are Absolved from","subject":"that they"}
+{"object":"","order":82,"predicate":"is and ought to be totally dissolved","subject":"all political connection between them and the State of Great Britain"}
+{"object":"War","order":83,"predicate":"have full Power to levy","subject":"they"}
+{"object":"Peace","order":84,"predicate":"conclude","subject":"[they have full Power to]"}
+{"object":"Alliances","order":85,"predicate":"contract","subject":"[they have full Power to]"}
+{"object":"Commerce","order":86,"predicate":"establish","subject":"[they have full Power to]"}
+{"object":"our Lives, our Fortunes and our sacred Honor","order":88,"predicate":"mutually pledge to each other","subject":"we"}
+
+{"object":"the President of the United States","order":1,"predicate":"was issued by","subject":"a proclamation"}
+{"object":"free","order":2,"predicate":"shall be then, thenceforward, and forever","subject":"all persons held as slaves within any State or designated part of a State, the people whereof shall then be in rebellion against the United States"}
+{"object":"the freedom of such persons","order":3,"predicate":"will recognize and maintain","subject":"the Executive Government of the United States, including the military and naval authority thereof"}
+{"object":"such persons, or any of them, in any efforts they may make for their actual freedom","order":4,"predicate":"will do no act or acts to repress","subject":"[the Executive Government of the United States]"}
+{"object":"the States and parts of States, if any, in which the people thereof, respectively, shall then be in rebellion against the United States","order":5,"predicate":"will, on the first day of January aforesaid, by proclamation, designate","subject":"The Executive"}
+{"object":"conclusive evidence that such State, and the people thereof, are not then in rebellion against the United States","order":6,"predicate":"shall, in the absence of strong countervailing testimony, be deemed","subject":"the fact that any State, or the people thereof, shall on that day be, in good faith, represented in the Congress of the United States by members chosen thereto at elections wherein a majority of the qualified voters of such State shall have participated"}
+{"object":"the States and parts of States wherein the people thereof respectively, are this day in rebellion against the United States","order":7,"predicate":"do, on this first day of January, in the year of our Lord one thousand eight hundred and sixty-three, order and designate as","subject":"I, Abraham Lincoln, President of the United States"}
+{"object":"this proclamation were not issued","order":8,"predicate":"are, for the present, left precisely as if","subject":"which excepted parts"}
+{"object":"that all persons held as slaves within said designated States, and parts of States, are, and henceforward shall be free","order":9,"predicate":"do order and declare","subject":"I"}
+{"object":"the freedom of said persons","order":10,"predicate":"will recognize and maintain","subject":"the Executive government of the United States, including the military and naval authorities thereof"}
+{"object":"the people so declared to be free to abstain from all violence, unless in necessary self-defence","order":11,"predicate":"hereby enjoin upon","subject":"I"}
+{"object":"them that, in all cases when allowed, they labor faithfully for reasonable wages","order":12,"predicate":"recommend to","subject":"I"}
+{"object":"that such persons of suitable condition, will be received into the armed service of the United States to garrison forts, positions, stations, and other places, and to man vessels of all sorts in said service","order":13,"predicate":"further declare and make known","subject":"I"}
+{"object":"the considerate judgment of mankind, and the gracious favor of Almighty God","order":14,"predicate":"invoke","subject":"I"}
+{"object":"my hand","order":15,"predicate":"have hereunto set","subject":"I"}
+{"object":"the seal of the United States to be affixed","order":16,"predicate":"have caused","subject":"[I]"}
+
+{"object":"no mere recent phase in human history","order":1,"predicate":"is","subject":"The democratic aspiration"}
+{"object":"Magna Carta","order":2,"predicate":"was written in","subject":"It"}
+{"object":"his 1941 Inaugural address","order":3,"predicate":"[said this in]","subject":"Franklin Delano Roosevelt"}
+{"object":"his seal to Magna Carta","order":4,"predicate":"affixed","subject":"King John"}
+{"object":"their demands in order to avert civil war","order":5,"predicate":"consented to","subject":"He"}
+{"object":"the agreement","order":6,"predicate":"nullified","subject":"Pope Innocent III"}
+{"object":"internal war","order":7,"predicate":"plunged into","subject":"England"}
+{"object":"the conflict between King John and his barons","order":8,"predicate":"failed to resolve","subject":"Magna Carta"}
+{"object":"several times after his death","order":9,"predicate":"was reissued","subject":"it"}
+{"object":"the National Archives, courtesy of David M. Rubenstein","order":10,"predicate":"is on display at","subject":"one of four surviving originals of the 1297 Magna Carta"}
+{"object":"the official Statute Rolls of England","order":11,"predicate":"was entered into","subject":"This version"}
+{"object":"a group of 13th-century barons to protect their rights and property against a tyrannical king","order":12,"predicate":"was written by","subject":"Magna Carta"}
+{"object":"many practical matters and specific grievances relevant to the feudal system under which they lived","order":13,"predicate":"is concerned with","subject":"It"}
+{"object":"the minds of the men who brokered the agreement","order":14,"predicate":"were hardly apparent in","subject":"The interests of the common man"}
+{"object":"two principles expressed in Magna Carta that resonate to this day","order":15,"predicate":"are","subject":"there"}
+{"object":"","order":16,"predicate":"shall be taken, imprisoned, disseised, outlawed, banished, or in any way destroyed","subject":"No freeman"}
+{"object":"him, except by the lawful judgment of his peers or by the law of the land","order":17,"predicate":"proceed against or prosecute","subject":"nor will We"}
+{"object":"[right or justice]","order":18,"predicate":"sell","subject":"To no one will We"}
+{"object":"right or justice","order":19,"predicate":"deny or delay","subject":"to no one will We"}
+{"object":"action in liberty's defense","order":20,"predicate":"served to inspire and justify","subject":"Magna Carta"}
+{"object":"they were entitled to the same rights as Englishmen, rights guaranteed in Magna Carta","order":21,"predicate":"believed","subject":"The colonists"}
+{"object":"those rights into the laws of their states and later into the Constitution and Bill of Rights","order":22,"predicate":"embedded","subject":"They"}
+{"object":"a direct descendent of Magna Carta's guarantee of proceedings according to the 'law of the land'","order":23,"predicate":"is","subject":"The Fifth Amendment to the Constitution"}
+{"object":"life, liberty, or property, without due process of law","order":24,"predicate":"shall be deprived of","subject":"no person"}
+
+{"object":"greetings to all to whom the present letters come","order":1,"predicate":"sends","subject":"Edward by the grace of God King of England, lord of Ireland and duke of Aquitaine"}
+{"object":"the great charter of the lord Henry, late King of England, our father, concerning the liberties of England","order":2,"predicate":"have inspected","subject":"We"}
+{"object":"greetings to his archbishops, bishops, abbots, priors, earls, barons, sheriffs, reeves, ministers and all his bailiffs and faithful men inspecting the present charter","order":3,"predicate":"sends","subject":"Henry by the grace of God King of England, lord of Ireland, duke of Normandy and Aquitaine and count of Anjou"}
+{"object":"to the archbishops, bishops, abbots, priors, earls, barons and all of our realm these liberties written below to hold in our realm of England in perpetuity","order":4,"predicate":"have given and granted","subject":"Know that we"}
+{"object":"God and confirm by this our present charter for ourselves and our heirs in perpetuity that the English Church is to be free and to have all its rights fully and its liberties entirely","order":5,"predicate":"grant to","subject":"we"}
+{"object":"all the freemen of our realm for ourselves and our heirs in perpetuity the liberties written below to have and to hold to them and their heirs from us and our heirs in perpetuity","order":6,"predicate":"furthermore grant and give to","subject":"We"}
+{"object":"his inheritance for the ancient relief","order":7,"predicate":"is to have","subject":"the heir"}
+{"object":"according to the ancient custom of (knights') fees","order":8,"predicate":"will give less","subject":"he who owes less"}
+{"object":"custody of him and his land until he has taken homage from the heir","order":9,"predicate":"is not to have","subject":"his lord"}
+{"object":"his inheritance without relief and without fine","order":10,"predicate":"is to have","subject":"he"}
+{"object":"the custody of his lords until the aforesaid term","order":11,"predicate":"will nonetheless remain in","subject":"his land"}
+{"object":"reasonable receipts from the heir's land and reasonable customs and reasonable services, and this without destruction or waste of men or things","order":12,"predicate":"is only to take","subject":"The keeper of the land of such an heir who is under age"}
+{"object":"recompense from him","order":13,"predicate":"will take","subject":"we"}
+{"object":"two law-worthy and discreet men of that fee who will answer to us or to the person to whom we assign such land for the land's issues","order":14,"predicate":"will be assigned to","subject":"the land"}
+{"object":"custody","order":15,"predicate":"is to lose","subject":"he"}
+{"object":"two law-worthy and discreet men of that fee who similarly will answer to us as is aforesaid","order":16,"predicate":"is to be assigned to","subject":"the land"}
+{"object":"the houses, parks, fishponds, ponds, mills and other things pertaining to that land from the issues of the same land","order":17,"predicate":"is to maintain","subject":"The keeper"}
+{"object":"the heir, when the heir comes to full age, all his land stocked with ploughs and all other things in at least the same condition as when he received it","order":18,"predicate":"will restore to","subject":"he"}
+{"object":"the custodies of archbishoprics, bishoprics, abbeys, priories, churches and vacant offices which pertain to us","order":19,"predicate":"are to be observed in","subject":"All these things"}
+{"object":"","order":20,"predicate":"ought not to be sold","subject":"such custodies"}
+{"object":"without disparagement","order":21,"predicate":"are to be married","subject":"Heirs"}
+{"object":"her marriage portion and her inheritance","order":22,"predicate":"is immediately and without any difficulty to have","subject":"A widow"}
+{"object":"anything for her dower or her marriage portion or for her inheritance which her husband and she held on the day of her husband's death","order":23,"predicate":"to pay","subject":"nor is she"}
+{"object":"the chief dwelling place of her husband for forty days after her husband's death","order":24,"predicate":"shall remain in","subject":"she"}
+{"object":"her","order":25,"predicate":"will be assigned","subject":"dower"}
+{"object":"her","order":26,"predicate":"will immediately be provided for","subject":"a suitable house"}
+{"object":"her reasonable necessities from the common property","order":27,"predicate":"is to have","subject":"she"}
+{"object":"the third part of all the lands of her husband which were his during his lifetime","order":28,"predicate":"will be assigned","subject":"As dower she"}
+{"object":"for so long as she wishes to live without a husband","order":29,"predicate":"shall be distrained to marry","subject":"No widow"}
+{"object":"any land or rent for any debt, as long as the existing chattels of the debtor suffice for the payment of the debt","order":30,"predicate":"will seize","subject":"Neither we nor our bailiffs"}
+{"object":"for so long as the principal debtor is able to pay the debt","order":31,"predicate":"be distrained","subject":"nor will the debtor's guarantors"}
+{"object":"the debt","order":32,"predicate":"will answer for","subject":"the guarantors"}
+{"object":"the lands and rents of the debtor until they are repaid the debt","order":33,"predicate":"are to have","subject":"they"}
+{"object":"all its ancient liberties and customs","order":34,"predicate":"is to have","subject":"The city of London"}
+{"object":"that all other cities and boroughs and vills and the barons of the Cinque Ports and all ports are to have all their liberties and free customs","order":35,"predicate":"wish and grant","subject":"we"}
+{"object":"more service for a knight's fee or for any other free tenement than is due from it","order":36,"predicate":"is to be distrained to do","subject":"No-one"}
+{"object":"our court","order":37,"predicate":"are not to follow","subject":"Common pleas"}
+{"object":"a certain fixed place","order":38,"predicate":"are to be held in","subject":"[Common pleas]"}
+{"object":"save in their particular counties","order":39,"predicate":"are not to be taken","subject":"Recognisances of novel disseisin and of mort d'ancestor"}
+{"object":"our justices once a year to each county","order":40,"predicate":"will send","subject":"We, or should we be outside the realm, our chief justiciar"}
+{"object":"the justices in their visitation","order":41,"predicate":"are to be completed elsewhere by","subject":"those assizes which cannot be completed in that visitation"}
+{"object":"our justices of the Bench and completed there","order":42,"predicate":"are to be referred to","subject":"those which cannot be completed by them on account of the difficulty of various articles (of law)"}
+{"object":"our justices of the Bench","order":43,"predicate":"are always to be taken before","subject":"Assizes of darrein presentment"}
+{"object":"there","order":44,"predicate":"are to be completed","subject":"[Assizes of darrein presentment]"}
+{"object":"a small offence save in accordance with the manner of the offence","order":45,"predicate":"is not to be amerced for","subject":"A freeman"}
+{"object":"saving his merchandise","order":47,"predicate":"[is to be amerced in the same way]","subject":"a merchant"}
+{"object":"the same way, saving his necessity should he fall into our mercy","order":48,"predicate":"is to be amerced in","subject":"any villain other than one of our own"}
+{"object":"save by the oath of honest and law-worthy men of the neighbourhood","order":49,"predicate":"is to be imposed","subject":"none of the aforesaid amercements"}
+{"object":"save by their peers and only in accordance with the manner of their offence","order":50,"predicate":"are not to be amerced","subject":"Earls and barons"}
+{"object":"bridges or bank works save for those that ought to do so of old and by right","order":51,"predicate":"is to be distrained to make","subject":"No town or free man"}
+{"object":"save for those that were in defense in the time of King H(enry II) our grandfather","order":52,"predicate":"are to be kept up","subject":"No bank works of any sort"}
+{"object":"pleas of our crown","order":53,"predicate":"is to hold","subject":"No sheriff, constable, coroner or any other of our bailiffs"}
+{"object":"all the goods and chattels of the dead man found in lay fee, to the value of the said debt, by view of law-worthy men","order":54,"predicate":"is permitted to attach and enroll","subject":"our sheriff or bailiff"}
+{"object":"thence until the debt that remains is paid to us","order":55,"predicate":"is to be removed","subject":"nothing"}
+{"object":"the executors to discharge the will of the dead man","order":56,"predicate":"is to be released to","subject":"the remainder"}
+{"object":"the (use of) the dead man, saving to the dead man's wife and children their reasonable portion","order":57,"predicate":"are to pass to","subject":"all the chattels"}
+{"object":"corn or other chattels from anyone who is not themselves of a vill where a castle is built","order":58,"predicate":"is to take","subject":"No constable or his bailiff"}
+{"object":"the purchase price within forty days","order":59,"predicate":"is to pay","subject":"the constable or his bailiff"}
+{"object":"any knight to give money for castle guard if the knight is willing to do such guard in person","order":60,"predicate":"is to distrain","subject":"No constable"}
+{"object":"in accordance with the length of time we have him in the army for the fee for which he has done service in the army","order":61,"predicate":"is to be quit of (castle) guard","subject":"he"}
+{"object":"anyone's horses or carts to make carriage, unless he renders the payment customarily due","order":62,"predicate":"is to take","subject":"No sheriff or bailiff of ours or of anyone else"}
+{"object":"our bailiffs","order":63,"predicate":"is to be taken by","subject":"No demesne cart belonging to any churchman or knight or any other lady"}
+{"object":"someone else's timber for a castle or any other of our business save by the will of he to whom the timber belongs","order":64,"predicate":"take","subject":"nor will we or our bailiffs or anyone else"}
+{"object":"the lands of those convicted of felony save for a year and a day","order":65,"predicate":"shall not hold","subject":"We"}
+{"object":"the lords of the fees","order":66,"predicate":"is to be restored to","subject":"such land"}
+{"object":"save on the sea coast","order":67,"predicate":"are to be entirely dismantled","subject":"All fish weirs on the Thames and the Medway and throughout England"}
+{"object":"to anyone in respect to any free tenement in such a way that a free man might lose his court","order":68,"predicate":"is not to be issued","subject":"The writ called 'praecipe'"}
+{"object":"a single measure for wine throughout our realm, and a single measure for ale, and a single measure for corn, that is to say the London quarter","order":69,"predicate":"is to be","subject":"There"}
+{"object":"weights as for measures","order":71,"predicate":"shall be the same for","subject":"It"}
+{"object":"nothing given for a writ of inquest from the person seeking an inquest of life or member","order":72,"predicate":"is to be","subject":"there"}
+{"object":"","order":73,"predicate":"is to be given freely and is not to be denied","subject":"such a writ"}
+{"object":"custody of the heir or their land which pertains to another's fee","order":74,"predicate":"are not, by virtue of such a fee farm or socage or burgage, to have","subject":"we"}
+{"object":"such a fee farm or socage or burgage unless this fee farm owes knight service","order":75,"predicate":"to have custody of","subject":"nor are we"}
+{"object":"the custody of an heir or of any land which is held from another by knight service on the pretext of some small serjeanty held from us by service of rendering us knives or arrows or suchlike things","order":76,"predicate":"are not to have","subject":"We"}
+{"object":"any man on his open law or on oath simply by virtue of his spoken word, without reliable witnesses being produced for the same","order":77,"predicate":"is henceforth to put","subject":"No bailiff"}
+{"object":"his free tenement or of his liberties or free customs, or outlawed or exiled or in any way ruined","order":78,"predicate":"is to be taken or imprisoned or disseised of","subject":"No freeman"}
+{"object":"such a man or send against him save by lawful judgement of his peers or by the law of the land","order":79,"predicate":"go against","subject":"nor will we"}
+{"object":"right or justice","order":80,"predicate":"sell or deny or delay","subject":"To no-one will we"}
+{"object":"safe and secure conduct in leaving and coming to England and in staying and going through England both by land and by water to buy and to sell, without any evil exactions, according to the ancient and right customs, save in time of war","order":81,"predicate":"are to have","subject":"All merchants"}
+{"object":"without damage to their bodies or goods until it is established by us or our chief justiciar in what way the merchants of our land are treated","order":82,"predicate":"are to be attached","subject":"they"}
+{"object":"our land","order":83,"predicate":"are to be safe in","subject":"the other merchants"}
+{"object":"any other relief or render any other service to us that would not have been rendered to the baron if the barony were still held by a baron","order":84,"predicate":"is not to give","subject":"his heir"}
+{"object":"such things in the same way as the baron held them","order":85,"predicate":"shall hold","subject":"we"}
+{"object":"the escheat or custody of any of our men unless the man who held the barony or the escheat held elsewhere from us in chief","order":86,"predicate":"to have","subject":"nor, on account of such a barony or escheat, are we"}
+{"object":"any more of his land to anyone, unless the residue of his land is sufficient to render due service to the lord of the fee as pertains to that fee","order":87,"predicate":"is henceforth to give or sell","subject":"No free man"}
+{"object":"the custody of such abbeys when they fall vacant just as they ought to have and as is declared above","order":88,"predicate":"are to have","subject":"All patrons of abbeys which have charters of the kings of England over advowson or ancient tenure or possession"}
+{"object":"the appeal of woman for the death of anyone save for the death of that woman's husband","order":89,"predicate":"is to be taken or imprisoned on","subject":"No-one"}
+{"object":"save from month to month","order":90,"predicate":"is to be held","subject":"No county court"}
+{"object":"his tourn through the hundred save for twice a year and only in the place that is due and customary","order":91,"predicate":"make","subject":"nor will any sheriff or his bailiff"}
+{"object":"the Michaelmas term without exception","order":92,"predicate":"is to be taken at","subject":"the view of frankpledge"}
+{"object":"his liberties which he had or used to have in the time of King H(enry II) my grandfather or which he has acquired since","order":93,"predicate":"is to have","subject":"every man"}
+{"object":"so that our peace be held and so that the tithing is to be held entire as it used to be","order":94,"predicate":"is to be taken","subject":"The view of frankpledge"}
+{"object":"that which the sheriff used to have in taking the view in the time of King H(enry) our grandfather","order":95,"predicate":"does not seek exceptions but remains content with","subject":"the sheriff"}
+{"object":"anyone to give his land to a religious house in such a way that he receives it back from such a house to hold","order":96,"predicate":"permitted to","subject":"Nor is it"}
+{"object":"any religious house to accept the land of anyone in such way that the land is restored to the person from whom it was received to hold","order":97,"predicate":"permitted to","subject":"nor is it"}
+{"object":"","order":98,"predicate":"is to be entirely quashed","subject":"the gift"}
+{"object":"the lord of that fee","order":99,"predicate":"is to revert to","subject":"such land"}
+{"object":"as it used to be in the time of King H(enry) our grandfather","order":100,"predicate":"is to be taken","subject":"Scutage"}
+{"object":"archbishops, bishops, abbots, priors, Templars, Hospitallers, earls, barons and all others, both ecclesiastical and secular persons, just as they formerly had","order":101,"predicate":"shall be preserved to","subject":"all liberties and free customs"}
+{"object":"all of our realm, both clergy and laity, in so far as pertains to them in respect to their own men","order":102,"predicate":"are to be observed by","subject":"All these aforesaid customs and liberties which we have granted to be held in our realm in so far as pertains to us"}
+{"object":"us a fifteenth part of all their movable goods","order":103,"predicate":"have given","subject":"the archbishops, bishops, abbots, priors, earls, barons, knights, fee holders and all of our realm"}
+{"object":"them for us and our heirs that neither we nor our heirs will seek anything by which the liberties contained in this charter might be infringed or damaged","order":104,"predicate":"grant to","subject":"we"}
+{"object":"nothing and to be held as nothing","order":105,"predicate":"it is to count for","subject":"should anything be obtained from anyone against this"}
+{"object":"them for ourselves and our heirs and by the terms of the present (letters) renew them","order":106,"predicate":"concede and confirm","subject":"We"}
+{"object":"the aforesaid charter is to be firmly and inviolably observed in all and each of its articles in perpetuity, including any articles contained in the same charter which by chance have not to date been observed","order":107,"predicate":"wishing and granting for ourselves and our heirs that","subject":"[We]"}
+{"object":"these our letters patent","order":108,"predicate":"have had made","subject":"We"}
+
+{"object":"a citizen thereof","order":1,"predicate":"may be admitted to become","subject":"Any Alien being a free white person"}
+{"object":"","order":2,"predicate":"shall administer","subject":"which Oath or Affirmation such Court"}
+{"object":"such Application, and the proceedings thereon","order":3,"predicate":"shall record","subject":"the Clerk of such Court"}
+{"object":"a Citizen of the United States","order":4,"predicate":"shall be considered as","subject":"such person"}
+{"object":"citizens of the United States","order":5,"predicate":"shall also be considered as","subject":"the children of such person so naturalized"}
+{"object":"natural born Citizens","order":6,"predicate":"shall be considered as","subject":"the children of citizens of the United States that may be born beyond Sea, or out of the limits of the United States"}
+{"object":"persons whose fathers have never been resident in the United States","order":7,"predicate":"shall not descend to","subject":"the right of citizenship"}
+{"object":"a citizen as aforesaid, except by an Act of the Legislature of the State in which such person was proscribed","order":8,"predicate":"shall be admitted","subject":"no person heretofore proscribed by any States"}
+{"object":"a citizen of the United States, or any of them, on the following conditions, and not otherwise","order":9,"predicate":"may be admitted to become","subject":"Any alien, being a free white person"}
+{"object":"the supreme, superior, district, or circuit court of some one of the states","order":10,"predicate":"shall have declared, on oath or affirmation, before","subject":"He"}
+{"object":"a citizen of the United States","order":11,"predicate":"three years, at least, before his admission, that it was bona fide, his intention to become","subject":"[He shall have declared]"}
+{"object":"some one of the courts aforesaid","order":13,"predicate":"shall, at the time of his application to be admitted, declare on oath or affirmation before","subject":"He"}
+{"object":"the United States, five years at least","order":14,"predicate":"has resided within","subject":"that he"}
+{"object":"the constitution of the United States","order":16,"predicate":"will support","subject":"that he"}
+{"object":"all allegiance and fidelity to any foreign prince, potentate, state, or sovereignty whatever","order":17,"predicate":"does absolutely and entirely renounce and abjure","subject":"that he"}
+{"object":"the clerk of the court","order":18,"predicate":"shall be recorded by","subject":"which proceedings"}
+{"object":"he has resided within the limits and under the jurisdiction of the United States five years","order":19,"predicate":"shall be satisfied that","subject":"The court admitting such alien"}
+{"object":"during that time, he has behaved as a man of a good moral character, attached to the principles of the constitution of the United States","order":20,"predicate":"shall further appear to their satisfaction that","subject":"it"}
+{"object":"an express renunciation of his title or order of nobility","order":21,"predicate":"shall, in addition to the above requisites, make","subject":"he"}
+{"object":"the said court","order":22,"predicate":"shall be recorded in","subject":"which renunciation"}
+{"object":"a citizen","order":23,"predicate":"may be admitted to become","subject":"Any alien now residing within the limits and under the jurisdiction of the United States"}
+{"object":"two years, at least, within and under the jurisdiction of the same","order":24,"predicate":"on his declaring, on oath or affirmation, in some one of the courts aforesaid, that he has resided","subject":"[Any alien]"}
+{"object":"the state or territory where such court is at the time held","order":25,"predicate":"one year, at least, within","subject":"[that he has resided]"}
+{"object":"the constitution of the United States","order":26,"predicate":"will support","subject":"that he"}
+{"object":"all allegiance and fidelity to any foreign prince, potentate, state, or sovereignty whatever","order":27,"predicate":"does absolutely and entirely renounce and abjure","subject":"that he"}
+{"object":"a man of good moral character, attached to the constitution of the United States","order":28,"predicate":"has behaved as","subject":"on its appearing to the satisfaction of the court, that during the said term of two years, he"}
+{"object":"an express renunciation of his title or order of nobility, before he shall be entitled to such admission","order":29,"predicate":"on his moreover making in the court","subject":"when the alien applying for admission to citizenship, shall have borne any hereditary title, or been of any of the orders of nobility"}
+{"object":"the clerk thereof","order":30,"predicate":"shall be recorded by","subject":"all of which proceedings, required in this proviso to be performed in the court"}
+{"object":"citizens of the United States","order":31,"predicate":"shall be considered as","subject":"the children of persons duly naturalized, dwelling within the United States, and being under the age of twenty-one years, at the time of such naturalization"}
+{"object":"citizens of the United States","order":32,"predicate":"shall be considered as","subject":"the children of citizens of the United States, born out of the limits and jurisdiction of the United States"}
+{"object":"persons, whose fathers have never been resident of the United States","order":33,"predicate":"shall not descend to","subject":"That the right of citizenship"}
+{"object":"a citizen as aforesaid, without the consent of the legislature of the state, in which such person was proscribed","order":34,"predicate":"shall be admitted","subject":"That no person heretofore proscribed by any state, or who has been legally convicted of having joined the army of Great Britain during the late war"}
+{"object":"","order":35,"predicate":"be, and the same is hereby repealed","subject":"The Act intituled, 'An act to establish an uniform rule of naturalization,' passed the twenty-sixth day of March, one thousand seven hundred and ninety"}
+
+{"object":"a firm, inviolable, and universal Peace, and a true and Sincere Friendship between the most Serene and mighty Prince, Lewis the Sixteenth, the most Christian King his Heirs and Successors, and the united States of America","order":1,"predicate":"shall be","subject":"There"}
+{"object":"the most Christian King, his Heirs and successors, and the Said united States","order":2,"predicate":"shall be perpetual between","subject":"the Terms hereinafter mentioned"}
+{"object":"no other Duties or Imposts in the Ports, Havens, Roads, Countries, Islands, Cities, or Towns of the Said united States, or any of them, than the Natives thereof","order":3,"predicate":"Shall pay","subject":"The Subjects of the most Christian King"}
+{"object":"all other the Rights, Liberties, Priviledges, Immunities, and Exemptions in Trade, Navigation and Commerce","order":4,"predicate":"shall enjoy","subject":"[The Subjects of the most Christian King]"}
+{"object":"no other Duties, or Imposts in the Ports, Havens, Roads, Countries, Islands, Cities, or Towns of the most Christian King, than the Natives of Such Countries","order":5,"predicate":"Shall pay","subject":"The Subjects, People and Inhabitants of the Said united States and every of them"}
+{"object":"all other the Rights, Liberties, Priviledges, Immunities and Exemptions in Trade, Navigation and Commerce","order":6,"predicate":"shall enjoy","subject":"[The Subjects, People and Inhabitants of the Said united States]"}
+{"object":"all Vessells, and the Effects belonging to the Subjects People, or Inhabitants of the Said united States, or any of them, being in his Ports, Havens, or Roads, or on the Seas, near to his Countries, Islands, Cities, or Towns","order":7,"predicate":"Shall endeavour, by all the Means in his Power to protect and defend","subject":"The most Christian King"}
+{"object":"the right owners, their Agents or Attornies, all Such Vessells, and Effects, which Shall be taken, within his Jurisdiction","order":8,"predicate":"[shall endeavour] to recover and restore, to","subject":"[The most Christian King]"}
+{"object":"all Vessells belonging to the Subjects, People or Inhabitants of the Said united States, or any of them","order":9,"predicate":"Shall upon all occasions, take under their Protection","subject":"his Ships of War, or any Convoys Sailing under his Authority"}
+{"object":"Such Vessells as long as they hold the Same Course, or go the same Way, against all Attacks, Force, and Violence, in the Same manner, as they ought to protect and defend Vessells belonging to the Subjects of the most Christian King","order":10,"predicate":"shall defend","subject":"[his Ships of War, or any Convoys]"}
+{"object":"all Vessells and Effects belonging to the Subjects of the most Christian King","order":11,"predicate":"Shall protect and defend","subject":"the Said united States, and their Ships of War and Convoys Sailing under their Authority"}
+{"object":"them, if taken within the Jurisdiction of the Said united States, or any of them","order":12,"predicate":"[shall] endeavour to recover and restore","subject":"[the Said united States, and their Ships of War and Convoys]"}
+{"object":"any Pirates, or Sea Robbers","order":13,"predicate":"Shall not receive, nor Suffer to be received into any of their Ports, Havens, Roads, Countries, Islands, Cities or Towns","subject":"The most Christian King and the Said united States"}
+{"object":"them","order":14,"predicate":"nor afford, or suffer any Entertainment, Assistance, or Provision to be afforded to","subject":"[The most Christian King and the Said united States]"}
+{"object":"all Pyrates, and Sea Robbers, and their Partners, Sharers, and Abettors be found out, apprehended, and Suffer condign Punishment","order":15,"predicate":"shall endeavour by all Means, that","subject":"[The most Christian King and the Said united States]"}
+{"object":"the right owners, their Agents or Attornies demanding the Same, and making the right of Property to appear by due Proof","order":16,"predicate":"Shall be restored, or Satisfaction given therefor to","subject":"all the Vessells and Effects piratically taken, and brought into the Ports or Havens of the most Christian King, or the Said united States, which can be found, altho they be Sold"}
+{"object":"the Subjects, People and Inhabitants of the Said united States and every of them, and their Vessells and Effects of every Kind, against all Attacks, Assaults, Violences, Injuries, Depredations or Plunderings by or from the King or Emperor of Morocco, or Fez, and the States of Algiers, Tunis and Tripoli","order":17,"predicate":"Shall protect, defend and Secure, as far as in his Power","subject":"The most Christian King"}
+{"object":"the People and Inhabitants of the Said united States, then called the British Colonies, in North America, their Vessells and Effects","order":18,"predicate":"protected, defended, and Secured","subject":"the King and Kingdom of Great Britain, before the Commencement of the present War"}
+{"object":"the most Christian King","order":19,"predicate":"should declare War, against","subject":"the King of Great Britain"}
+{"object":"Great Britain, in Such War, with Men, Money, ships, or any of the Articles in this treaty denominated Contraband Goods","order":20,"predicate":"shall not assist","subject":"the Said united States"}
+{"object":"a separate Peace","order":21,"predicate":"shall not make","subject":"they"}
+{"object":"Labradore, New Britain, Nova Scotia, Accadia, Canada, Florida, nor any of the Countries, Cities, or Towns, on the Continent of North America, nor of the Islands of Newfoundland, Cape Breton, St. Johns, Anticoste, nor of any other Islands lying near to the Said Continent","order":22,"predicate":"Shall never invade, nor attempt to invade, or get Possession, for himself of","subject":"the most Christian King"}
+{"object":"the Sole, exclusive undivided and perpetual Possession of all the Countries, Cities, and Towns, on the Said Continent, and of all Islands near to it, which now are, or lately were under the Jurisdiction of or subject to the King or Crown of Great Britain","order":23,"predicate":"Shall have","subject":"the Said united States"}
+{"object":"the Same Rights, Liberties, Priviledges, Immunities and Exemptions in Trade, Commerce and Navigation to and from the Said Islands, and Dominions, that are mentioned in the Second Article of this Treaty","order":25,"predicate":"Shall enjoy","subject":"the Subjects, People and Inhabitants of the Said united States, and every of them"}
+{"object":"the true Intent and Meaning of this Treaty","order":26,"predicate":"is","subject":"It"}
+{"object":"the Exportation of any Thing of the Growth, Production, or Manufacture of the Islands in the West Indies now belonging, or which may hereafter belong to the most Christian King, to the Said united States, or any of them, than the lowest that are or shall be imposed on the Exportation thereof to France or to any other Part of the World","order":27,"predicate":"Shall be imposed on","subject":"no higher or other Duties"}
+{"object":"that no Duties whatever more than shall ever hereafter be imposed on the Exportation of Molasses, from any of the Islands and Dominions of the most Christian King in the West Indies to any of these united States","order":28,"predicate":"is agreed, by and between the Said Parties","subject":"It"}
+{"object":"the Droit de Aubeine","order":29,"predicate":"shall be exempt from","subject":"The Subjects, People, and Inhabitants of the Said united States, or any of them, being Merchants and residing in France, and their Property, and Effects of every Kind"}
+{"object":"Certificates, expressly Shewing that her Goods are not of the Number of those which have been prohibited, as Contraband","order":30,"predicate":"Shall be obliged to exhibit, as well upon the high Seas as in the Ports and Havens, not only her Passports, but likewise","subject":"The Merchant Ship of either of the Parties, which shall be making into a Port belonging to the Enemy of the other Ally, and concerning whose Voyage, and the Species of Goods on board her, there Shall be just Grounds of Suspicion"}
+{"object":"the Hatches of such ship, or to open any Chests, Coffers, Packs, Casks, or any other Vessells found therein or to remove the Smallest Parcells of her Goods","order":31,"predicate":"Shall not be lawfull to break up","subject":"If by the exhibiting of the abovesaid Certificates, the other Party discover there are any of those Sorts of Goods, which are prohibited and declared Contraband, and consigned for a Port under the Obedience of his Enemies, it"}
+{"object":"the Presence of the Officers of the Court of Admiralty, and an Inventory thereof made","order":32,"predicate":"be brought on Shore in","subject":"the lading"}
+{"object":"no Allowance to sell, exchange, or alienate the same in any manner, untill after that due and lawfull Proscess shall have been had against such prohibited Goods","order":33,"predicate":"shall be","subject":"there"}
+{"object":"the same","order":34,"predicate":"shall, by a Sentence pronounced, have confiscated","subject":"the Court of Admiralty"}
+{"object":"their being as it were infected by the prohibited Goods","order":36,"predicate":"be detained on Pretence of","subject":"neither may they"}
+{"object":"lawfull Prize","order":37,"predicate":"be confiscated as","subject":"much less shall they"}
+{"object":"the ship","order":38,"predicate":"shall forthwith discharge","subject":"If not the whole Cargo, but only Part thereof Shall consist of prohibited or contraband Goods, and the Commander of the ship shall be ready and willing to deliver them to the Captor who has discovered them, in such Case the Captor having received those Goods"}
+{"object":"the Voyage on which she was bound","order":39,"predicate":"not hinder her by any Means freely to prosecute","subject":"[the Captor]"}
+{"object":"whatever Shall be found to be laden by the Subjects and Inhabitants of either Party, on any ship belonging to the Enemy of the other or to his Subjects, the whole, although it be not of the sort of prohibited Goods, may be confiscated in the Same Manner as if it belonged to the Enemy himself","order":40,"predicate":"is agreed, that","subject":"it"}
+{"object":"","order":42,"predicate":"Shall noways be liable to Confiscation","subject":"the Goods of the Subjects and People of either Party, whether they be of the Nature of Such as are prohibited, or otherwise which, as is aforesaid, were put on board any Ship belonging to an Enemy before the War, or after the Declaration of the Same, without Knowledge of it"}
+{"object":"the Proprietors demanding the Same","order":43,"predicate":"Shall well and truly be restored without delay to","subject":"[the Goods]"}
+{"object":"them afterwards to any Ports belonging to the Enemy","order":44,"predicate":"Shall not be any Ways lawfull to carry","subject":"if the Said Merchandizes be contraband, it"}
+{"object":"any Injury, or Damage to the other Side","order":45,"predicate":"Shall be forbid, doing","subject":"all the Commanders of the Ships of the most Christian King, and of the said united States, and all their subjects and Inhabitants"}
+{"object":"","order":46,"predicate":"Shall be punished","subject":"if they act to the contrary, they"}
+{"object":"Satisfaction for all matter of Damage, and the Interest thereof, by Reparation, under the Pain and Obligation of their Person and Goods","order":47,"predicate":"Shall moreover be bound to make","subject":"[they]"}
+{"object":"Some Port of either State","order":48,"predicate":"Shall be brought into","subject":"All Ships, and Merchandizes, of what Nature So ever, which Shall be rescued out of the Hands of any Pirates, or Robbers on the high Seas"}
+{"object":"the Custody of the Officers of that Port, in order to be restored entire to the true Proprietor, as Soon as due and Sufficient Proof Shall be made, concerning the Property thereof","order":49,"predicate":"Shall be delivered to","subject":"[All Ships, and Merchandizes]"}
+{"object":"the Ships of War of either Party and Privateers, freely to carry whithersoever they please, the Ships and Goods, taken from their Enemies, without being obliged to pay any Duty to the Officers of the Admiralty or any other Judges","order":50,"predicate":"Shall be lawfull for","subject":"It"}
+{"object":"the Ports of either Party","order":51,"predicate":"be arrested, or Seized, when they come to, and enter","subject":"nor Shall Such Prizes"}
+{"object":"the Same, or make Examination concerning the Lawfullness of Such Prizes","order":52,"predicate":"Search","subject":"nor Shall the Searchers, or other Officers of those Places"}
+{"object":"their Prizes to the Place expressed in their Commissions","order":53,"predicate":"may hoist Sail, at any Time and depart and carry","subject":"they"}
+{"object":"","order":54,"predicate":"Shall be obliged to shew","subject":"which the Commanders of Such Ships of War"}
+{"object":"Such as Shall have made Prize of the Subjects, People, or Property, of either of the Parties","order":55,"predicate":"Shall be given in their Ports to","subject":"on the Contrary, no shelter, or Refuge"}
+{"object":"they go out, and retire from thence as Soon as possible","order":56,"predicate":"Shall be vigorously used, that","subject":"if Such Should come in, being forced by Stress of Weather, or the Danger of the Sea, all proper Means"}
+{"object":"the Persons Ship wrecked, or such as Shall be in danger thereof","order":57,"predicate":"Shall be given to","subject":"If any Ships belonging to either of the Parties, their People, or subjects Shall, within the Coasts, or Dominions of the other, Stick upon the Sands or be wrecked, or Suffer any other Damage, all friendly Assistance and Relief"}
+{"object":"them for their free and quiet Passage from thence, and the Return of every one to his own Country","order":58,"predicate":"Shall likewise be given to","subject":"Letters of Safe Conduct"}
+{"object":"all Humanity and Kindness, and enjoy all friendly Protection and Help","order":59,"predicate":"shall be received and treated with","subject":"That in Case the Subjects and Inhabitants of Either Party, with their Shipping, whether public, and of War, or private and of Merchants be forced through Stress of Weather, Pursuit of Pirates or Enemies or any other urgent Necessity, for Seeking of shelter and Harbour to retreat, and enter into any of the Rivers, Creeks, Bays, Havens, Roads, Ports, or shores, belonging to the other Party, they"}
+{"object":"Victuals and all Things needfull for the sustenance of their Persons, or Reparation of their Ships, and Conveniency of their Voyage","order":60,"predicate":"Shall be permitted to refresh and provide themselves, at reasonable Rates, with","subject":"they"}
+{"object":"the Said Ports or Roads, but may remove and depart when and whither they please, without any Lett or Hindrance","order":61,"predicate":"shall no Ways be detained or hindered from returning out of","subject":"they"}
+{"object":"all Places possessed, or which shall be possessed by the other Party","order":62,"predicate":"shall abstain and forbear to fish in","subject":"The Subjects, Inhabitants, Merchants, Commanders of Ships, Masters and Mariners of the States, Provinces, and Dominions of each Party respectively"}
+{"object":"the Havens, Bays, Creeks, Roads, Coasts, or Places, which the said united States hold or shall hereafter hold","order":63,"predicate":"Shall not fish in","subject":"The most Christian Kings Subjects"}
+{"object":"the Havens, Bays, Creeks, Roads, Coasts, or Places, which the most Christian King possesses, or shall hereafter possess","order":64,"predicate":"shall not fish in","subject":"in like manner, the subjects, People, and Inhabitants of the said united states"}
+{"object":"","order":65,"predicate":"shall be confiscated","subject":"if any ship or Vessell shall be found fishing, contrary to the Tenor of this Treaty, the Said ship or Vessell, with its Lading, Proof being made thereof"}
+{"object":"the Merchants, in the Cities and Towns where they live, for settling and transporting their Goods and Merchandizes","order":66,"predicate":"is agreed, that if a War should break out between the Said two Nations, Six Months, after the Proclamation of War, Shall be allowed to","subject":"it"}
+{"object":"the Same","order":67,"predicate":"shall be made for","subject":"if any Thing be taken from them, or any Injury be done them within that Term by either Party, or the People or subjects of either, full Satisfaction"}
+{"object":"any Commission or Letters of Marque for arming any Ship or Ships to act as Privateers, against the Said united States or any of them","order":68,"predicate":"shall apply for, or take","subject":"No Subjects of the most Christian King"}
+{"object":"any Commission or Letters of Marque for arming any ship or Ships to act as Privateers, against the Subjects of the most Christian King or any of them","order":69,"predicate":"apply for, or take","subject":"Nor shall any Citizen, Subject, or Inhabitant, of the said united States or any of them"}
+{"object":"a Pirate","order":70,"predicate":"shall be punished as","subject":"If any Person of either Nation Shall take Such Commissions or Letters of Marque, he"}
+{"object":"any foreign Privateers, not belonging to the Subjects of the most Christian King, nor Citizens of the Said united States, who have Commissions from any other Prince or State, in Enmity with either Nation, to fit their Ships in the Ports of either the one or the other of the aforesaid Parties","order":71,"predicate":"Shall not be lawfull for","subject":"It"}
+{"object":"Victuals, except Such as Shall be necessary for their going to the next Port of that Prince or State from which they have Commissions","order":74,"predicate":"be allowed even to purchase","subject":"neither Shall they"}
+{"object":"all and Singular the Subjects of the most Christian King, and the Citizens, People, and Inhabitants of the Said united States, to Sail with their Ships, with all manner of Liberty and Security","order":75,"predicate":"Shall be lawfull for","subject":"It"}
+{"object":"the Proprietors of the Merchandizes laden thereon from any Port, to the Places of those who now are, or hereafter shall be at Enmity with the most Christian King, or the united States","order":76,"predicate":"being made, who are","subject":"no distinction"}
+{"object":"the Subjects and Inhabitants aforesaid, to Sail with the Ships and Merchandizes aforementioned; and to trade with the Same Liberty and Security, from the Places, Ports, and Havens of those who are Enemies of both or either Party","order":77,"predicate":"shall likewise be lawfull for","subject":"It"}
+{"object":"free Ships Shall also give a Freedom to Goods, and that every Thing Shall be deemed to be free and exempt, which Shall be found on board the Ships, belonging to the Subjects of either of the Confederates; although the whole Lading or any Part thereof, should appertain to the Enemies of Either, Contraband Goods being always excepted","order":78,"predicate":"is hereby Stipulated that","subject":"It"}
+{"object":"the Same Liberty, be extended to Persons, who are on board a free ship with this Effect, that although they be Enemies to both or either Party, they are not to be taken out of that free ship, unless they are Soldiers, and in actual Service of the Enemies","order":79,"predicate":"is also agreed in like manner, that","subject":"It"}
+{"object":"all Kinds of Merchandizes, excepting those only which are distinguished by the Name of Contraband","order":80,"predicate":"Shall extend to","subject":"This Liberty of Navigation and Commerce"}
+{"object":"Contraband or prohibited Goods","order":82,"predicate":"Shall not be reckoned among","subject":"These Merchandizes which follow"}
+{"object":"","order":83,"predicate":"shall not be reputed Contraband","subject":"that is to Say, all Sorts of Cloths, and all other Manufactures woven of any Wool, Flax, Silk, Cotton, or any other Materials whatever; all Kinds of Wearing Apparell, together with the Species whereof they are used to be made; Gold and Silver, as well coined as uncoined, Tin, Iron, Lead, Copper, Brass, Coals; as also Wheat and Barley, and any other Kind of Corn and Pulse; Tobacco, and likewise all manner of Spices; Salted and Smoaked Flesh, Salted Fish, Cheese and Butter, Beer, Oils, Wines, Sugars, and all Sorts of Salt; and in general, all Provisions which Serve for the Nourishment of Man kind, and the Sustenance of Life: Furthermore, all Kinds of Cotton, Hemp, Flax, Tar, Pitch, Ropes, Cables, Sails, Sail Cloths, Anchors, and any Parts of Anchors; also ships Masts, Planks, Boards, and Beams, of what Trees soever; and all other Things proper either for building or repairing Ships, and all other Goods whatever which have not been worked into the Form of any Instrument or Thing prepared for War, by Land or by Sea"}
+{"object":"free Goods","order":84,"predicate":"shall wholly be reckoned among","subject":"much less Such as have been already wrought and made up for any other Use; all which"}
+{"object":"","order":85,"predicate":"[shall be reckoned among free Goods]","subject":"as likewise all other Merchandizes and Things which are not comprehended, and particularly mentioned in the foregoing Enumeration of Contraband Goods"}
+{"object":"the freeest Manner by the subjects of both Confederates, even to Places belonging to an Enemy, such Towns or Places being only excepted as are at that time besieged, blocked up, or invested","order":86,"predicate":"may be transported and carried in","subject":"they"}
+{"object":"Sea Letters or Passports expressing the Name, Property and Bulk of the Ship, as also the Name and Place of Habitation of the Master or Commander","order":87,"predicate":"is agreed, that in Case either of the Parties hereto, Should be engaged in War, the Ships and Vessells belonging to the Subjects or People of the other Ally, must be furnished with","subject":"it"}
+{"object":"the Form annexed to this Treaty","order":88,"predicate":"Shall be made out and granted according to","subject":"which Passport"}
+{"object":"every Year that is, if the Ship happens to return home within the Space of a Year","order":89,"predicate":"Shall likewise be recalled","subject":"they"}
+{"object":"Such Ships being laden, are to be provided, not only with Passports as above mentioned, but also with Certificates containing the Several Particulars of the Cargo","order":90,"predicate":"is likewise agreed, that","subject":"It"}
+{"object":"the Officers of the Place whence the Ship Set Sail, in the accustomed Form","order":91,"predicate":"Shall be made out by","subject":"which Certificates"}
+{"object":"an Account of their Lading, unless they Should be Suspected upon Some manifest Tokens, of carrying to the Enemy of the other Ally, any prohibited Goods called Contraband","order":93,"predicate":"Shall not be obliged to give","subject":"The Ships of the Subjects and Inhabitants of either of the Parties, coming upon any Coast belonging to either of the Said Allies, but not willing to enter into Port, or being entered into Port, and not willing to unload their Cargoes, or break Bulk"}
+{"object":"their Passports and Certificates, in the manner before Specified","order":94,"predicate":"shall be obliged to exhibit in the Ports","subject":"In Cases of Such manifest suspicion, the Said Subjects and Inhabitants, of either of the Parties"}
+{"object":"Cannon Shot","order":95,"predicate":"Shall remain out of","subject":"That if the Ships of the Said Subjects, People or Inhabitants of either of the Parties, Shall be met with, either Sailing along the Coast, or on the high Seas, by any Ship of War of the other, or by any Privateers, the Said Ships of War or Privateers, for the avoiding of any disorder"}
+{"object":"their Boats, aboard the Merchant Ship, which they Shall So meet with","order":96,"predicate":"may Send","subject":"[the Said Ships of War or Privateers]"}
+{"object":"her to the Number of two or three Men only","order":97,"predicate":"may enter","subject":"[the Said Ships of War or Privateers]"}
+{"object":"his Passport, concerning the Property of the Ship, made out according to the Form inserted in this present Treaty","order":98,"predicate":"Shall exhibit","subject":"to whom the Master or Commander of such Ship or Vessell"}
+{"object":"her Voyage","order":99,"predicate":"Shall be free and at Liberty to pursue","subject":"the Ship when she Shall have Shewed Such Passport"}
+{"object":"her in any Manner, or to give her Chase, or force her to quit her intended Course","order":100,"predicate":"shall not be lawfull to molest or Search","subject":"it"}
+{"object":"[Master and Commander]","order":101,"predicate":"has been given to","subject":"Leave and Permission"}
+{"object":"the officers who have the Jurisdiction of maritime Affairs, that the Said Ship belongs to one or more of the subjects","order":102,"predicate":"shall make oath before","subject":"he"}
+{"object":"the End of these Presents","order":103,"predicate":"shall be put at","subject":"the Act whereof"}
+{"object":"the Marine ordinances and Regulations","order":104,"predicate":"will keep and cause to be kept by his Crew, on board","subject":"[he]"}
+{"object":"the proper Office a List signed and witnessed containing the Names and sirnames, the Places of Birth and Abode of the Crew of his ship, and of all who shall embark on board her","order":105,"predicate":"enter in","subject":"[he]"}
+{"object":"the Knowledge and Permission of the Officers of the Marine","order":106,"predicate":"shall not take on board without","subject":"whom he"}
+{"object":"this present Leave to the Officers and Judges of the Marine","order":107,"predicate":"shall Shew","subject":"in every Port or Haven where he shall enter with his ship, he"}
+{"object":"a faithfull Account to them of what passed and was done during his Voyage","order":108,"predicate":"shall give","subject":"[he]"}
+{"object":"the Colours, Arms, and Ensigns of the King (or of the united states) during his Voyage","order":109,"predicate":"shall carry","subject":"he"}
+{"object":"these Presents","order":110,"predicate":"have Signed","subject":"We"}
+{"object":"the seal of our Arms thereunto","order":111,"predicate":"put","subject":"[We]"}
+{"object":"[secretary]","order":112,"predicate":"caused the same to be countersigned by","subject":"[We]"}
+{"object":"that [Master] of the Ship named in the above Passport, hath taken the oath mentioned therein","order":113,"predicate":"do certify","subject":"We of the Admiralty of [place]"}
+{"object":"on the [date] D. E. of F. personally appeared before Us, and declared by a Solemn Oath, that the Ship or Vessell called G. of about [number] Tons whereof H. I. of K. his usual Place of Habitation, is Master or Commander, does rightfully and properly belong to him and others subjects, and to them alone","order":114,"predicate":"do certify and attest, that","subject":"We A.B. Magistrate, (or) Officers of the Customs of the Town and Port of C."}
+{"object":"the Port of L. to the Port of M. laden with the Goods and Merchandizes hereunder particularly described and enumerated","order":115,"predicate":"is now bound from","subject":"That she"}
+{"object":"this Certificate","order":116,"predicate":"have Signed","subject":"We"}
+{"object":"the Seal of our Office","order":117,"predicate":"seal it with","subject":"[We]"}
+
+{"object":"this Constitution for the United States of America","order":1,"predicate":"do ordain and establish","subject":"We the People of the United States"}
+{"object":"a Congress of the United States, which shall consist of a Senate and House of Representatives","order":2,"predicate":"shall be vested in","subject":"All legislative Powers herein granted"}
+{"object":"Members chosen every second Year by the People of the several States","order":3,"predicate":"shall be composed of","subject":"The House of Representatives"}
+{"object":"the Qualifications requisite for Electors of the most numerous Branch of the State Legislature","order":4,"predicate":"shall have","subject":"the Electors in each State"}
+{"object":"a Representative who shall not have attained to the Age of twenty five Years, and been seven Years a Citizen of the United States, and who shall not, when elected, be an Inhabitant of that State in which he shall be chosen","order":5,"predicate":"shall be","subject":"No Person"}
+{"object":"the several States which may be included within this Union, according to their respective Numbers","order":6,"predicate":"shall be apportioned among","subject":"Representatives and direct Taxes"}
+{"object":"three Years after the first Meeting of the Congress of the United States, and within every subsequent Term of ten Years","order":7,"predicate":"shall be made within","subject":"The actual Enumeration"}
+{"object":"one for every thirty Thousand","order":8,"predicate":"shall not exceed","subject":"The Number of Representatives"}
+{"object":"one Representative","order":9,"predicate":"shall have at Least","subject":"each State"}
+{"object":"three","order":10,"predicate":"shall be entitled to chuse","subject":"the State of New Hampshire"}
+{"object":"eight","order":11,"predicate":"[shall be entitled to chuse]","subject":"Massachusetts"}
+{"object":"one","order":12,"predicate":"[shall be entitled to chuse]","subject":"Rhode-Island and Providence Plantations"}
+{"object":"five","order":13,"predicate":"[shall be entitled to chuse]","subject":"Connecticut"}
+{"object":"six","order":14,"predicate":"[shall be entitled to chuse]","subject":"New-York"}
+{"object":"four","order":15,"predicate":"[shall be entitled to chuse]","subject":"New Jersey"}
+{"object":"eight","order":16,"predicate":"[shall be entitled to chuse]","subject":"Pennsylvania"}
+{"object":"one","order":17,"predicate":"[shall be entitled to chuse]","subject":"Delaware"}
+{"object":"six","order":18,"predicate":"[shall be entitled to chuse]","subject":"Maryland"}
+{"object":"ten","order":19,"predicate":"[shall be entitled to chuse]","subject":"Virginia"}
+{"object":"five","order":20,"predicate":"[shall be entitled to chuse]","subject":"North Carolina"}
+{"object":"five","order":21,"predicate":"[shall be entitled to chuse]","subject":"South Carolina"}
+{"object":"three","order":22,"predicate":"[shall be entitled to chuse]","subject":"Georgia"}
+{"object":"Writs of Election to fill such Vacancies","order":23,"predicate":"shall issue","subject":"When vacancies happen in the Representation from any State"}
+{"object":"their Speaker and other Officers","order":24,"predicate":"shall chuse","subject":"The House of Representatives"}
+{"object":"the sole Power of Impeachment","order":25,"predicate":"shall have","subject":"The House of Representatives"}
+{"object":"two Senators from each State, chosen by the Legislature thereof, for six Years","order":26,"predicate":"shall be composed of","subject":"The Senate of the United States"}
+{"object":"one Vote","order":27,"predicate":"shall have","subject":"each Senator"}
+{"object":"into three Classes","order":28,"predicate":"shall be divided","subject":"Immediately after they shall be assembled"}
+{"object":"the Expiration of the second Year","order":29,"predicate":"shall be vacated at","subject":"The Seats of the Senators of the first Class"}
+{"object":"the Expiration of the fourth Year","order":30,"predicate":"[shall be vacated at]","subject":"[The Seats] of the second Class"}
+{"object":"the Expiration of the sixth Year","order":31,"predicate":"[shall be vacated at]","subject":"[The Seats] of the third Class"}
+{"object":"temporary Appointments","order":32,"predicate":"may make","subject":"if Vacancies happen by Resignation, or otherwise"}
+{"object":"a Senator who shall not have attained to the Age of thirty Years, and been nine Years a Citizen of the United States","order":33,"predicate":"shall be","subject":"No Person"}
+{"object":"President of the Senate","order":34,"predicate":"shall be","subject":"The Vice President of the United States"}
+{"object":"no Vote, unless they be equally divided","order":35,"predicate":"shall have","subject":"The Vice President"}
+{"object":"their other Officers, and also a President pro tempore","order":36,"predicate":"shall chuse","subject":"The Senate"}
+{"object":"the sole Power to try all Impeachments","order":37,"predicate":"shall have","subject":"The Senate"}
+{"object":"Oath or Affirmation","order":38,"predicate":"shall be on","subject":"When sitting for that Purpose"}
+{"object":"the Chief Justice","order":39,"predicate":"shall preside","subject":"When the President of the United States is tried"}
+{"object":"without the Concurrence of two thirds of the Members present","order":40,"predicate":"shall be convicted","subject":"no Person"}
+{"object":"removal from Office, and disqualification to hold and enjoy any Office of honor, Trust or Profit under the United States","order":41,"predicate":"shall not extend further than to","subject":"Judgment in Cases of Impeachment"}
+{"object":"Indictment, Trial, Judgment and Punishment, according to Law","order":42,"predicate":"shall nevertheless be liable and subject to","subject":"the Party convicted"}
+{"object":"each State by the Legislature thereof","order":43,"predicate":"shall be prescribed in","subject":"The Times, Places and Manner of holding Elections for Senators and Representatives"}
+{"object":"such Regulations, except as to the Places of chusing Senators","order":44,"predicate":"may at any time by Law make or alter","subject":"the Congress"}
+{"object":"at least once in every Year","order":45,"predicate":"shall assemble","subject":"The Congress"}
+{"object":"the first Monday in December, unless they shall by Law appoint a different Day","order":46,"predicate":"shall be on","subject":"such Meeting"}
+{"object":"the Judge of the Elections, Returns and Qualifications of its own Members","order":47,"predicate":"shall be","subject":"Each House"}
+{"object":"a Quorum to do Business","order":48,"predicate":"shall constitute","subject":"a Majority of each"}
+{"object":"from day to day","order":49,"predicate":"may adjourn","subject":"a smaller Number"}
+{"object":"the Attendance of absent Members","order":50,"predicate":"may be authorized to compel","subject":"[a smaller Number]"}
+{"object":"the Rules of its Proceedings","order":51,"predicate":"may determine","subject":"Each House"}
+{"object":"its Members for disorderly Behaviour","order":52,"predicate":"may punish","subject":"Each House"}
+{"object":"a Member","order":53,"predicate":"may expel","subject":"Each House"}
+{"object":"a Journal of its Proceedings","order":54,"predicate":"shall keep","subject":"Each House"}
+{"object":"the same, excepting such Parts as may in their Judgment require Secrecy","order":55,"predicate":"shall publish","subject":"Each House"}
+{"object":"the Journal","order":56,"predicate":"shall be entered on","subject":"the Yeas and Nays of the Members"}
+{"object":"for more than three days","order":57,"predicate":"shall adjourn","subject":"Neither House"}
+{"object":"any other Place than that in which the two Houses shall be sitting","order":58,"predicate":"[shall adjourn] to","subject":"Neither House"}
+{"object":"a Compensation for their Services","order":59,"predicate":"shall receive","subject":"The Senators and Representatives"}
+{"object":"Arrest during their Attendance at the Session of their respective Houses","order":60,"predicate":"shall be privileged from","subject":"They"}
+{"object":"in any other Place for any Speech or Debate in either House","order":61,"predicate":"shall not be questioned","subject":"they"}
+{"object":"any civil Office under the Authority of the United States","order":62,"predicate":"shall be appointed to","subject":"No Senator or Representative"}
+{"object":"a Member of either House during his Continuance in Office","order":63,"predicate":"shall be","subject":"no Person holding any Office under the United States"}
+{"object":"the House of Representatives","order":64,"predicate":"shall originate in","subject":"All Bills for raising Revenue"}
+{"object":"Amendments as on other Bills","order":65,"predicate":"may propose or concur with","subject":"the Senate"}
+{"object":"the President of the United States","order":66,"predicate":"shall be presented to","subject":"Every Bill which shall have passed the House of Representatives and the Senate"}
+{"object":"it","order":67,"predicate":"shall sign","subject":"If he approve, he"}
+{"object":"it, with his Objections to that House in which it shall have originated","order":68,"predicate":"shall return","subject":"if not, he"}
+{"object":"the Objections at large on their Journal","order":69,"predicate":"shall enter","subject":"who"}
+{"object":"it","order":70,"predicate":"shall proceed to reconsider","subject":"[who]"}
+{"object":"the Bill","order":71,"predicate":"shall agree to pass","subject":"If after such Reconsideration two thirds of that House"}
+{"object":"the other House","order":72,"predicate":"shall be sent, together with the Objections, to","subject":"it"}
+{"object":"","order":73,"predicate":"shall likewise be reconsidered","subject":"by which it"}
+{"object":"a Law","order":74,"predicate":"shall become","subject":"if approved by two thirds of that House, it"}
+{"object":"yeas and Nays","order":75,"predicate":"shall be determined by","subject":"the Votes of both Houses"}
+{"object":"the Journal of each House respectively","order":76,"predicate":"shall be entered on","subject":"the Names of the Persons voting for and against the Bill"}
+{"object":"a Law","order":77,"predicate":"shall be","subject":"If any Bill shall not be returned by the President within ten Days, the Same"}
+{"object":"a Law","order":78,"predicate":"shall not be","subject":"unless the Congress by their Adjournment prevent its Return, in which Case it"}
+{"object":"the President of the United States","order":79,"predicate":"shall be presented to","subject":"Every Order, Resolution, or Vote"}
+{"object":"him","order":80,"predicate":"shall be approved by","subject":"before the Same shall take Effect, [it]"}
+{"object":"two thirds of the Senate and House of Representatives","order":81,"predicate":"shall be repassed by","subject":"or being disapproved by him, [it]"}
+{"object":"Taxes, Duties, Imposts and Excises","order":82,"predicate":"shall have Power To lay and collect","subject":"The Congress"}
+{"object":"uniform throughout the United States","order":83,"predicate":"shall be","subject":"all Duties, Imposts and Excises"}
+{"object":"Money on the credit of the United States","order":84,"predicate":"shall have Power [To borrow]","subject":"The Congress"}
+{"object":"Commerce with foreign Nations, and among the several States, and with the Indian Tribes","order":85,"predicate":"shall have Power [To regulate]","subject":"The Congress"}
+{"object":"an uniform Rule of Naturalization, and uniform Laws on the subject of Bankruptcies throughout the United States","order":86,"predicate":"shall have Power [To establish]","subject":"The Congress"}
+{"object":"Money","order":87,"predicate":"shall have Power [To coin]","subject":"The Congress"}
+{"object":"the Value thereof, and of foreign Coin","order":88,"predicate":"shall have Power [To regulate]","subject":"The Congress"}
+{"object":"the Standard of Weights and Measures","order":89,"predicate":"shall have Power [To fix]","subject":"The Congress"}
+{"object":"the Punishment of counterfeiting the Securities and current Coin of the United States","order":90,"predicate":"shall have Power [To provide for]","subject":"The Congress"}
+{"object":"Post Offices and post Roads","order":91,"predicate":"shall have Power [To establish]","subject":"The Congress"}
+{"object":"the Progress of Science and useful Arts","order":92,"predicate":"shall have Power [To promote]","subject":"The Congress"}
+{"object":"Tribunals inferior to the supreme Court","order":93,"predicate":"shall have Power [To constitute]","subject":"The Congress"}
+{"object":"Piracies and Felonies committed on the high Seas, and Offences against the Law of Nations","order":94,"predicate":"shall have Power [To define and punish]","subject":"The Congress"}
+{"object":"War","order":95,"predicate":"shall have Power [To declare]","subject":"The Congress"}
+{"object":"Letters of Marque and Reprisal","order":96,"predicate":"shall have Power [To grant]","subject":"The Congress"}
+{"object":"Rules concerning Captures on Land and Water","order":97,"predicate":"shall have Power [To make]","subject":"The Congress"}
+{"object":"Armies","order":98,"predicate":"shall have Power [To raise and support]","subject":"The Congress"}
+{"object":"a longer Term than two Years","order":99,"predicate":"shall be for","subject":"no Appropriation of Money to that Use"}
+{"object":"a Navy","order":100,"predicate":"shall have Power [To provide and maintain]","subject":"The Congress"}
+{"object":"Rules for the Government and Regulation of the land and naval Forces","order":101,"predicate":"shall have Power [To make]","subject":"The Congress"}
+{"object":"the Militia to execute the Laws of the Union, suppress Insurrections and repel Invasions","order":102,"predicate":"shall have Power [To provide for calling forth]","subject":"The Congress"}
+{"object":"the Militia","order":103,"predicate":"shall have Power [To provide for organizing, arming, and disciplining]","subject":"The Congress"}
+{"object":"exclusive Legislation in all Cases whatsoever, over such District as may become the Seat of the Government of the United States","order":104,"predicate":"shall have Power [To exercise]","subject":"The Congress"}
+{"object":"like Authority over all Places purchased for the Erection of Forts, Magazines, Arsenals, dock-Yards, and other needful Buildings","order":105,"predicate":"shall have Power [To exercise]","subject":"The Congress"}
+{"object":"all Laws which shall be necessary and proper for carrying into Execution the foregoing Powers","order":106,"predicate":"shall have Power [To make]","subject":"The Congress"}
+{"object":"the Congress prior to the Year one thousand eight hundred and eight","order":107,"predicate":"shall not be prohibited by","subject":"The Migration or Importation of such Persons as any of the States now existing shall think proper to admit"}
+{"object":"such Importation, not exceeding ten dollars for each Person","order":108,"predicate":"may be imposed on","subject":"a Tax or duty"}
+{"object":"","order":109,"predicate":"shall not be suspended","subject":"The Privilege of the Writ of Habeas Corpus"}
+{"object":"","order":110,"predicate":"shall be passed","subject":"No Bill of Attainder or ex post facto Law"}
+{"object":"","order":111,"predicate":"shall be laid","subject":"No Capitation, or other direct, Tax"}
+{"object":"Articles exported from any State","order":112,"predicate":"shall be laid on","subject":"No Tax or Duty"}
+{"object":"any Regulation of Commerce or Revenue to the Ports of one State over those of another","order":113,"predicate":"shall be given by","subject":"No Preference"}
+{"object":"Duties in another","order":114,"predicate":"be obliged to enter, clear, or pay","subject":"nor shall Vessels bound to, or from, one State"}
+{"object":"the Treasury, but in Consequence of Appropriations made by Law","order":115,"predicate":"shall be drawn from","subject":"No Money"}
+{"object":"from time to time","order":116,"predicate":"shall be published","subject":"a regular Statement and Account of the Receipts and Expenditures of all public Money"}
+{"object":"the United States","order":117,"predicate":"shall be granted by","subject":"No Title of Nobility"}
+{"object":"any present, Emolument, Office, or Title, of any kind whatever, from any King, Prince, or foreign State","order":118,"predicate":"shall accept of","subject":"no Person holding any Office of Profit or Trust under them"}
+{"object":"any Treaty, Alliance, or Confederation","order":119,"predicate":"shall enter into","subject":"No State"}
+{"object":"Letters of Marque and Reprisal","order":120,"predicate":"shall grant","subject":"No State"}
+{"object":"Money","order":121,"predicate":"shall coin","subject":"No State"}
+{"object":"Bills of Credit","order":122,"predicate":"shall emit","subject":"No State"}
+{"object":"any Thing but gold and silver Coin a Tender in Payment of Debts","order":123,"predicate":"shall make","subject":"No State"}
+{"object":"any Bill of Attainder, ex post facto Law, or Law impairing the Obligation of Contracts","order":124,"predicate":"shall pass","subject":"No State"}
+{"object":"any Title of Nobility","order":125,"predicate":"shall grant","subject":"No State"}
+{"object":"any Imposts or Duties on Imports or Exports, without the Consent of the Congress","order":126,"predicate":"shall lay","subject":"No State"}
+{"object":"the Use of the Treasury of the United States","order":127,"predicate":"shall be for","subject":"the net Produce of all Duties and Imposts"}
+{"object":"the Revision and Controul of the Congress","order":128,"predicate":"shall be subject to","subject":"all such Laws"}
+{"object":"any Duty of Tonnage, without the Consent of Congress","order":129,"predicate":"shall lay","subject":"No State"}
+{"object":"Troops, or Ships of War in time of Peace","order":130,"predicate":"shall keep","subject":"No State"}
+{"object":"any Agreement or Compact with another State, or with a foreign Power","order":131,"predicate":"shall enter into","subject":"No State"}
+{"object":"War, unless actually invaded","order":132,"predicate":"shall engage in","subject":"No State"}
+{"object":"a President of the United States of America","order":133,"predicate":"shall be vested in","subject":"The executive Power"}
+{"object":"his Office during the Term of four Years","order":134,"predicate":"shall hold","subject":"He"}
+{"object":"","order":135,"predicate":"be elected","subject":"[He], together with the Vice President"}
+{"object":"a Number of Electors","order":136,"predicate":"shall appoint","subject":"Each State"}
+{"object":"an Elector","order":137,"predicate":"shall be appointed","subject":"no Senator or Representative, or Person holding an Office of Trust or Profit under the United States"}
+{"object":"their respective States","order":138,"predicate":"shall meet in","subject":"The Electors"}
+{"object":"two Persons","order":139,"predicate":"shall vote by Ballot for","subject":"[The Electors]"}
+{"object":"a List of all the Persons voted for, and of the Number of Votes for each","order":140,"predicate":"shall make","subject":"They"}
+{"object":"","order":141,"predicate":"shall sign and certify","subject":"which List they"}
+{"object":"the Seat of the Government of the United States","order":142,"predicate":"shall transmit sealed to","subject":"[which List they]"}
+{"object":"all the Certificates","order":143,"predicate":"shall, in the Presence of the Senate and House of Representatives, open","subject":"The President of the Senate"}
+{"object":"","order":144,"predicate":"shall then be counted","subject":"the Votes"}
+{"object":"the President","order":145,"predicate":"shall be","subject":"The Person having the greatest Number of Votes"}
+{"object":"one of them for President","order":146,"predicate":"shall immediately chuse by Ballot","subject":"if there be more than one who have such Majority, and have an equal Number of Votes"}
+{"object":"the President","order":147,"predicate":"shall in like Manner chuse","subject":"if no Person have a Majority, then from the five highest on the List the said House"}
+{"object":"States","order":148,"predicate":"shall be taken by","subject":"the Votes"}
+{"object":"one Vote","order":149,"predicate":"having","subject":"the Representation from each State"}
+{"object":"a Member or Members from two thirds of the States","order":150,"predicate":"shall consist of","subject":"A quorum for this Purpose"}
+{"object":"a Choice","order":151,"predicate":"shall be necessary to","subject":"a Majority of all the States"}
+{"object":"the Vice President","order":152,"predicate":"shall be","subject":"after the Choice of the President, the Person having the greatest Number of Votes of the Electors"}
+{"object":"the Vice President","order":153,"predicate":"shall chuse from them by Ballot","subject":"if there should remain two or more who have equal Votes"}
+{"object":"the Time of chusing the Electors, and the Day on which they shall give their Votes","order":154,"predicate":"may determine","subject":"The Congress"}
+{"object":"the same throughout the United States","order":155,"predicate":"shall be","subject":"which Day"}
+{"object":"the Office of President","order":156,"predicate":"shall be eligible to","subject":"No Person except a natural born Citizen"}
+{"object":"that Office who shall not have attained to the Age of thirty five Years, and been fourteen Years a Resident within the United States","order":157,"predicate":"be eligible to","subject":"neither shall any Person"}
+{"object":"the Vice President","order":158,"predicate":"shall devolve on","subject":"In Case of the Removal of the President from Office, or of his Death, Resignation, or Inability to discharge the Powers and Duties of the said Office, the Same"}
+{"object":"the Case of Removal, Death, Resignation or Inability, both of the President and Vice President","order":159,"predicate":"may by Law provide for","subject":"the Congress"}
+{"object":"accordingly","order":160,"predicate":"shall act","subject":"such Officer"}
+{"object":"for his Services, a Compensation","order":161,"predicate":"shall receive","subject":"The President"}
+{"object":"the Period for which he shall have been elected","order":162,"predicate":"shall neither be encreased nor diminished during","subject":"which"}
+{"object":"any other Emolument from the United States, or any of them","order":163,"predicate":"shall not receive within that Period","subject":"he"}
+{"object":"the following Oath or Affirmation","order":164,"predicate":"shall take","subject":"Before he enter on the Execution of his Office, he"}
+{"object":"Commander in Chief of the Army and Navy of the United States, and of the Militia of the several States","order":165,"predicate":"shall be","subject":"The President"}
+{"object":"the Opinion, in writing, of the principal Officer in each of the executive Departments","order":166,"predicate":"may require","subject":"he"}
+{"object":"Reprieves and Pardons for Offences against the United States, except in Cases of Impeachment","order":167,"predicate":"shall have Power to grant","subject":"he"}
+{"object":"Treaties","order":168,"predicate":"shall have Power, by and with the Advice and Consent of the Senate, to make","subject":"He"}
+{"object":"Ambassadors, other public Ministers and Consuls, Judges of the supreme Court, and all other Officers of the United States","order":169,"predicate":"shall nominate, and by and with the Advice and Consent of the Senate, shall appoint","subject":"he"}
+{"object":"the Appointment of such inferior Officers, in the President alone, in the Courts of Law, or in the Heads of Departments","order":170,"predicate":"may by Law vest","subject":"the Congress"}
+{"object":"all Vacancies that may happen during the Recess of the Senate","order":171,"predicate":"shall have Power to fill up","subject":"The President"}
+{"object":"the Congress Information of the State of the Union","order":172,"predicate":"shall from time to time give to","subject":"He"}
+{"object":"their Consideration such Measures as he shall judge necessary and expedient","order":173,"predicate":"shall recommend to","subject":"[He]"}
+{"object":"both Houses, or either of them","order":174,"predicate":"may, on extraordinary Occasions, convene","subject":"he"}
+{"object":"them to such Time as he shall think proper","order":175,"predicate":"may adjourn","subject":"in Case of Disagreement between them, with Respect to the Time of Adjournment, he"}
+{"object":"Ambassadors and other public Ministers","order":176,"predicate":"shall receive","subject":"he"}
+{"object":"the Laws be faithfully executed","order":177,"predicate":"shall take Care that","subject":"he"}
+{"object":"all the Officers of the United States","order":178,"predicate":"shall Commission","subject":"[he]"}
+{"object":"Office on Impeachment for, and Conviction of, Treason, Bribery, or other high Crimes and Misdemeanors","order":179,"predicate":"shall be removed from","subject":"The President, Vice President and all civil Officers of the United States"}
+{"object":"one supreme Court, and in such inferior Courts as the Congress may from time to time ordain and establish","order":180,"predicate":"shall be vested in","subject":"The judicial Power of the United States"}
+{"object":"their Offices during good Behaviour","order":181,"predicate":"shall hold","subject":"The Judges, both of the supreme and inferior Courts"}
+{"object":"at stated Times, for their Services, a Compensation","order":182,"predicate":"shall receive","subject":"[The Judges]"}
+{"object":"their Continuance in Office","order":183,"predicate":"shall not be diminished during","subject":"which"}
+{"object":"all Cases, in Law and Equity, arising under this Constitution","order":184,"predicate":"shall extend to","subject":"The judicial Power"}
+{"object":"all Cases affecting Ambassadors, other public Ministers and Consuls","order":185,"predicate":"[shall extend] to","subject":"The judicial Power"}
+{"object":"all Cases of admiralty and maritime Jurisdiction","order":186,"predicate":"[shall extend] to","subject":"The judicial Power"}
+{"object":"Controversies to which the United States shall be a Party","order":187,"predicate":"[shall extend] to","subject":"The judicial Power"}
+{"object":"Controversies between two or more States","order":188,"predicate":"[shall extend] to","subject":"The judicial Power"}
+{"object":"Controversies between a State and Citizens of another State","order":189,"predicate":"[shall extend] to","subject":"The judicial Power"}
+{"object":"Controversies between Citizens of different States","order":190,"predicate":"[shall extend] to","subject":"The judicial Power"}
+{"object":"Controversies between Citizens of the same State claiming Lands under Grants of different States","order":191,"predicate":"[shall extend] to","subject":"The judicial Power"}
+{"object":"Controversies between a State, or the Citizens thereof, and foreign States, Citizens or Subjects","order":192,"predicate":"[shall extend] to","subject":"The judicial Power"}
+{"object":"original Jurisdiction","order":193,"predicate":"shall have","subject":"In all Cases affecting Ambassadors, other public Ministers and Consuls, and those in which a State shall be Party, the supreme Court"}
+{"object":"appellate Jurisdiction","order":194,"predicate":"shall have","subject":"In all the other Cases before mentioned, the supreme Court"}
+{"object":"Jury","order":195,"predicate":"shall be by","subject":"The Trial of all Crimes"}
+{"object":"the State where the said Crimes shall have been committed","order":196,"predicate":"shall be held in","subject":"such Trial"}
+{"object":"such Place or Places as the Congress may by Law have directed","order":197,"predicate":"shall be at","subject":"when not committed within any State, the Trial"}
+{"object":"levying War against them, or in adhering to their Enemies, giving them Aid and Comfort","order":198,"predicate":"shall consist only in","subject":"Treason against the United States"}
+{"object":"Treason unless on the Testimony of two Witnesses to the same overt Act, or on Confession in open Court","order":199,"predicate":"shall be convicted of","subject":"No Person"}
+{"object":"the Punishment of Treason","order":200,"predicate":"shall have Power to declare","subject":"The Congress"}
+{"object":"Corruption of Blood, or Forfeiture except during the Life of the Person attainted","order":201,"predicate":"shall work","subject":"no Attainder of Treason"}
+{"object":"each State to the public Acts, Records, and judicial Proceedings of every other State","order":202,"predicate":"shall be given in","subject":"Full Faith and Credit"}
+{"object":"the Manner in which such Acts, Records and Proceedings shall be proved, and the Effect thereof","order":203,"predicate":"may by general Laws prescribe","subject":"the Congress"}
+{"object":"all Privileges and Immunities of Citizens in the several States","order":204,"predicate":"shall be entitled to","subject":"The Citizens of each State"}
+{"object":"to be removed to the State having Jurisdiction of the Crime","order":205,"predicate":"shall on Demand of the executive Authority of the State from which he fled, be delivered up","subject":"A Person charged in any State with Treason, Felony, or other Crime, who shall flee from Justice, and be found in another State"}
+{"object":"such Service or Labour, in Consequence of any Law or Regulation therein","order":206,"predicate":"shall be discharged from","subject":"No Person held to Service or Labour in one State, under the Laws thereof, escaping into another"}
+{"object":"Claim of the Party to whom such Service or Labour may be due","order":207,"predicate":"shall be delivered up on","subject":"[No Person held to Service or Labour]"}
+{"object":"the Congress into this Union","order":208,"predicate":"may be admitted by","subject":"New States"}
+{"object":"the Jurisdiction of any other State","order":209,"predicate":"shall be formed or erected within","subject":"no new State"}
+{"object":"the Junction of two or more States, or Parts of States, without the Consent of the Legislatures of the States concerned as well as of the Congress","order":210,"predicate":"be formed by","subject":"nor any State"}
+{"object":"the Territory or other Property belonging to the United States","order":211,"predicate":"shall have Power to dispose of","subject":"The Congress"}
+{"object":"all needful Rules and Regulations respecting the Territory or other Property belonging to the United States","order":212,"predicate":"shall have Power to make","subject":"The Congress"}
+{"object":"any Claims of the United States, or of any particular State","order":213,"predicate":"shall be so construed as to Prejudice","subject":"nothing in this Constitution"}
+{"object":"every State in this Union a Republican Form of Government","order":214,"predicate":"shall guarantee to","subject":"The United States"}
+{"object":"each of them against Invasion","order":215,"predicate":"shall protect","subject":"[The United States]"}
+{"object":"against domestic Violence on Application of the Legislature, or of the Executive","order":216,"predicate":"shall protect","subject":"[The United States]"}
+{"object":"Amendments to this Constitution","order":217,"predicate":"shall propose","subject":"The Congress, whenever two thirds of both Houses shall deem it necessary"}
+{"object":"a Convention for proposing Amendments","order":218,"predicate":"shall call","subject":"or, on the Application of the Legislatures of two thirds of the several States, [The Congress]"}
+{"object":"all Intents and Purposes, as Part of this Constitution","order":219,"predicate":"shall be valid to","subject":"which"}
+{"object":"the first and fourth Clauses in the Ninth Section of the first Article","order":220,"predicate":"shall in any Manner affect","subject":"no Amendment which may be made prior to the Year One thousand eight hundred and eight"}
+{"object":"its equal Suffrage in the Senate","order":221,"predicate":"shall be deprived of","subject":"no State, without its Consent"}
+{"object":"the United States under this Constitution, as under the Confederation","order":222,"predicate":"shall be as valid against","subject":"All Debts contracted and Engagements entered into, before the Adoption of this Constitution"}
+{"object":"the supreme Law of the Land","order":223,"predicate":"shall be","subject":"This Constitution, and the Laws of the United States which shall be made in Pursuance thereof; and all Treaties made, or which shall be made, under the Authority of the United States"}
+{"object":"thereby","order":224,"predicate":"shall be bound","subject":"the Judges in every State"}
+{"object":"Oath or Affirmation, to support this Constitution","order":225,"predicate":"shall be bound by","subject":"The Senators and Representatives before mentioned, and the Members of the several State Legislatures, and all executive and judicial Officers, both of the United States and of the several States"}
+{"object":"a Qualification to any Office or public Trust under the United States","order":226,"predicate":"shall ever be required as","subject":"no religious Test"}
+{"object":"the Establishment of this Constitution between the States so ratifying the Same","order":227,"predicate":"shall be sufficient for","subject":"The Ratification of the Conventions of nine States"}
+{"object":"the seventh and eighth Lines of the first Page","order":228,"predicate":"being interlined between","subject":"The Word, 'the'"}
+{"object":"an Erazure in the fifteenth Line of the first Page","order":229,"predicate":"being partly written on","subject":"The Word 'Thirty'"}
+{"object":"the thirty second and thirty third Lines of the first Page","order":230,"predicate":"being interlined between","subject":"The Words 'is tried'"}
+{"object":"the forty third and forty fourth Lines of the second Page","order":231,"predicate":"being interlined between","subject":"the Word 'the'"}
+{"object":"our Names","order":232,"predicate":"have hereunto subscribed","subject":"We"}
+

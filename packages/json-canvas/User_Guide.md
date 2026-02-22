@@ -149,6 +149,10 @@ json-canvas md extract \
   --langs ndjson,jsonl,jsonlines,json,hash
 ```
 
+Helpful flags:
+- `--loose-ndjson`: also parse standalone JSON object lines outside fences (heuristic)
+- `--canon-filter`: only emit records that the mnemonic-manifold canon decoder can consume (useful for `--strict` pipelines)
+
 Find large nodes:
 ```bash
 json-canvas list diagram.json --filter "width*height>10000"

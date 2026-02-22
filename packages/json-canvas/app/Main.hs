@@ -72,6 +72,7 @@ data MdExtractOptions = MdExtractOptions
   , mdLangs :: String
   , mdAggregate :: Bool
   , mdLooseNdjson :: Bool
+  , mdCanonFilter :: Bool
   } deriving (Show)
 
 data MnemonicManifoldCommand
@@ -262,6 +263,7 @@ parseMdExtract = MdExtractOptions
         , pure True
         ]
   <*> switch (long "loose-ndjson" <> help "Also parse loose JSON lines outside fences")
+  <*> switch (long "canon-filter" <> help "Only emit records compatible with mnemonic-manifold canon decoding")
   where
     autoMode = maybeReader $ \s -> case s of
       "ndjson-only" -> Just ModeNdjsonOnly
@@ -542,6 +544,7 @@ runMd = \case
           , ecLangs = map (T.pack . trim) (splitComma mdLangs)
           , ecAggregate = mdAggregate
           , ecLooseNdjson = mdLooseNdjson
+          , ecCanonFilter = mdCanonFilter
           }
     extractNdjsonFromTree cfg
   where
