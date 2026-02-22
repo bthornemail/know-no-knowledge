@@ -29,6 +29,7 @@ library
 executable json-canvas
   hs-source-dirs:      app
   main-is:             Main.hs
+  other-modules:       Paths_json_canvas_cli
   build-depends:
     base >= 4.17 && < 4.20,
     aeson,

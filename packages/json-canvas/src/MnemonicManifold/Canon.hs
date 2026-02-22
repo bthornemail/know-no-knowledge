@@ -1,3 +1,4 @@
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 
@@ -7,12 +8,16 @@ module MnemonicManifold.Canon
   , decodeCanonTriples
   ) where
 
+import Control.Applicative ((<|>))
+import Data.Aeson ((.:), (.:?), FromJSON(..))
 import qualified Data.Aeson as A
 import qualified Data.Aeson.Types as A
+import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Lazy.Char8 as BL
-import qualified Data.Text as T
+import Data.Maybe (catMaybes, fromMaybe)
 import Data.Text (Text)
-import Data.Maybe (fromMaybe)
+import qualified Data.Text as T
+
 import MnemonicManifold.Spec (Triple(..), Versions(..))
 
 data Evidence = Evidence
@@ -38,144 +43,163 @@ data InputContext = InputContext
 
 decodeCanonTriples :: Bool -> Text -> BL.ByteString -> Either Text [CanonTriple]
 decodeCanonTriples strictMode docId input =
-  let ctx = InputContext
+  let allLines = BL.lines input
+      ctx = InputContext
         { icDocId = docId
         , icDocBytes = fromIntegral (BL.length input)
-        , icDocLines = length (BL.lines input)
+        , icDocLines = length allLines
         }
-      lineOffsets = snd $ foldl step (0 :: Int, []) (BL.lines input)
-      numbered = zip3 [1..] lineOffsets (BL.lines input)
-  in foldl (accum strictMode ctx) (Right []) numbered
+      items = zip3 [1..] (computeOffsets allLines) allLines
+  in foldl (accum strictMode ctx) (Right []) items
+
+computeOffsets :: [BL.ByteString] -> [(Int, Int, Int)]
+computeOffsets = snd . foldl step (0, [])
   where
     step (off, acc) line =
       let start = off
           len = fromIntegral (BL.length line)
           end = start + len
-          next = end + 1
-      in (next, acc ++ [(start, end, len)])
+      in (end + 1, acc ++ [(start, end, len)])
 
-    accum True _ (Left err) _ = Left err
-    accum True ctx (Right acc) item = do
-      ct <- decodeLine True ctx item
-      pure (acc ++ [ct])
-    accum False ctx (Right acc) item =
-      case decodeLine False ctx item of
-        Left _ -> Right acc
-        Right ct -> Right (acc ++ [ct])
-    accum False _ (Left err) _ = Left err
+accum
+  :: Bool
+  -> InputContext
+  -> Either Text [CanonTriple]
+  -> (Int, (Int, Int, Int), BL.ByteString)
+  -> Either Text [CanonTriple]
+accum True ctx (Right acc) item = do
+  case decodeLine True ctx item of
+    Left err
+      | "empty line" `T.isInfixOf` err -> Right acc
+      | "skip " `T.isInfixOf` err -> Right acc
+      | otherwise -> Left err
+    Right ct -> Right (acc ++ [ct])
+accum True _ (Left err) _ = Left err
+accum False ctx (Right acc) item =
+  case decodeLine False ctx item of
+    Left _ -> Right acc
+    Right ct -> Right (acc ++ [ct])
+accum False _ (Left err) _ = Left err
 
 decodeLine :: Bool -> InputContext -> (Int, (Int, Int, Int), BL.ByteString) -> Either Text CanonTriple
 decodeLine strictMode ctx (lineNo, (spanStart, spanEnd, lineLen), rawLine)
   | BL.null rawLine =
-      if strictMode then Left (linePrefix <> "empty line") else Left (linePrefix <> "skip empty line")
+      Left (prefix <> "empty line")
   | otherwise =
       case A.eitherDecode rawLine of
         Left err ->
           if strictMode
-            then Left $ linePrefix <> "invalid JSON: " <> T.pack err
-            else Left $ linePrefix <> "skip invalid JSON"
-        Right v ->
-          case parseAnyCanon ctx spanStart spanEnd lineLen v of
+            then Left (prefix <> "invalid JSON: " <> T.pack err)
+            else Left (prefix <> "skip invalid JSON")
+        Right v
+          | isSkippableMeta v -> Left (prefix <> "skip meta event")
+          | otherwise ->
+          case A.parseMaybe (parseCanonTriple ctx fallbackEv) v of
             Nothing ->
               if strictMode
-                then Left $ linePrefix <> "unrecognized canon record"
-                else Left $ linePrefix <> "skip unrecognized record"
+                then Left (prefix <> "unrecognized canon record")
+                else Left (prefix <> "skip unrecognized record")
             Just ct -> Right ct
   where
-    linePrefix = "line " <> T.pack (show lineNo) <> ": "
+    prefix = "line " <> T.pack (show lineNo) <> ": "
+    fallbackEv = Evidence
+      { evDocBytes = icDocBytes ctx
+      , evDocLines = icDocLines ctx
+      , evSpanStart = spanStart
+      , evSpanEnd = spanEnd
+      , evLineLength = lineLen
+      }
 
-parseAnyCanon :: InputContext -> Int -> Int -> Int -> A.Value -> Maybe CanonTriple
-parseAnyCanon ctx spanStart spanEnd lineLen v = do
-  A.Object o <- pure v
-  let versions = parseVersions o
-      docId = fromMaybe (icDocId ctx) (parseDocId o)
-
-  triple <- parseTriple o <|> parseCanonEventTriple o
-  evidence <- parseEvidence o <|> pure (fallbackEvidence ctx spanStart spanEnd lineLen)
-  pure $ CanonTriple docId versions triple evidence
+isSkippableMeta :: A.Value -> Bool
+isSkippableMeta = \case
+  A.Object o ->
+    case A.parseMaybe (\oo -> (oo .:? "event" :: A.Parser (Maybe Text))) o of
+      Nothing -> False
+      Just Nothing -> False
+      Just (Just ev) ->
+        ev `elem` ["canon","series_start","series_end","canon_complete","speaker.canon.start","speaker.source.start"]
+        || (not (hasAny o ["text","quote","description"]) && ev `elem` ["canon","series_start","series_end","canon_complete"])
+  _ -> False
   where
-    (<|>) :: Maybe a -> Maybe a -> Maybe a
-    (<|>) (Just a) _ = Just a
-    (<|>) Nothing b = b
+    hasAny o ks = any (`KM.member` o) ks
 
-parseVersions :: A.Object -> Versions
-parseVersions o =
-  Versions
-    { lexiconVersion = fromMaybe "canon.v1" (o A..:? "lexicon_version")
-    , parserVersion = fromMaybe "canon.v1" (o A..:? "parser_version")
+parseCanonTriple :: InputContext -> Evidence -> A.Value -> A.Parser CanonTriple
+parseCanonTriple ctx fallbackEv = A.withObject "canon" $ \o -> do
+  docId <- parseDocId o
+  versions <- parseVersions o
+  triple <- parseSPO o <|> parseNestedSPO o <|> parseEventTriple o
+  evidence <- parseEvidence o <|> pure fallbackEv
+  pure $ CanonTriple
+    { ctDoc = fromMaybe (icDocId ctx) docId
+    , ctVersions = versions
+    , ctTriple = triple
+    , ctEvidence = evidence
     }
 
-parseDocId :: A.Object -> Maybe Text
-parseDocId o =
-  case o A..:? "doc" of
-    Just (A.String t) -> Just t
-    Just (A.Object d) -> d A..:? "path"
-    _ -> Nothing
+parseDocId :: A.Object -> A.Parser (Maybe Text)
+parseDocId o = do
+  mv <- o .:? "doc" :: A.Parser (Maybe A.Value)
+  case mv of
+    Just (A.String t) -> pure (Just t)
+    Just (A.Object d) -> d .:? "path"
+    _ -> pure Nothing
 
-parseTriple :: A.Object -> Maybe Triple
-parseTriple o =
-  parseSPO o <|> parseNested
-  where
-    parseSPO obj = do
-      s <- obj A..:? "subject"
-      p <- obj A..:? "predicate"
-      ob <- obj A..:? "object"
-      pure $ Triple s p ob
+parseVersions :: A.Object -> A.Parser Versions
+parseVersions o = do
+  lexV <- o .:? "lexicon_version"
+  parV <- o .:? "parser_version"
+  pure $ Versions
+    { lexiconVersion = fromMaybe "canon.v1" lexV
+    , parserVersion = fromMaybe "canon.v1" parV
+    }
 
-    parseNested = do
-      A.Object t <- o A..:? "triple"
-      s <- t A..:? "subject"
-      p <- t A..:? "predicate"
-      ob <- t A..:? "object"
-      pure $ Triple s p ob
+parseSPO :: A.Object -> A.Parser Triple
+parseSPO o =
+  Triple
+    <$> o .: "subject"
+    <*> o .: "predicate"
+    <*> o .: "object"
 
-    (<|>) :: Maybe a -> Maybe a -> Maybe a
-    (<|>) (Just a) _ = Just a
-    (<|>) Nothing b = b
+parseNestedSPO :: A.Object -> A.Parser Triple
+parseNestedSPO o = do
+  t <- o .: "triple"
+  A.withObject "triple" (\to -> Triple <$> to .: "subject" <*> to .: "predicate" <*> to .: "object") t
 
-parseCanonEventTriple :: A.Object -> Maybe Triple
-parseCanonEventTriple o = do
-  ev <- o A..:? "event"
+parseEventTriple :: A.Object -> A.Parser Triple
+parseEventTriple o = do
+  ev <- o .: "event"
   obj <- pickText o
+  mSeries <- o .:? "series"
+  mArticle <- o .:? "article"
+  mId <- o .:? "id"
+  mName <- o .:? "name"
+  mSpeaker <- o .:? "speaker"
+  mVoice <- o .:? "voice"
+  mType <- o .:? "type"
   let predParts =
-        [ ("series", o A..:? "series")
-        , ("article", o A..:? "article")
-        , ("id", o A..:? "id")
-        , ("name", o A..:? "name")
-        , ("speaker", o A..:? "speaker")
-        , ("voice", o A..:? "voice")
-        , ("type", o A..:? "type")
-        ]
-      p = T.intercalate "|" $ filter (not . T.null) $ map renderPart predParts
+        catMaybes
+          [ render "series" <$> mSeries
+          , render "article" <$> mArticle
+          , render "id" <$> mId
+          , render "name" <$> mName
+          , render "speaker" <$> mSpeaker
+          , render "voice" <$> mVoice
+          , render "type" <$> mType
+          ]
+      p = T.intercalate "|" predParts
   pure $ Triple ev p obj
   where
     pickText obj =
-      (obj A..:? "text") <|> (obj A..:? "quote") <|> (obj A..:? "description")
+      (obj .: "text") <|> (obj .: "quote") <|> (obj .: "description")
+    render k v = k <> "=" <> v
 
-    renderPart (k, mv) = case mv of
-      Nothing -> ""
-      Just v -> k <> "=" <> v
-
-    (<|>) :: Maybe a -> Maybe a -> Maybe a
-    (<|>) (Just a) _ = Just a
-    (<|>) Nothing b = b
-
-parseEvidence :: A.Object -> Maybe Evidence
+parseEvidence :: A.Object -> A.Parser Evidence
 parseEvidence o = do
-  A.Object e <- o A..:? "evidence"
-  docBytes <- e A..:? "doc_bytes"
-  docLines <- e A..:? "doc_lines"
-  spanStart <- e A..:? "span_start"
-  spanEnd <- e A..:? "span_end"
-  let lineLen = fromMaybe 0 (e A..:? "line_length")
-  pure $ Evidence docBytes docLines spanStart spanEnd lineLen
-
-fallbackEvidence :: InputContext -> Int -> Int -> Int -> Evidence
-fallbackEvidence InputContext{..} spanStart spanEnd lineLen =
-  Evidence
-    { evDocBytes = icDocBytes
-    , evDocLines = icDocLines
-    , evSpanStart = spanStart
-    , evSpanEnd = spanEnd
-    , evLineLength = lineLen
-    }
+  eVal <- o .: "evidence"
+  A.withObject "evidence" (\e -> Evidence
+    <$> e .: "doc_bytes"
+    <*> e .: "doc_lines"
+    <*> e .: "span_start"
+    <*> e .: "span_end"
+    <*> (fromMaybe 0 <$> (e .:? "line_length"))
+    ) eVal

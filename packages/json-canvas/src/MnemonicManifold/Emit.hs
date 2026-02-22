@@ -52,7 +52,7 @@ emitStaticFanoEvents =
             [ ("kind", jsonText "mnemonic.fano.point")
             , ("bits", jsonText (pointBitsText p))
             ]
-      in (textNode nid pos size payload) `withColor` Just (PresetColor 2)
+      in withColor (Just (PresetColor 2)) (textNode nid pos size payload)
 
     lineNode (Line name (p,q,r), i) =
       let nid = lineNodeId name
@@ -63,7 +63,7 @@ emitStaticFanoEvents =
             , ("name", jsonText name)
             , ("points", jsonArray (map (jsonText . pointBitsText) [p,q,r]))
             ]
-      in (textNode nid pos size payload) `withColor` Just (PresetColor 5)
+      in withColor (Just (PresetColor 5)) (textNode nid pos size payload)
 
 emitClauseEvents :: EmitOptions -> CanonTriple -> [CanvasEvent]
 emitClauseEvents EmitOptions{..} CanonTriple{..} =
@@ -94,8 +94,7 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
                 , ("char_length", jsonInt charLength)
                 ])
             ]
-      in (textNode clauseNodeId (evDocBytes, evDocLines) (evSpanStart, charLength) payload)
-           `withColor` Just (PresetColor 1)
+      in withColor (Just (PresetColor 1)) (textNode clauseNodeId (evDocBytes, evDocLines) (evSpanStart, charLength) payload)
 
     a = hashS ctVersions (tSubject ctTriple)
     b = hashO ctVersions (tObject ctTriple)
@@ -119,7 +118,7 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
                 ])
             ]
           eid = EdgeId ("MM:E:" <> shortHashHex16 (unNodeId clauseNodeId <> ":P:" <> pointBitsText p))
-      in EvAddEdge $ (edge eid clauseNodeId (pointNodeId p)) `withEdgeLabel` Just payload
+      in EvAddEdge $ withEdgeLabel (Just payload) (edge eid clauseNodeId (pointNodeId p))
 
     lineEdges :: [CanvasEvent]
     lineEdges = flip map allLines $ \(Line name (p,q,r)) ->
@@ -134,7 +133,7 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
             , ("xor_ok", jsonBool ok)
             ]
           eid = EdgeId ("MM:E:" <> shortHashHex16 (unNodeId clauseNodeId <> ":L:" <> name))
-      in EvAddEdge $ (edge eid clauseNodeId (lineNodeId name)) `withEdgeLabel` Just payload
+      in EvAddEdge $ withEdgeLabel (Just payload) (edge eid clauseNodeId (lineNodeId name))
 
     centroidEvents :: [CanvasEvent]
     centroidEvents
@@ -147,9 +146,9 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
                 , ("stop_metric", T.pack (show (stopMetric ctVersions ctTriple)))
                 , ("sabbath", jsonBool (sabbath ctVersions ctTriple))
                 ]
-              node = (textNode nid (evDocBytes, evDocLines + 40) (240, 80) payload) `withColor` Just (PresetColor 6)
+              node = withColor (Just (PresetColor 6)) (textNode nid (evDocBytes, evDocLines + 40) (240, 80) payload)
               eid = EdgeId ("MM:E:" <> shortHashHex16 (unNodeId clauseNodeId <> ":OBSERVER"))
-              e = (edge eid clauseNodeId nid) `withEdgeLabel` Just (jsonObj [("kind", jsonText "mnemonic.observer.link")])
+              e = withEdgeLabel (Just (jsonObj [("kind", jsonText "mnemonic.observer.link")])) (edge eid clauseNodeId nid)
           in [EvAddNode node, EvAddEdge e]
 
 pointNodeId :: Point -> NodeId

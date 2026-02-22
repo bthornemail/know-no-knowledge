@@ -25,7 +25,7 @@ main = do
   canon <- BL.readFile "test/vectors/canon-mini.ndjson"
   golden <- BL.readFile "test/vectors/mnemonic-manifold.golden.ndjson"
 
-  triples <- case decodeCanonTriples True "testdoc" canon of
+  triples <- case decodeCanonTriples True "test/vectors/canon-mini.ndjson" canon of
     Left err -> do
       putStrLn ("FAIL: decodeCanonTriples: " ++ T.unpack err)
       exitFailure
@@ -43,4 +43,3 @@ main = do
     Right _ -> do
       putStrLn "FAIL: strict mode should reject unrecognized record"
       exitFailure
-
