@@ -72,17 +72,26 @@ writeManifest ManifestOptions{..} = when moEmitManifest $ do
   gitCommit <- if moIncludeGitHead then resolveGitHead moStrict else pure Nothing
   timeVal <- if moTimestamp then resolveSourceDateEpoch else pure Nothing
 
-  let manifestText =
-        jsonObj
-          [ ("version", jsonText "ulp.manifest.v0.1")
-          , ("root", jsonText (T.pack moRoot))
-          , ("inputs", jsonArray (map renderInput inputs))
-          , ("outputs", renderOutputs outputsAggregate outputFiles)
-          , ("config", renderConfig)
-          , ("tool", renderTool gitCommit)
-          , ("time", maybe jsonNull jsonInteger timeVal)
-          ]
-      outBytes = BL.fromStrict (TE.encodeUtf8 manifestText) <> "\n"
+  let baseFields =
+        [ ("version", jsonText "ulp.manifest.v0.2")
+        , ("root", jsonText (T.pack moRoot))
+        , ("inputs", jsonArray (map renderInput inputs))
+        , ("outputs", renderOutputs outputsAggregate outputFiles)
+        , ("config", renderConfig)
+        , ("tool", renderTool gitCommit)
+        , ("time", maybe jsonNull jsonInteger timeVal)
+        ]
+      baseText = jsonObj baseFields
+      baseBytes = TE.encodeUtf8 baseText <> "\n"
+      rootHex = hex (sha256 baseBytes)
+      finalFields =
+        case baseFields of
+          (v@(k,_):rest) | k == "version" ->
+            v : ("root_sha256", jsonText rootHex) : rest
+          _ ->
+            ("root_sha256", jsonText rootHex) : baseFields
+      finalText = jsonObj finalFields
+      outBytes = BL.fromStrict (TE.encodeUtf8 finalText) <> "\n"
   BL.writeFile moManifestPath outBytes
   where
     renderConfig =
