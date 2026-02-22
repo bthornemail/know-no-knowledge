@@ -1,0 +1,13 @@
+services:
+  json-canvas:
+    build:
+      context: ./packages/json-canvas
+      dockerfile: Dockerfile
+    image: json-canvas:local
+    working_dir: /work
+    volumes:
+      - ./docs:/work/docs:ro
+      - ./build:/work/build
+    environment:
+      - LANG=C.UTF-8
+
