@@ -38,6 +38,7 @@ import MnemonicManifold.Canon (decodeCanonTriples)
 import MnemonicManifold.Emit (BuildRootInfo(..), EmitOptions(..), emitStaticFanoEvents, emitClauseEvents)
 import Desktop.MdExtract (ExtractConfig(..), ExtractMode(..), extractNdjsonFromTree)
 import Desktop.MdManifest (ManifestOptions(..), writeManifest)
+import Desktop.MdVerifyEvidence (VerifyConfig(..), verifyEvidenceNdjsonBytes)
 
 -- | Command line options
 data Options = Options
@@ -64,6 +65,7 @@ data Command
 
 data MdCommand
   = MdExtract MdExtractOptions
+  | MdVerifyEvidence MdVerifyEvidenceOptions
   deriving (Show)
 
 data MdExtractOptions = MdExtractOptions
@@ -80,6 +82,12 @@ data MdExtractOptions = MdExtractOptions
   , mdManifestPath :: Maybe FilePath
   , mdIncludeGitHead :: Bool
   , mdTimestamp :: Bool
+  } deriving (Show)
+
+data MdVerifyEvidenceOptions = MdVerifyEvidenceOptions
+  { mveIn :: FilePath
+  , mveRoot :: FilePath
+  , mveStrict :: Bool
   } deriving (Show)
 
 data MnemonicManifoldCommand
@@ -224,11 +232,17 @@ data ImportFormat
 
 -- | Parser for command line options
 parseOptions :: ParserInfo Options
-parseOptions = info (parserHelper <**> helper)
+parseOptions = info (parserHelper <**> helper <**> versionOpt)
   ( fullDesc
   <> progDesc "JSON Canvas CLI tool - Create, view, and manipulate JSON Canvas files"
   <> header "json-canvas - A tool for working with JSON Canvas diagrams"
   )
+
+versionOpt :: Parser (a -> a)
+versionOpt =
+  infoOption
+    (showVersion version)
+    (long "version" <> help "Show version")
 
 parserHelper :: Parser Options
 parserHelper = Options
@@ -257,6 +271,7 @@ parseCommand = subparser
 parseMd :: Parser MdCommand
 parseMd = subparser
   ( command "extract" (info (MdExtract <$> parseMdExtract) (progDesc "Extract fenced NDJSON/JSON blocks from Markdown"))
+ <> command "verify-evidence" (info (MdVerifyEvidence <$> parseMdVerifyEvidence) (progDesc "Verify evidence spans against source bytes"))
   )
 
 parseMdExtract :: Parser MdExtractOptions
@@ -283,6 +298,16 @@ parseMdExtract = MdExtractOptions
       "ndjson-only" -> Just ModeNdjsonOnly
       "all" -> Just ModeAll
       _ -> Nothing
+
+parseMdVerifyEvidence :: Parser MdVerifyEvidenceOptions
+parseMdVerifyEvidence = MdVerifyEvidenceOptions
+  <$> strOption (long "in" <> value "-" <> metavar "FILE" <> help "Input NDJSON file ('-' for stdin)")
+  <*> strOption (long "root" <> value "." <> metavar "DIR" <> help "Docs root directory (used to resolve evidence.doc_path)")
+  <*> asum
+        [ flag' True (long "strict" <> help "Fail on first mismatch / missing evidence (default: true)")
+        , flag' False (long "no-strict" <> help "Disable strict failure; skip records that can't be verified")
+        , pure True
+        ]
 
 parseMnemonicManifold :: Parser MnemonicManifoldCommand
 parseMnemonicManifold = subparser
@@ -586,6 +611,12 @@ runMd = \case
             , moToolVersion = T.pack (showVersion version)
             }
     writeManifest mopts
+  MdVerifyEvidence MdVerifyEvidenceOptions{..} -> do
+    input <- if mveIn == "-" then BL.getContents else BL.readFile mveIn
+    res <- verifyEvidenceNdjsonBytes (VerifyConfig mveRoot mveStrict) input
+    case res of
+      Left err -> die (T.unpack err)
+      Right () -> pure ()
   where
     splitComma s = case break (== ',') s of
       (a, "") -> [a]

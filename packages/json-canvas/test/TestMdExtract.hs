@@ -6,12 +6,17 @@ import qualified Data.ByteString.Lazy as BL
 import Control.Monad (when)
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
+import qualified Data.Aeson as A
+import qualified Data.Aeson.Key as K
+import qualified Data.Aeson.KeyMap as KM
+import qualified Data.Vector as V
 import System.Directory (copyFile, createDirectoryIfMissing, doesDirectoryExist, doesFileExist, removePathForcibly)
 import System.FilePath ((</>))
 import System.Exit (exitFailure)
 
 import Desktop.MdExtract (ExtractConfig (..), ExtractMode (..), extractNdjsonFromMarkdown, extractNdjsonFromTree)
 import Desktop.MdManifest (ManifestOptions (..), writeManifest)
+import Desktop.MdVerifyEvidence (VerifyConfig (..), verifyEvidenceNdjsonBytes)
 
 assertEq :: String -> BL.ByteString -> BL.ByteString -> IO ()
 assertEq label expected actual =
@@ -43,6 +48,14 @@ main = do
   assertEq "golden" golden out1
   assertEq "determinism" out1 out2
 
+  -- Evidence verification should succeed against the on-disk source bytes.
+  v1 <- verifyEvidenceNdjsonBytes (VerifyConfig "test/vectors" True) out1
+  case v1 of
+    Left err -> do
+      putStrLn ("FAIL: verify-evidence: " ++ T.unpack err)
+      exitFailure
+    Right () -> pure ()
+
   let bad = "```ndjson\n{not json}\n```\n"
   case extractNdjsonFromMarkdown True False False ["ndjson"] "bad.md" bad of
     Left _ -> pure ()
@@ -56,6 +69,42 @@ main = do
     Right _ -> do
       putStrLn "FAIL: strict should reject unclosed fence"
       exitFailure
+
+  -- Negative: tamper with span_start so verification fails.
+  let ls = filter (not . BL.null) (BL.split 10 out1)
+  case ls of
+    [] -> do
+      putStrLn "FAIL: expected extracted NDJSON records"
+      exitFailure
+    (firstLine:restLines) ->
+      case A.decode firstLine :: Maybe A.Value of
+        Nothing -> do
+          putStrLn "FAIL: could not decode first NDJSON line"
+          exitFailure
+        Just (A.Object o) ->
+          case KM.lookup (K.fromText "evidence") o of
+            Just (A.Object ev) ->
+              case KM.lookup (K.fromText "span_start") ev of
+                Just (A.Number n) ->
+                  let ev' = KM.insert (K.fromText "span_start") (A.Number (n + 1)) ev
+                      o' = KM.insert (K.fromText "evidence") (A.Object ev') o
+                      tampered = BL.intercalate "\n" (A.encode (A.Object o') : restLines) <> "\n"
+                  in do
+                    v2 <- verifyEvidenceNdjsonBytes (VerifyConfig "test/vectors" True) tampered
+                    case v2 of
+                      Left _ -> pure ()
+                      Right () -> do
+                        putStrLn "FAIL: verify-evidence should reject tampered span_start"
+                        exitFailure
+                _ -> do
+                  putStrLn "FAIL: expected evidence.span_start"
+                  exitFailure
+            _ -> do
+              putStrLn "FAIL: expected evidence object on first record"
+              exitFailure
+        Just _ -> do
+          putStrLn "FAIL: expected first NDJSON line to be an object"
+          exitFailure
 
   -- Canvas pointers (tree extraction)
   canvasGolden <- BL.readFile "test/vectors/md-canvas-pointers.golden.ndjson"

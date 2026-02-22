@@ -1,0 +1,281 @@
+.Dd Feb 22, 2026
+.Dt JSON-CANVAS 1
+.Os
+.Sh NAME
+.Nm json-canvas
+.Nd deterministic Markdown-to-NDJSON compiler and mnemonic-manifold emitter
+.Sh SYNOPSIS
+.Nm
+.Op Fl v
+.Op Fl -version
+.Ar command
+.Op Ar args ...
+.Pp
+.Nm
+.Cm md extract
+.Fl -root Ar DIR
+.Fl -out Ar DIR
+.Op Fl -mode Ar MODE
+.Op Fl -langs Ar LIST
+.Op Fl -strict
+.Op Fl -aggregate | Fl -no-aggregate
+.Op Fl -loose-ndjson
+.Op Fl -canon-filter
+.Op Fl -emit-canvas-pointers
+.Op Fl -emit-manifest
+.Op Fl -manifest-path Ar PATH
+.Op Fl -include-git-head
+.Op Fl -timestamp
+.Pp
+.Nm
+.Cm md verify-evidence
+.Op Fl -in Ar PATH
+.Op Fl -root Ar DIR
+.Op Fl -strict | Fl -no-strict
+.Pp
+.Nm
+.Cm mnemonic-manifold emit
+.Fl -in Ar PATH
+.Fl -out Ar PATH
+.Op Fl -emit-static | Fl -no-emit-static
+.Op Fl -strict | Fl -no-strict
+.Op Fl -centroid
+.Op Fl -manifest Ar PATH
+.Op Fl -build-root-sha256 Ar HEX
+.Sh DESCRIPTION
+.Nm
+is a deterministic, proof-carrying compiler pipeline that lowers Markdown corpora into canon NDJSON,
+projects clauses onto the mnemonic-manifold Fano execution surface,
+and emits replayable Canvas NDJSON events.
+The tool is content-addressed, auditable, and strict by default.
+.Pp
+The pipeline is typically:
+.Bl -enum -compact
+.It
+Extract records from a Markdown corpus into per-file NDJSON plus an aggregate stream.
+.It
+Attach deterministic byte-span evidence to every emitted record.
+.It
+Optionally emit a content-addressed build manifest with a single root hash.
+.It
+Emit mnemonic-manifold events for visualization and replay.
+.El
+.Sh COMMANDS
+.Bl -tag -width Ds
+.It Cm md extract
+Walk a directory tree of Markdown files and extract structured records from fenced code blocks and optionally loose JSON object lines.
+.It Cm md verify-evidence
+Verify extracted records by re-reading source bytes and checking that
+evidence spans parse to the same JSON objects (ignoring injected
+.Cm evidence
+or
+.Cm evidence_md Ns ).
+.It Cm mnemonic-manifold emit
+Read canon NDJSON records and emit Canvas NDJSON events for the mnemonic-manifold projection.
+.El
+.Sh "GLOBAL OPTIONS"
+.Bl -tag -width Ds
+.It Fl v , Fl -verbose
+Verbose output.
+.It Fl -version
+Print version and exit.
+.El
+.Sh "MD EXTRACT"
+.Ss Inputs
+.Bl -tag -width Ds
+.It Fl -root Ar DIR
+Root directory containing Markdown sources (typically
+.Pa docs/ Ns ).
+.It Fl -out Ar DIR
+Output directory. The extractor writes subdirectories such as
+.Pa ndjson/
+and
+.Pa canvas/ Ns .
+.El
+.Ss Extraction scope
+.Bl -tag -width Ds
+.It Fl -mode Ar MODE
+Extraction mode.
+Supported values:
+.Cm ndjson-only
+or
+.Cm all Ns .
+Default:
+.Cm ndjson-only Ns .
+.It Fl -langs Ar LIST
+Comma-separated fence languages to extract (case-insensitive).
+Common values:
+.Cm ndjson ,
+.Cm jsonl ,
+.Cm jsonlines ,
+.Cm json ,
+.Cm hash ,
+.Cm canvas Ns .
+.Pp
+Note:
+in
+.Cm ndjson-only
+mode, the implementation only emits
+.Cm ndjson/jsonl/jsonlines
+even if other values are included.
+.It Fl -aggregate
+Write an aggregate NDJSON stream to
+.Pa out/ndjson/all.ndjson Ns .
+.It Fl -emit-canvas-pointers
+Emit pointer records to
+.Pa out/ndjson/canvas.blocks.ndjson
+for extracted
+.Ql ```canvas
+fences.
+Pointer hashing is
+.Cm sha256
+over the raw fence bytes.
+.El
+.Ss Strictness and filtering
+.Bl -tag -width Ds
+.It Fl -strict
+Fail on malformed inputs (including unclosed fences and invalid JSON in extracted blocks).
+.It Fl -loose-ndjson
+Additionally parse standalone JSON object lines outside code fences using a conservative heuristic.
+.It Fl -canon-filter
+Emit only records compatible with
+.Cm mnemonic-manifold\ emit\ --strict
+(e.g. SPO clauses, nested SPO, supported event records, and hash records).
+.El
+.Ss Evidence
+Every emitted JSON object is augmented with deterministic provenance evidence.
+Evidence spans are UTF-8 byte offsets into the source Markdown:
+.Cm span_start
+(inclusive) and
+.Cm span_end
+(exclusive).
+If the input record already contains
+.Cm evidence ,
+the extractor preserves it and adds
+.Cm evidence_md
+for the Markdown span evidence.
+.Ss Manifest
+.Bl -tag -width Ds
+.It Fl -emit-manifest
+Write a content-addressed manifest JSON documenting inputs, outputs, config, and tool identity.
+.It Fl -manifest-path Ar PATH
+Manifest output path. Default is
+.Pa out/manifest.json Ns .
+.It Fl -include-git-head
+Include Git HEAD resolution as optional metadata.
+In strict mode, failure to resolve HEAD is an error.
+.It Fl -timestamp
+Include a deterministic build time sourced from
+.Ev SOURCE_DATE_EPOCH Ns .
+If unset or invalid, this option fails.
+.El
+.Pp
+Manifest schema version is
+.Cm ulp.manifest.v0.2
+and includes
+.Cm root_sha256
+computed as sha256 over the canonical manifest bytes with the
+.Cm root_sha256
+field omitted; the manifest file is newline-terminated.
+.Sh "MD VERIFY-EVIDENCE"
+.Bl -tag -width Ds
+.It Fl -in Ar PATH
+Input NDJSON to verify.
+Use
+.Sq -
+for stdin.
+.It Fl -root Ar DIR
+Docs root directory used to resolve
+.Cm evidence.doc_path Ns .
+.It Fl -strict
+Fail on the first mismatch or missing evidence (default).
+.It Fl -no-strict
+Skip records that cannot be verified (missing evidence, missing source file, parse failures).
+.El
+.Sh "MNEMONIC-MANIFOLD EMIT"
+.Bl -tag -width Ds
+.It Fl -in Ar PATH
+Input canon NDJSON (typically
+.Pa out/ndjson/all.ndjson Ns ).
+.It Fl -out Ar PATH
+Output Canvas NDJSON events (e.g.
+.Pa out/mnemonic-manifold.events.ndjson Ns ).
+.It Fl -emit-static
+Emit static Fano point/line nodes and feature anchor nodes.
+.It Fl -strict
+Require strict canon decoding.
+.It Fl -centroid
+Emit closure observer data (integer counts) for each clause projection.
+.It Fl -manifest Ar PATH
+Load a manifest and emit a build identity overlay edge (edge-only feature) using the manifest root hash.
+.It Fl -build-root-sha256 Ar HEX
+Provide a build root hash directly (hex). Overrides or substitutes manifest loading.
+.El
+.Pp
+Raw-string hashing is preserved (e.g.
+.Qq X ,
+.Qq [X] ,
+and
+.Qq [[X]]
+are distinct identities), while bracket reference semantics are represented as edge-only overlays.
+.Sh ENVIRONMENT
+.Bl -tag -width Ds
+.It Ev SOURCE_DATE_EPOCH
+Required when
+.Fl -timestamp
+is enabled for manifest emission. Must be a base-10 integer.
+.El
+.Sh FILES
+.Bl -tag -width Ds
+.It Pa out/ndjson/*.ndjson
+Per-file extracted NDJSON streams.
+.It Pa out/ndjson/all.ndjson
+Aggregate extracted NDJSON (when
+.Fl -aggregate
+is set).
+.It Pa out/ndjson/canvas.blocks.ndjson
+Canvas pointer records (when
+.Fl -emit-canvas-pointers
+is set).
+.It Pa out/canvas/*.json
+Extracted canvas blocks written as JSON files (when
+.Fl -mode all
+and
+.Cm canvas
+is included in
+.Fl -langs Ns ).
+.It Pa out/manifest.json
+Build manifest (when
+.Fl -emit-manifest
+is set).
+.El
+.Sh EXIT STATUS
+.Ex -std
+.Sh EXAMPLES
+.Ss Extract docs to NDJSON with manifest and canvas pointers
+.Bd -literal -offset indent
+cabal run json-canvas -- md extract \\
+  --root ../../docs \\
+  --out ../../build/docs \\
+  --mode all \\
+  --langs ndjson,jsonl,jsonlines,json,hash,canvas \\
+  --strict --aggregate --loose-ndjson --canon-filter \\
+  --emit-canvas-pointers --emit-manifest
+.Ed
+.Ss Verify evidence spans
+.Bd -literal -offset indent
+cabal run json-canvas -- md verify-evidence \\
+  --in ../../build/docs/ndjson/all.ndjson \\
+  --root ../../docs \\
+  --strict
+.Ed
+.Ss Emit mnemonic-manifold events with build identity
+.Bd -literal -offset indent
+cabal run json-canvas -- mnemonic-manifold emit \\
+  --in ../../build/docs/ndjson/all.ndjson \\
+  --out ../../build/docs/mnemonic-manifold.events.ndjson \\
+  --emit-static --strict --centroid \\
+  --manifest ../../build/docs/manifest.json
+.Ed
+.Sh SEE ALSO
+.Xr mandoc 1
