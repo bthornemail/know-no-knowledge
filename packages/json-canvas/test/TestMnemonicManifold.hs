@@ -8,7 +8,7 @@ import System.Exit (exitFailure)
 
 import Desktop.CanvasEDSL (encodeNDJSON)
 import MnemonicManifold.Canon (decodeCanonTriples)
-import MnemonicManifold.Emit (EmitOptions(..), emitStaticFanoEvents, emitClauseEvents)
+import MnemonicManifold.Emit (BuildRootInfo(..), EmitOptions(..), emitStaticFanoEvents, emitClauseEvents)
 
 assertEq :: String -> BL.ByteString -> BL.ByteString -> IO ()
 assertEq label expected actual =
@@ -24,6 +24,7 @@ main :: IO ()
 main = do
   canon <- BL.readFile "test/vectors/canon-mini.ndjson"
   golden <- BL.readFile "test/vectors/mnemonic-manifold.golden.ndjson"
+  buildRootGolden <- BL.readFile "test/vectors/mnemonic-manifold.buildroot.golden.ndjson"
   spoCanon <- BL.readFile "test/vectors/spo-mini.ndjson"
   spoGolden <- BL.readFile "test/vectors/spo-mini.golden.ndjson"
 
@@ -39,13 +40,25 @@ main = do
       exitFailure
     Right ts -> pure ts
 
-  let opts = EmitOptions { eoEmitStatic = True, eoCentroid = False }
+  let opts = EmitOptions { eoEmitStatic = True, eoCentroid = False, eoBuildRoot = Nothing }
+      buildRootOpts =
+        EmitOptions
+          { eoEmitStatic = True
+          , eoCentroid = False
+          , eoBuildRoot =
+              Just
+                (BuildRootInfo
+                   "0000000000000000000000000000000000000000000000000000000000000000"
+                   Nothing)
+          }
       out1 = encodeNDJSON (emitStaticFanoEvents <> concatMap (emitClauseEvents opts) triples)
       out2 = encodeNDJSON (emitStaticFanoEvents <> concatMap (emitClauseEvents opts) triples)
+      outBuildRoot = encodeNDJSON (emitStaticFanoEvents <> concatMap (emitClauseEvents buildRootOpts) triples)
       spoOut = encodeNDJSON (emitStaticFanoEvents <> concatMap (emitClauseEvents opts) spoTriples)
 
   assertEq "golden" golden out1
   assertEq "determinism" out1 out2
+  assertEq "buildroot-golden" buildRootGolden outBuildRoot
   assertEq "spo-golden" spoGolden spoOut
 
   case decodeCanonTriples True "testdoc" "{\"not\":\"canon\"}\n" of

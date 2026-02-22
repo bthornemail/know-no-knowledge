@@ -29,12 +29,13 @@ import Data.Function (on)
 import qualified Data.Map as Map
 import Data.Aeson (encode, decode)
 import qualified Data.Aeson as A
+import qualified Data.Aeson.KeyMap as KM
 import Data.Foldable (asum)
 import Options.Applicative
 import Data.Version (showVersion)
 import Paths_json_canvas_cli (version)
 import MnemonicManifold.Canon (decodeCanonTriples)
-import MnemonicManifold.Emit (EmitOptions(..), emitStaticFanoEvents, emitClauseEvents)
+import MnemonicManifold.Emit (BuildRootInfo(..), EmitOptions(..), emitStaticFanoEvents, emitClauseEvents)
 import Desktop.MdExtract (ExtractConfig(..), ExtractMode(..), extractNdjsonFromTree)
 import Desktop.MdManifest (ManifestOptions(..), writeManifest)
 
@@ -91,6 +92,8 @@ data MMEmitOptions = MMEmitOptions
   , mmEmitStatic :: Bool
   , mmStrict :: Bool
   , mmCentroid :: Bool
+  , mmManifest :: Maybe FilePath
+  , mmBuildRootSha256 :: Maybe String
   } deriving (Show)
 
 data CreateOptions = CreateOptions
@@ -293,6 +296,8 @@ parseMMEmit = MMEmitOptions
   <*> parseDefaultTrue "emit-static" "no-emit-static" "Emit static Fano nodes/lines"
   <*> parseDefaultTrue "strict" "no-strict" "Fail on unknown/invalid input lines"
   <*> switch (long "centroid" <> help "Emit an observer node with derived closure fields")
+  <*> optional (strOption (long "manifest" <> metavar "FILE" <> help "Manifest.json to read root_sha256 from (used for build.root overlay edges)"))
+  <*> optional (strOption (long "build-root-sha256" <> metavar "HEX" <> help "Override build root sha256 hex (64 hex chars) for build.root overlay edges"))
   where
     parseDefaultTrue pos neg h =
       asum
@@ -597,12 +602,56 @@ runMnemonicManifold = \case
     triples <- case decodeCanonTriples mmStrict docId input of
       Left err -> die (T.unpack err)
       Right ts -> pure ts
-    let opts = EmitOptions { eoEmitStatic = mmEmitStatic, eoCentroid = mmCentroid }
+    buildRoot <- resolveBuildRoot mmStrict mmManifest mmBuildRootSha256
+    let opts = EmitOptions { eoEmitStatic = mmEmitStatic, eoCentroid = mmCentroid, eoBuildRoot = buildRoot }
         events =
           (if mmEmitStatic then emitStaticFanoEvents else []) <>
           concatMap (emitClauseEvents opts) triples
         outBytes = encodeNDJSON events
     if mmOut == "-" then BL.putStr outBytes else BL.writeFile mmOut outBytes
+
+resolveBuildRoot :: Bool -> Maybe FilePath -> Maybe String -> IO (Maybe BuildRootInfo)
+resolveBuildRoot strictMode mManifest mOverride =
+  case mOverride of
+    Just hexStr -> do
+      mh <- requireSha256Hex strictMode (T.pack hexStr)
+      pure (BuildRootInfo <$> mh <*> pure (T.pack <$> mManifest))
+    Nothing ->
+      case mManifest of
+        Nothing -> pure Nothing
+        Just p -> do
+          bs <- BL.readFile p
+          case A.decode bs :: Maybe A.Value of
+            Nothing ->
+              if strictMode then die ("invalid manifest json: " <> p) else pure Nothing
+            Just v -> do
+              let mh = case v of
+                    A.Object o -> case KM.lookup "root_sha256" o of
+                      Just (A.String t) -> Just t
+                      _ -> Nothing
+                    _ -> Nothing
+              case mh of
+                Nothing ->
+                  if strictMode then die ("manifest missing root_sha256: " <> p) else pure Nothing
+                Just t -> do
+                  mh' <- requireSha256Hex strictMode t
+                  pure (BuildRootInfo <$> mh' <*> pure (Just (T.pack p)))
+
+requireSha256Hex :: Bool -> Text -> IO (Maybe Text)
+requireSha256Hex strictMode t =
+  case parseSha256Hex t of
+    Just s -> pure (Just s)
+    Nothing ->
+      if strictMode
+        then die ("invalid sha256 hex (expected 64 hex chars): " <> T.unpack t)
+        else pure Nothing
+
+parseSha256Hex :: Text -> Maybe Text
+parseSha256Hex t =
+  let s = T.toLower (T.strip t)
+      okLen = T.length s == 64
+      okChars = T.all (\c -> ('0' <= c && c <= '9') || ('a' <= c && c <= 'f')) s
+  in if okLen && okChars then Just s else Nothing
 
 -- | Create a new canvas
 runCreate :: Bool -> CreateOptions -> IO ()

@@ -2,7 +2,8 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module MnemonicManifold.Emit
-  ( EmitOptions(..)
+  ( BuildRootInfo(..)
+  , EmitOptions(..)
   , emitStaticFanoEvents
   , emitClauseEvents
   ) where
@@ -42,6 +43,12 @@ import MnemonicManifold.Brackets (stripBalancedBrackets)
 data EmitOptions = EmitOptions
   { eoEmitStatic :: Bool
   , eoCentroid :: Bool
+  , eoBuildRoot :: Maybe BuildRootInfo
+  } deriving (Eq, Show)
+
+data BuildRootInfo = BuildRootInfo
+  { brSha256Hex :: Text
+  , brManifestPath :: Maybe Text
   } deriving (Eq, Show)
 
 emitStaticFanoEvents :: [CanvasEvent]
@@ -53,6 +60,7 @@ emitStaticFanoEvents =
   , EvAddNode (refFeatureNode refObjectNodeId "ref.object" 380)
   , EvAddNode (refFeatureNode refPredicateNodeId "ref.predicate" 460)
   , EvAddNode (refFeatureNode groupOrderNodeId "group_order" 540)
+  , EvAddNode (refFeatureNode buildRootNodeId "build.root" 620)
   ]
   where
     pointNode (p, i) =
@@ -103,6 +111,7 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
   orderEdges <>
   refEdges <>
   groupOrderEdges <>
+  buildRootEdges <>
   centroidEvents
   where
     Evidence{..} = ctEvidence
@@ -224,6 +233,18 @@ emitClauseEvents EmitOptions{..} CanonTriple{..} =
                  eid = EdgeId ("MM:E:" <> shortHashHex16 (unNodeId clauseNodeId <> ":FEATURE:group_order"))
              in [EvAddEdge (withEdgeLabel (Just payload) (edge eid clauseNodeId groupOrderNodeId))]
 
+    buildRootEdges :: [CanvasEvent]
+    buildRootEdges = case eoBuildRoot of
+      Nothing -> []
+      Just BuildRootInfo{..} ->
+        let payload = jsonObj $
+              [ ("kind", jsonText "build.root")
+              , ("sha256", jsonText brSha256Hex)
+              ] ++
+              [ ("manifest_path", jsonText p) | Just p <- [brManifestPath] ]
+            eid = EdgeId ("MM:E:" <> shortHashHex16 (unNodeId clauseNodeId <> ":FEATURE:build.root:" <> brSha256Hex))
+        in [EvAddEdge (withEdgeLabel (Just payload) (edge eid clauseNodeId buildRootNodeId))]
+
     centroidEvents :: [CanvasEvent]
     centroidEvents
       | not eoCentroid = []
@@ -261,3 +282,6 @@ refPredicateNodeId = NodeId "MM:FEATURE:ref.predicate"
 
 groupOrderNodeId :: NodeId
 groupOrderNodeId = NodeId "MM:FEATURE:group_order"
+
+buildRootNodeId :: NodeId
+buildRootNodeId = NodeId "MM:FEATURE:build.root"
