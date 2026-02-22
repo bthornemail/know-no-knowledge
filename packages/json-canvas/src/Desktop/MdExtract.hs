@@ -16,16 +16,19 @@ import qualified Data.Aeson as A
 import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Lazy.Char8 as BL
 import Data.Char (isSpace)
+import Data.Foldable (toList)
 import Data.List (sort)
 import Data.Maybe (catMaybes)
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
+import qualified Data.Text.Encoding.Error as TEE
 import qualified Data.Text.IO as TIO
 import System.Directory
 import System.FilePath
 import qualified Data.ByteString as BS
 import qualified Data.Vector as V
+import MnemonicManifold.SHA256 (sha256)
 
 data ExtractMode
   = ModeNdjsonOnly
@@ -41,13 +44,15 @@ data ExtractConfig = ExtractConfig
   , ecAggregate :: Bool
   , ecLooseNdjson :: Bool
   , ecCanonFilter :: Bool
+  , ecEmitCanvasPointers :: Bool
   } deriving (Eq, Show)
 
 -- | Extract NDJSON records from fenced blocks in a Markdown file.
 -- Output is canonicalized NDJSON: each emitted record is parsed as JSON then re-encoded with aeson.
 extractNdjsonFromMarkdown :: Bool -> Bool -> Bool -> [Text] -> FilePath -> Text -> Either Text BL.ByteString
 extractNdjsonFromMarkdown strictMode looseNdjson canonFilter allowedLangs relPath markdown =
-  fmap (BL.unlines . map A.encode . applyCanonFilter canonFilter) (extractValues strictMode looseNdjson allowedLangs relPath markdown)
+  fmap (\(ndjsonOut, _canvasBlocks, _canvasPointers) -> ndjsonOut) $
+    extractNdjsonFromBytes strictMode looseNdjson canonFilter allowedLangs relPath (TE.encodeUtf8 markdown)
 
 -- | Walk ecRoot and extract from all *.md files. Writes:
 --   <out>/ndjson/all.ndjson (if ecAggregate)
@@ -64,10 +69,10 @@ extractNdjsonFromTree ExtractConfig{..} = do
           ModeAll -> map normalizeLang ecLangs
       canvasEnabled = "canvas" `elem` langsToUse
 
-  perFile <- forM mdFiles $ \absPath -> do
+  canvasPointersAcc <- fmap concat $ forM mdFiles $ \absPath -> do
     let rel = makeRelative ecRoot absPath
-    content <- TIO.readFile absPath
-    case extractNdjsonFromMarkdown ecStrict ecLooseNdjson ecCanonFilter langsToUse rel content of
+    rawBytes <- BS.readFile absPath
+    case extractNdjsonFromBytes ecStrict ecLooseNdjson ecCanonFilter langsToUse rel rawBytes of
       Left err ->
         if ecStrict
           then ioError (userError (T.unpack err))
@@ -76,28 +81,34 @@ extractNdjsonFromTree ExtractConfig{..} = do
             let outPath = ecOut </> "ndjson" </> addExtension rel "ndjson"
             createDirectoryIfMissing True (takeDirectory outPath)
             BL.writeFile outPath BL.empty
-            pure (rel, BL.empty)
-      Right ndjson -> do
+            pure []
+      Right (ndjson, canvasBlocks, canvasPointers) -> do
         let outPath = ecOut </> "ndjson" </> addExtension rel "ndjson"
         createDirectoryIfMissing True (takeDirectory outPath)
         BL.writeFile outPath ndjson
         when (ecMode == ModeAll) $ do
-          when canvasEnabled $ do
-            case extractCanvasBlocks ecStrict rel content of
-              Left err ->
-                if ecStrict then ioError (userError (T.unpack err)) else pure ()
-              Right canvases -> do
-                forM_ canvases $ \(blockIndex, canvasValue) -> do
-                  let canvasOut =
-                        ecOut </> "canvas" </> addExtension (rel <> ".block" <> show blockIndex) "canvas.json"
-                  createDirectoryIfMissing True (takeDirectory canvasOut)
-                  BL.writeFile canvasOut (A.encode canvasValue)
-        pure (rel, ndjson)
+          when canvasEnabled $
+            forM_ canvasBlocks $ \(blockIndex, canvasValue) -> do
+              let canvasOut =
+                    ecOut </> "canvas" </> addExtension (rel <> ".block" <> show blockIndex) "canvas.json"
+              createDirectoryIfMissing True (takeDirectory canvasOut)
+              BL.writeFile canvasOut (A.encode canvasValue)
+        pure canvasPointers
 
   when ecAggregate $ do
     let allOut = ecOut </> "ndjson" </> "all.ndjson"
-        combined = BL.unlines (filter (not . BL.null) (map snd perFile))
+        -- rebuild from per-file outputs to ensure stable ordering
+    perOuts <- forM mdFiles $ \absPath -> do
+      let rel = makeRelative ecRoot absPath
+          outPath = ecOut </> "ndjson" </> addExtension rel "ndjson"
+      exists <- doesFileExist outPath
+      if exists then BL.readFile outPath else pure BL.empty
+    let combined = BL.unlines (filter (not . BL.null) perOuts)
     BL.writeFile allOut combined
+
+  when ecEmitCanvasPointers $ do
+    let outPath = ecOut </> "ndjson" </> "canvas.blocks.ndjson"
+    BL.writeFile outPath (BL.unlines (map A.encode canvasPointersAcc))
 
 findMdFiles :: FilePath -> IO [FilePath]
 findMdFiles root = go root
@@ -121,36 +132,93 @@ data Fence = Fence
   , fLines :: [Text]
   } deriving (Eq, Show)
 
-extractValues :: Bool -> Bool -> [Text] -> FilePath -> Text -> Either Text [Value]
-extractValues strictMode looseNdjson allowedLangs relPath markdown = do
-  fences <- parseFences strictMode relPath (T.lines markdown)
-  fenceVals <- concat <$> traverse (fenceToValues strictMode allowedLangs relPath) (zip [0 :: Int ..] fences)
-  looseVals <-
-    if looseNdjson
-      then extractLooseNdjsonValues strictMode relPath (T.lines markdown)
-      else Right []
-  pure (fenceVals <> looseVals)
+data LineInfo = LineInfo
+  { liNo :: Int
+  , liStart :: Int
+  , liLen :: Int
+  , liBytes :: BS.ByteString
+  , liText :: Text
+  } deriving (Eq, Show)
 
-parseFences :: Bool -> FilePath -> [Text] -> Either Text [Fence]
-parseFences strictMode relPath = go 1 Nothing [] []
+data FenceInfo = FenceInfo
+  { fiLang :: Text
+  , fiBlockIndex :: Int
+  , fiOpenLine :: Int
+  , fiContentStartLine :: Int
+  , fiContentEndLine :: Int
+  , fiLines :: [LineInfo]
+  } deriving (Eq, Show)
+
+extractNdjsonFromBytes :: Bool -> Bool -> Bool -> [Text] -> FilePath -> BS.ByteString -> Either Text (BL.ByteString, [(Int, Value)], [Value])
+extractNdjsonFromBytes strictMode looseNdjson canonFilter allowedLangs relPath rawBytes = do
+  let docBytes = BS.length rawBytes
+      lineInfos = splitLines relPath rawBytes
+      docLines = length lineInfos
+      langs = map normalizeLang allowedLangs
+  (fences, inFenceLines) <- parseFences strictMode relPath lineInfos
+
+  extracted <- concat <$> traverse (fenceToRecords strictMode relPath docBytes docLines langs) fences
+  looseRecs <-
+    if looseNdjson
+      then extractLooseNdjsonRecords strictMode relPath docBytes docLines lineInfos inFenceLines
+      else Right []
+
+  let allRecords = applyCanonFilter canonFilter (extracted <> looseRecs)
+      ndjsonOut = BL.unlines (map A.encode allRecords)
+      canvasBlocks = if "canvas" `elem` langs then extractCanvasValues strictMode relPath rawBytes fences else Right []
+      canvasPointers = if "canvas" `elem` langs then extractCanvasPointers relPath docBytes docLines rawBytes fences else Right []
+  cb <- canvasBlocks
+  cp <- canvasPointers
+  pure (ndjsonOut, cb, cp)
+
+splitLines :: FilePath -> BS.ByteString -> [LineInfo]
+splitLines _ bs = go 1 0 bs
   where
-    go _ Nothing acc _ [] = Right (reverse acc)
-    go lineNo (Just (lang, startLine, cur)) acc _ [] =
-      if strictMode
-        then Left (errAt startLine ("unclosed fence lang=" <> lang))
-        else Right (reverse (Fence lang startLine (reverse cur) : acc))
-    go lineNo st acc _ (ln:rest) =
+    go _ _ b | BS.null b = []
+    go n off b =
+      let (line, rest) = BS.break (== 10) b
+          len = BS.length line
+          text = case TE.decodeUtf8' line of
+            Right t -> t
+            Left _ -> TE.decodeUtf8With TEE.lenientDecode line
+          li = LineInfo n off len line text
+      in if BS.null rest
+           then [li]
+           else li : go (n + 1) (off + len + 1) (BS.drop 1 rest)
+
+parseFences :: Bool -> FilePath -> [LineInfo] -> Either Text ([FenceInfo], [Bool])
+parseFences strictMode relPath lis =
+  let (fences, inFenceFlags, st, _, _) =
+        foldl step ([], [], Nothing, 0 :: Int, False) lis
+      result = (reverse fences, reverse inFenceFlags)
+  in case st of
+      Nothing -> Right result
+      Just (_lang, openLine, _cur) ->
+        if strictMode
+          then Left (T.pack relPath <> ":" <> T.pack (show openLine) <> ": unclosed fence")
+          else Right result
+  where
+    step (accF, accFlags, st, blockIndex, inFence) li =
       case st of
         Nothing ->
-          case fenceStart ln of
-            Nothing -> go (lineNo + 1) Nothing acc [] rest
-            Just lang -> go (lineNo + 1) (Just (lang, lineNo, [])) acc [] rest
-        Just (lang, startLine, cur) ->
-          if fenceEnd ln
-            then go (lineNo + 1) Nothing (Fence lang startLine (reverse cur) : acc) [] rest
-            else go (lineNo + 1) (Just (lang, startLine, ln : cur)) acc [] rest
-
-    errAt l msg = T.pack relPath <> ":" <> T.pack (show l) <> ": " <> msg
+          case fenceStart (liText li) of
+            Nothing -> (accF, False : accFlags, Nothing, blockIndex, False)
+            Just lang ->
+              ( accF
+              , True : accFlags
+              , Just (lang, liNo li, [])
+              , blockIndex
+              , True
+              )
+        Just (lang, openLine, cur) ->
+          if fenceEnd (liText li)
+            then
+              let contentLines = reverse cur
+                  contentStart = openLine + 1
+                  contentEnd = liNo li - 1
+                  fi = FenceInfo (normalizeLang lang) blockIndex openLine contentStart contentEnd contentLines
+              in (fi : accF, True : accFlags, Nothing, blockIndex + 1, False)
+            else (accF, True : accFlags, Just (lang, openLine, li : cur), blockIndex, True)
 
 fenceStart :: Text -> Maybe Text
 fenceStart t =
@@ -166,33 +234,31 @@ fenceStart t =
 fenceEnd :: Text -> Bool
 fenceEnd t = T.strip t == "```"
 
-fenceToValues :: Bool -> [Text] -> FilePath -> (Int, Fence) -> Either Text [Value]
-fenceToValues strictMode allowedLangs relPath (blockIndex, Fence{..}) =
-  case normalizeLang fLang of
+fenceToRecords :: Bool -> FilePath -> Int -> Int -> [Text] -> FenceInfo -> Either Text [Value]
+fenceToRecords strictMode relPath docBytes docLines allowedLangs FenceInfo{..} =
+  case fiLang of
     lang
-      | not (null allowedLangs) && lang `notElem` map normalizeLang allowedLangs ->
-          Right []
+      | not (null allowedLangs) && lang `notElem` allowedLangs -> Right []
       | lang `elem` ["ndjson","jsonl","jsonlines"] ->
-          parseNdjsonLines strictMode relPath blockIndex fStartLine fLines
+          parseNdjsonLines strictMode relPath docBytes docLines fiLang fiBlockIndex fiContentStartLine fiContentEndLine fiLines
       | lang == "json" ->
-          parseJsonBlock strictMode relPath blockIndex fStartLine fLines
+          parseJsonBlock strictMode relPath docBytes docLines fiLang fiBlockIndex fiContentStartLine fiContentEndLine fiLines
       | lang == "hash" ->
-          parseHashLines relPath blockIndex fStartLine fLines
+          parseHashLines relPath docBytes docLines fiLang fiBlockIndex fiContentStartLine fiContentEndLine fiLines
       | lang == "canvas" ->
           Right []
-      | otherwise ->
-          Right []
+      | otherwise -> Right []
 
 normalizeLang :: Text -> Text
 normalizeLang = T.toLower . T.takeWhile (not . isSpace)
 
-parseNdjsonLines :: Bool -> FilePath -> Int -> Int -> [Text] -> Either Text [Value]
-parseNdjsonLines strictMode relPath blockIndex startLine ls =
+parseNdjsonLines :: Bool -> FilePath -> Int -> Int -> Text -> Int -> Int -> Int -> [LineInfo] -> Either Text [Value]
+parseNdjsonLines strictMode relPath docBytes docLines blockLang blockIndex blockLineStart blockLineEnd ls =
   fmap catMaybes $ traverse go (zip [0 :: Int ..] ls)
   where
-    go (i, raw) =
-      let lineNo = startLine + i
-          t = T.strip raw
+    go (i, li) =
+      let lineNo = liNo li
+          t = T.strip (liText li)
       in if T.null t || isComment t
            then Right Nothing
            else case A.eitherDecodeStrict' (encodeUtf8 t) of
@@ -200,7 +266,10 @@ parseNdjsonLines strictMode relPath blockIndex startLine ls =
                if strictMode
                  then Left (mkErr lineNo ("invalid JSON in ndjson block: " <> T.pack err))
                  else Right Nothing
-             Right v -> Right (Just v)
+             Right v ->
+               case attachEvidence (mkEvidence relPath docBytes docLines blockLang blockIndex blockLineStart blockLineEnd (Just (i + 1)) Nothing (liStart li) (liLen li)) v of
+                 Left e -> if strictMode then Left e else Right Nothing
+                 Right o -> Right (Just o)
 
     mkErr l msg =
       T.pack relPath <> ":" <> T.pack (show l) <> ": block " <> T.pack (show blockIndex) <> ": " <> msg
@@ -208,13 +277,13 @@ parseNdjsonLines strictMode relPath blockIndex startLine ls =
 isComment :: Text -> Bool
 isComment t = "#" `T.isPrefixOf` t || "//" `T.isPrefixOf` t
 
-parseJsonBlock :: Bool -> FilePath -> Int -> Int -> [Text] -> Either Text [Value]
-parseJsonBlock strictMode relPath blockIndex startLine ls =
-  case A.eitherDecodeStrict' (encodeUtf8 (T.unlines ls)) of
+parseJsonBlock :: Bool -> FilePath -> Int -> Int -> Text -> Int -> Int -> Int -> [LineInfo] -> Either Text [Value]
+parseJsonBlock strictMode relPath docBytes docLines blockLang blockIndex blockLineStart blockLineEnd ls =
+  case A.eitherDecodeStrict' (blockBytes ls) of
     Left err ->
       -- Some repos label NDJSON as ```json. If parsing as a single JSON
       -- value fails, fall back to line-by-line parsing.
-      case parseNdjsonLines strictMode relPath blockIndex startLine ls of
+      case parseNdjsonLines strictMode relPath docBytes docLines blockLang blockIndex blockLineStart blockLineEnd ls of
         Right vals | not (null vals) -> Right vals
         Right _ ->
           if strictMode
@@ -224,59 +293,82 @@ parseJsonBlock strictMode relPath blockIndex startLine ls =
           if strictMode
             then Left (mkErr startLine ("invalid JSON block: " <> T.pack err))
             else Right []
-    Right v ->
-      case v of
-        A.Array arr -> Right (V.toList arr)
-        A.Object _ -> Right [v]
-        _ ->
-          if strictMode
-            then Left (mkErr startLine "json block must be object or array")
-            else Right []
+    Right v -> case v of
+      A.Object _ ->
+        case attachEvidence (mkEvidence relPath docBytes docLines blockLang blockIndex blockLineStart blockLineEnd Nothing Nothing spanStart spanLen) v of
+          Left e -> if strictMode then Left e else Right []
+          Right o -> Right [o]
+      A.Array arr ->
+        fmap catMaybes $ traverse (oneArray spanStart spanLen) (zip [0 :: Int ..] (V.toList arr))
+      _ ->
+        if strictMode
+          then Left (mkErr startLine "json block must be object or array")
+          else Right []
   where
-    mkErr l msg =
-      T.pack relPath <> ":" <> T.pack (show l) <> ": block " <> T.pack (show blockIndex) <> ": " <> msg
+    startLine = blockLineStart
+    mkErr l msg = T.pack relPath <> ":" <> T.pack (show l) <> ": block " <> T.pack (show blockIndex) <> ": " <> msg
+    (spanStart, spanLen) =
+      case ls of
+        [] -> (0, 0)
+        (x:_) ->
+          let endLi = last ls
+              start = liStart x
+              end = liStart endLi + liLen endLi
+          in (start, end - start)
 
-parseHashLines :: FilePath -> Int -> Int -> [Text] -> Either Text [Value]
-parseHashLines relPath blockIndex startLine ls =
-  Right $ catMaybes $ zipWith mk [0 :: Int ..] ls
+    oneArray sStart sLen (idx, item) =
+      case item of
+        A.Object _ ->
+          case attachEvidence (mkEvidence relPath docBytes docLines blockLang blockIndex blockLineStart blockLineEnd Nothing (Just idx) sStart sLen) item of
+            Left _ -> if strictMode then Left (mkErr startLine "json array element must be object") else Right Nothing
+            Right o -> Right (Just o)
+        _ ->
+          if strictMode then Left (mkErr startLine "json array element must be object") else Right Nothing
+
+parseHashLines :: FilePath -> Int -> Int -> Text -> Int -> Int -> Int -> [LineInfo] -> Either Text [Value]
+parseHashLines relPath docBytes docLines blockLang blockIndex blockLineStart blockLineEnd ls =
+  fmap catMaybes $ traverse mk (zip [0 :: Int ..] ls)
   where
-    mk i raw =
-      let t = T.strip raw
+    mk (i, li) =
+      let t = T.strip (liText li)
+          lineNo = liNo li
       in if T.null t || isComment t
-           then Nothing
-           else Just $ A.object
-              [ "event" .= ("hash" :: Text)
-              , "doc" .= relPath
-              , "block_index" .= blockIndex
-              , "line" .= (startLine + i)
-              , "value" .= t
-              ]
+           then Right Nothing
+           else
+             let v = A.object
+                   [ "event" .= ("hash" :: Text)
+                   , "doc" .= relPath
+                   , "block_index" .= blockIndex
+                   , "line" .= lineNo
+                   , "value" .= t
+                   ]
+             in case attachEvidence (mkEvidence relPath docBytes docLines blockLang blockIndex blockLineStart blockLineEnd (Just (i + 1)) Nothing (liStart li) (liLen li)) v of
+                  Left e -> Left e
+                  Right o -> Right (Just o)
 
 encodeUtf8 :: Text -> BS.ByteString
 encodeUtf8 = TE.encodeUtf8
 
-extractLooseNdjsonValues :: Bool -> FilePath -> [Text] -> Either Text [Value]
-extractLooseNdjsonValues strictMode relPath = go 1 False []
+extractLooseNdjsonRecords :: Bool -> FilePath -> Int -> Int -> [LineInfo] -> [Bool] -> Either Text [Value]
+extractLooseNdjsonRecords strictMode relPath docBytes docLines lis inFenceFlags =
+  fmap catMaybes $ traverse one (zip lis inFenceFlags)
   where
-    go _ _ acc [] = Right (reverse acc)
-    go lineNo inFence acc (ln:rest) =
-      case () of
-        _
-          | not inFence
-          , Just _ <- fenceStart ln -> go (lineNo + 1) True acc rest
-          | inFence
-          , fenceEnd ln -> go (lineNo + 1) False acc rest
-          | inFence -> go (lineNo + 1) True acc rest
-          | otherwise ->
-              let t = T.strip ln
-              in if looksLikeJson t
-                   then case A.eitherDecodeStrict' (encodeUtf8 t) of
-                     Left err ->
-                       if strictMode
-                         then Left (mkErr lineNo ("invalid JSON on loose line: " <> T.pack err))
-                         else go (lineNo + 1) False acc rest
-                     Right v -> go (lineNo + 1) False (v : acc) rest
-                   else go (lineNo + 1) False acc rest
+    one (li, inFence) =
+      if inFence
+        then Right Nothing
+        else
+          let t = T.strip (liText li)
+          in if looksLikeJson t
+               then case A.eitherDecodeStrict' (encodeUtf8 t) of
+                 Left err ->
+                   if strictMode
+                     then Left (mkErr (liNo li) ("invalid JSON on loose line: " <> T.pack err))
+                     else Right Nothing
+                 Right v ->
+                   case attachEvidence (mkEvidence relPath docBytes docLines "loose" (-1) (liNo li) (liNo li) (Just 1) Nothing (liStart li) (liLen li)) v of
+                     Left e -> if strictMode then Left e else Right Nothing
+                     Right o -> Right (Just o)
+               else Right Nothing
 
     looksLikeJson t =
       -- Heuristic for "loose NDJSON": only attempt JSON parsing on lines that
@@ -286,20 +378,103 @@ extractLooseNdjsonValues strictMode relPath = go 1 False []
 
     mkErr l msg = T.pack relPath <> ":" <> T.pack (show l) <> ": " <> msg
 
-extractCanvasBlocks :: Bool -> FilePath -> Text -> Either Text [(Int, Value)]
-extractCanvasBlocks strictMode relPath markdown = do
-  fences <- parseFences strictMode relPath (T.lines markdown)
-  let canvasFences = [ (i, f) | (i, f) <- zip [0 :: Int ..] fences, normalizeLang (fLang f) == "canvas" ]
-  traverse (one strictMode relPath) canvasFences
+blockBytes :: [LineInfo] -> BS.ByteString
+blockBytes ls = BS.intercalate "\n" (map liBytes ls)
+
+mkEvidence
+  :: FilePath
+  -> Int
+  -> Int
+  -> Text
+  -> Int
+  -> Int
+  -> Int
+  -> Maybe Int
+  -> Maybe Int
+  -> Int
+  -> Int
+  -> Value
+mkEvidence relPath docBytes docLines blockLang blockIndex blockLineStart blockLineEnd mLineNo mArrayIndex spanStart spanLen =
+  let base =
+        [ "doc_path" .= relPath
+        , "doc_bytes" .= docBytes
+        , "doc_lines" .= docLines
+        , "block_lang" .= blockLang
+        , "block_index" .= blockIndex
+        , "block_line_start" .= blockLineStart
+        , "block_line_end" .= blockLineEnd
+        , "span_start" .= spanStart
+        , "span_end" .= (spanStart + spanLen)
+        , "line_length" .= spanLen
+        ]
+      extras =
+        catMaybes
+          [ ("line_no" .=) <$> mLineNo
+          , ("array_index" .=) <$> mArrayIndex
+          ]
+  in A.object (base <> extras)
+
+attachEvidence :: Value -> Value -> Either Text Value
+attachEvidence evidence = \case
+  A.Object o ->
+    if KM.member "evidence" o
+      then Right (A.Object (KM.insert "evidence_md" evidence o))
+      else Right (A.Object (KM.insert "evidence" evidence o))
+  _ -> Left "extracted record must be a JSON object"
+
+extractCanvasValues :: Bool -> FilePath -> BS.ByteString -> [FenceInfo] -> Either Text [(Int, Value)]
+extractCanvasValues strictMode relPath _rawBytes fences = do
+  let canvasFences = [ f | f <- fences, fiLang f == "canvas" ]
+  fmap catMaybes $ traverse one canvasFences
   where
-    one st rp (i, Fence{..}) = do
-      vals <- parseJsonBlock st rp i fStartLine fLines
-      case vals of
-        [v@(A.Object _)] -> Right (i, v)
-        [v] ->
-          if st then Left (T.pack rp <> ":" <> T.pack (show fStartLine) <> ": canvas block must be a JSON object") else Right (i, v)
-        _ ->
-          if st then Left (T.pack rp <> ":" <> T.pack (show fStartLine) <> ": canvas block must be a single JSON object") else Right (i, A.object [])
+    one FenceInfo{..} = do
+      let b = blockBytes fiLines
+      case A.eitherDecodeStrict' b of
+        Left err ->
+          if strictMode then Left (T.pack relPath <> ":" <> T.pack (show fiOpenLine) <> ": invalid canvas JSON: " <> T.pack err) else Right Nothing
+        Right v ->
+          case v of
+            A.Object _ -> Right (Just (fiBlockIndex, v))
+            _ ->
+              if strictMode then Left (T.pack relPath <> ":" <> T.pack (show fiOpenLine) <> ": canvas block must be a JSON object") else Right Nothing
+
+extractCanvasPointers :: FilePath -> Int -> Int -> BS.ByteString -> [FenceInfo] -> Either Text [Value]
+extractCanvasPointers relPath docBytes docLines _rawBytes fences =
+  fmap catMaybes $ traverse one [ f | f <- fences, fiLang f == "canvas" ]
+  where
+    one FenceInfo{..} =
+      case fiLines of
+        [] -> Right Nothing
+        (x:_) ->
+          let endLi = last fiLines
+              spanStart = liStart x
+              spanLen = (liStart endLi + liLen endLi) - spanStart
+              outRel = "canvas/" <> T.pack (addExtension (relPath <> ".block" <> show fiBlockIndex) "canvas.json")
+              canvasBytes = A.encode (sndOrNull (A.eitherDecodeStrict' (blockBytes fiLines)))
+              shaHex = "sha256:" <> hex (sha256 (BL.toStrict canvasBytes))
+              ev = mkEvidence relPath docBytes docLines "canvas" fiBlockIndex fiContentStartLine fiContentEndLine Nothing Nothing spanStart spanLen
+              v = A.object
+                    [ "event" .= ("canvas.block" :: Text)
+                    , "doc" .= relPath
+                    , "block_index" .= fiBlockIndex
+                    , "canvas_path" .= outRel
+                    , "canvas_sha256" .= shaHex
+                    , "evidence" .= ev
+                    ]
+          in Right (Just v)
+
+    sndOrNull = \case
+      Left _ -> A.object []
+      Right v -> v
+
+hex :: BS.ByteString -> Text
+hex bs = T.concat (map byteHex (BS.unpack bs))
+  where
+    byteHex w =
+      let digits = "0123456789abcdef"
+          hi = fromIntegral (w `div` 16)
+          lo = fromIntegral (w `mod` 16)
+      in T.pack [digits !! hi, digits !! lo]
 
 applyCanonFilter :: Bool -> [Value] -> [Value]
 applyCanonFilter False = id

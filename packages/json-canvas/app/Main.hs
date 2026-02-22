@@ -73,6 +73,7 @@ data MdExtractOptions = MdExtractOptions
   , mdAggregate :: Bool
   , mdLooseNdjson :: Bool
   , mdCanonFilter :: Bool
+  , mdEmitCanvasPointers :: Bool
   } deriving (Show)
 
 data MnemonicManifoldCommand
@@ -264,6 +265,7 @@ parseMdExtract = MdExtractOptions
         ]
   <*> switch (long "loose-ndjson" <> help "Also parse loose JSON lines outside fences")
   <*> switch (long "canon-filter" <> help "Only emit records compatible with mnemonic-manifold canon decoding")
+  <*> switch (long "emit-canvas-pointers" <> help "Write ndjson/canvas.blocks.ndjson pointer records for extracted ```canvas blocks (requires --mode all and 'canvas' in --langs)")
   where
     autoMode = maybeReader $ \s -> case s of
       "ndjson-only" -> Just ModeNdjsonOnly
@@ -545,6 +547,7 @@ runMd = \case
           , ecAggregate = mdAggregate
           , ecLooseNdjson = mdLooseNdjson
           , ecCanonFilter = mdCanonFilter
+          , ecEmitCanvasPointers = mdEmitCanvasPointers
           }
     extractNdjsonFromTree cfg
   where
