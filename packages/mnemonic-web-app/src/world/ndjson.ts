@@ -22,9 +22,9 @@ export type CanvasEdge = {
   color?: string;
 };
 
-export function parseCanvasEventsNdjson(input: string): CanvasEvent[] {
+export function parseNdjsonObjects(input: string): unknown[] {
   const lines = input.split(/\r?\n/).filter((l) => l.trim().length > 0);
-  const events: CanvasEvent[] = [];
+  const values: unknown[] = [];
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     let v: unknown;
@@ -36,8 +36,11 @@ export function parseCanvasEventsNdjson(input: string): CanvasEvent[] {
     if (typeof v !== "object" || v === null) {
       throw new Error(`Non-object record on line ${i + 1}`);
     }
-    events.push(v as CanvasEvent);
+    values.push(v);
   }
-  return events;
+  return values;
 }
 
+export function parseCanvasEventsNdjson(input: string): CanvasEvent[] {
+  return parseNdjsonObjects(input) as CanvasEvent[];
+}

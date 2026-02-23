@@ -33,13 +33,13 @@ main = do
   md <- TIO.readFile "test/vectors/md-sample.md"
   golden <- BL.readFile "test/vectors/md-extract.golden.ndjson"
 
-  out1 <- case extractNdjsonFromMarkdown True False False ["ndjson","jsonl","jsonlines","json","hash"] "md-sample.md" md of
+  out1 <- case extractNdjsonFromMarkdown True False False False ["ndjson","jsonl","jsonlines","json","hash"] "md-sample.md" md of
     Left err -> do
       putStrLn ("FAIL: extract: " ++ T.unpack err)
       exitFailure
     Right bs -> pure bs
 
-  out2 <- case extractNdjsonFromMarkdown True False False ["ndjson","jsonl","jsonlines","json","hash"] "md-sample.md" md of
+  out2 <- case extractNdjsonFromMarkdown True False False False ["ndjson","jsonl","jsonlines","json","hash"] "md-sample.md" md of
     Left err -> do
       putStrLn ("FAIL: extract determinism: " ++ T.unpack err)
       exitFailure
@@ -47,6 +47,22 @@ main = do
 
   assertEq "golden" golden out1
   assertEq "determinism" out1 out2
+
+  -- Prose → canon event extraction (paragraphs outside fences)
+  mdProse <- TIO.readFile "test/vectors/md-prose-sample.md"
+  proseGolden <- BL.readFile "test/vectors/md-prose-extract.golden.ndjson"
+  proseOut <- case extractNdjsonFromMarkdown True False False True ["ndjson"] "md-prose-sample.md" mdProse of
+    Left err -> do
+      putStrLn ("FAIL: prose extract: " ++ T.unpack err)
+      exitFailure
+    Right bs -> pure bs
+  assertEq "prose golden" proseGolden proseOut
+  vProse <- verifyEvidenceNdjsonBytes (VerifyConfig "test/vectors" True) proseOut
+  case vProse of
+    Left err -> do
+      putStrLn ("FAIL: prose verify-evidence: " ++ T.unpack err)
+      exitFailure
+    Right () -> pure ()
 
   -- Evidence verification should succeed against the on-disk source bytes.
   v1 <- verifyEvidenceNdjsonBytes (VerifyConfig "test/vectors" True) out1
@@ -57,14 +73,14 @@ main = do
     Right () -> pure ()
 
   let bad = "```ndjson\n{not json}\n```\n"
-  case extractNdjsonFromMarkdown True False False ["ndjson"] "bad.md" bad of
+  case extractNdjsonFromMarkdown True False False False ["ndjson"] "bad.md" bad of
     Left _ -> pure ()
     Right _ -> do
       putStrLn "FAIL: strict should reject invalid JSON line in ndjson block"
       exitFailure
 
   let unclosed = "```ndjson\n{\"a\":1}\n"
-  case extractNdjsonFromMarkdown True False False ["ndjson"] "unclosed.md" unclosed of
+  case extractNdjsonFromMarkdown True False False False ["ndjson"] "unclosed.md" unclosed of
     Left _ -> pure ()
     Right _ -> do
       putStrLn "FAIL: strict should reject unclosed fence"
@@ -127,6 +143,7 @@ main = do
       , ecAggregate = True
       , ecLooseNdjson = False
       , ecCanonFilter = False
+      , ecEmitProseEvents = False
       , ecEmitCanvasPointers = True
       }
 
@@ -150,6 +167,7 @@ main = do
       , moAggregate = True
       , moLooseNdjson = False
       , moCanonFilter = False
+      , moEmitProseEvents = False
       , moEmitCanvasPointers = True
       , moEmitManifest = True
       , moManifestPath = out </> "manifest.json"

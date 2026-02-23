@@ -77,6 +77,7 @@ data MdExtractOptions = MdExtractOptions
   , mdAggregate :: Bool
   , mdLooseNdjson :: Bool
   , mdCanonFilter :: Bool
+  , mdEmitProseEvents :: Bool
   , mdEmitCanvasPointers :: Bool
   , mdEmitManifest :: Bool
   , mdManifestPath :: Maybe FilePath
@@ -288,6 +289,7 @@ parseMdExtract = MdExtractOptions
         ]
   <*> switch (long "loose-ndjson" <> help "Also parse loose JSON lines outside fences")
   <*> switch (long "canon-filter" <> help "Only emit records compatible with mnemonic-manifold canon decoding")
+  <*> switch (long "emit-prose-events" <> help "Emit canon event records from Markdown prose (paragraphs outside fences)")
   <*> switch (long "emit-canvas-pointers" <> help "Write ndjson/canvas.blocks.ndjson pointer records for extracted ```canvas blocks (requires --mode all and 'canvas' in --langs)")
   <*> switch (long "emit-manifest" <> help "Write a content-addressed manifest.json alongside extracted outputs")
   <*> optional (strOption (long "manifest-path" <> metavar "FILE" <> help "Manifest output path (default: <out>/manifest.json)"))
@@ -586,6 +588,7 @@ runMd = \case
           , ecAggregate = mdAggregate
           , ecLooseNdjson = mdLooseNdjson
           , ecCanonFilter = mdCanonFilter
+          , ecEmitProseEvents = mdEmitProseEvents
           , ecEmitCanvasPointers = mdEmitCanvasPointers
           }
     extractNdjsonFromTree cfg
@@ -602,6 +605,7 @@ runMd = \case
             , moAggregate = mdAggregate
             , moLooseNdjson = mdLooseNdjson
             , moCanonFilter = mdCanonFilter
+            , moEmitProseEvents = mdEmitProseEvents
             , moEmitCanvasPointers = mdEmitCanvasPointers
             , moEmitManifest = mdEmitManifest
             , moManifestPath = manifestPath

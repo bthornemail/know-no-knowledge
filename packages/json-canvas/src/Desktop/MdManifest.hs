@@ -49,6 +49,7 @@ data ManifestOptions = ManifestOptions
   , moAggregate :: Bool
   , moLooseNdjson :: Bool
   , moCanonFilter :: Bool
+  , moEmitProseEvents :: Bool
   , moEmitCanvasPointers :: Bool
   , moEmitManifest :: Bool
   , moManifestPath :: FilePath
@@ -103,6 +104,7 @@ writeManifest ManifestOptions{..} = when moEmitManifest $ do
           , ("aggregate", jsonBool moAggregate)
           , ("loose_ndjson", jsonBool moLooseNdjson)
           , ("canon_filter", jsonBool moCanonFilter)
+          , ("emit_prose_events", jsonBool moEmitProseEvents)
           , ("emit_canvas_pointers", jsonBool moEmitCanvasPointers)
           ]
 

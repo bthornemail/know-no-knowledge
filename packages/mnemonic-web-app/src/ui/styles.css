@@ -63,6 +63,38 @@ body {
   overflow: hidden;
 }
 
+.boot {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  padding: 16px;
+}
+
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 110px 1fr;
+  height: 100%;
+  gap: 12px;
+  padding: 12px;
+}
+
+.compareDrop {
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  color: var(--muted);
+  background: rgba(15, 22, 32, 0.35);
+}
+
+.compareBody {
+  grid-column: 1 / -1;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(15, 22, 32, 0.55);
+  overflow: hidden;
+}
+
 .split {
   display: grid;
   grid-template-rows: 1fr 1fr;
@@ -118,4 +150,3 @@ body {
 code {
   color: var(--accent);
 }
-

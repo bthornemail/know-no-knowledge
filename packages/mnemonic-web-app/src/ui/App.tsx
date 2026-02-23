@@ -1,22 +1,106 @@
-import React, { useMemo, useState } from "react";
-import { parseCanvasEventsNdjson } from "../world/ndjson";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { parseCanvasEventsNdjson, parseNdjsonObjects } from "../world/ndjson";
 import { buildScene } from "../world/scene";
 import { BlackboardView } from "./BlackboardView";
 import { WhiteboardView } from "./WhiteboardView";
+import { extractSPOTriples } from "../world/canon";
+import { classifyTriples } from "../spo/tripleClassifier";
+import { SPOTreeBuilder } from "../spo/treeBuilder";
+import { SPOTreePanel } from "./SPOTreePanel";
+import { MiniMap } from "./MiniMap";
+import { cameraDefault } from "./camera";
+import { useElementSize } from "./useElementSize";
+import { indexCanvasScene } from "../world/canvasMeta";
+import { ComparePanel } from "./ComparePanel";
+import { BootstrapPanel } from "./BootstrapPanel";
 
 export function App() {
   const [raw, setRaw] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState<"canvas" | "spo">("canvas");
+  const [appMode, setAppMode] = useState<"single" | "compare">("single");
+  const [viewMode, setViewMode] = useState<"svg" | "diagram">("diagram");
+  const [scopeMode, setScopeMode] = useState<"world" | "layer" | "node">("world");
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [activeLayerId, setActiveLayerId] = useState<string | null>(null);
+  const [svgCamera, setSvgCamera] = useState(cameraDefault());
+  const [diagramCamera, setDiagramCamera] = useState(cameraDefault());
+  const [viewportPx, setViewportPx] = useState({ w: 0, h: 0 });
+  const canvasHostRef = useRef<HTMLDivElement>(null);
+  const canvasSize = useElementSize(canvasHostRef);
 
-  const scene = useMemo(() => {
+  const [rawA, setRawA] = useState<string | null>(null);
+  const [rawB, setRawB] = useState<string | null>(null);
+  const [compareError, setCompareError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setViewportPx(canvasSize);
+  }, [canvasSize]);
+
+  const parsed = useMemo(() => {
     if (!raw) return null;
     try {
-      const events = parseCanvasEventsNdjson(raw);
-      return buildScene(events);
+      const values = parseNdjsonObjects(raw);
+      return values;
     } catch (e) {
       return null;
     }
   }, [raw]);
+
+  const scene = useMemo(() => {
+    if (!parsed) return null;
+    try {
+      const events = parsed as any[];
+      const maybeCanvas = events.some((v) => v && typeof v === "object" && (v as any).op);
+      if (!maybeCanvas) return null;
+      return buildScene(parseCanvasEventsNdjson(raw!));
+    } catch {
+      return null;
+    }
+  }, [parsed, raw]);
+
+  const canvasMeta = useMemo(() => {
+    if (!scene) return null;
+    return indexCanvasScene(scene);
+  }, [scene]);
+
+  const spo = useMemo(() => {
+    if (!parsed) return null;
+    const triples = extractSPOTriples(parsed);
+    if (triples.length === 0) return null;
+    const classified = classifyTriples(triples);
+    const tree = new SPOTreeBuilder().build(classified);
+    return { triples, tree };
+  }, [parsed]);
+
+  const parsedA = useMemo(() => {
+    if (!rawA) return null;
+    try {
+      return parseNdjsonObjects(rawA);
+    } catch {
+      return null;
+    }
+  }, [rawA]);
+
+  const parsedB = useMemo(() => {
+    if (!rawB) return null;
+    try {
+      return parseNdjsonObjects(rawB);
+    } catch {
+      return null;
+    }
+  }, [rawB]);
+
+  const spoA = useMemo(() => {
+    if (!parsedA) return null;
+    return extractSPOTriples(parsedA);
+  }, [parsedA]);
+
+  const spoB = useMemo(() => {
+    if (!parsedB) return null;
+    return extractSPOTriples(parsedB);
+  }, [parsedB]);
 
   async function onDrop(ev: React.DragEvent) {
     ev.preventDefault();
@@ -24,28 +108,139 @@ export function App() {
     const f = ev.dataTransfer.files?.[0];
     if (!f) return;
     const text = await f.text();
+    await loadSingleText(text);
+  }
+
+  async function loadSingleText(text: string) {
     try {
-      parseCanvasEventsNdjson(text);
+      parseNdjsonObjects(text);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
       return;
     }
     setRaw(text);
+    const values = parseNdjsonObjects(text);
+    const hasCanvas = values.some((v) => (v as any)?.op === "addNode" || (v as any)?.op === "addEdge");
+    const hasSPO = extractSPOTriples(values).length > 0;
+    if (hasSPO && !hasCanvas) setMode("spo");
+    else setMode("canvas");
+    setSelectedNodeId(null);
+    setScopeMode("world");
+    setActiveLayerId(null);
+  }
+
+  async function onDropCompare(which: "A" | "B", ev: React.DragEvent) {
+    ev.preventDefault();
+    setCompareError(null);
+    const f = ev.dataTransfer.files?.[0];
+    if (!f) return;
+    const text = await f.text();
+    try {
+      parseNdjsonObjects(text);
+    } catch (e) {
+      setCompareError(e instanceof Error ? e.message : String(e));
+      return;
+    }
+    if (which === "A") setRawA(text);
+    else setRawB(text);
+  }
+
+  async function loadCompareSample() {
+    setCompareError(null);
+    try {
+      const [a, b] = await Promise.all([
+        fetch("/sample.canon.a.ndjson").then((r) => r.text()),
+        fetch("/sample.canon.b.ndjson").then((r) => r.text())
+      ]);
+      setRawA(a);
+      setRawB(b);
+    } catch (e) {
+      setCompareError(e instanceof Error ? e.message : String(e));
+    }
+  }
+
+  async function loadSampleCanvas() {
+    setError(null);
+    try {
+      const text = await fetch("/sample.canvas.ndjson").then((r) => r.text());
+      await loadSingleText(text);
+      setMode("canvas");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    }
+  }
+
+  async function loadSampleCanon() {
+    setError(null);
+    try {
+      const text = await fetch("/sample.canon.a.ndjson").then((r) => r.text());
+      await loadSingleText(text);
+      setMode("spo");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    }
   }
 
   return (
     <div
       className="app"
       onDragOver={(e) => e.preventDefault()}
-      onDrop={onDrop}
+      onDrop={appMode === "single" ? onDrop : undefined}
     >
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".ndjson,.jsonl"
+        style={{ display: "none" }}
+        onChange={async (e) => {
+          const f = e.target.files?.[0];
+          if (!f) return;
+          const text = await f.text();
+          await loadSingleText(text);
+          e.target.value = "";
+        }}
+      />
       <div className="topbar">
         <div className="title">Mnemonic Manifold</div>
         <div className="hint">
-          Drop <code>*.ndjson</code> Canvas events (e.g.{" "}
-          <code>mnemonic-manifold.events.ndjson</code>)
+          {appMode === "single" ? (
+            <>
+              Drop <code>*.ndjson</code> (Canvas events or canon SPO records)
+            </>
+          ) : (
+            <>
+              Compare: drop two canon NDJSON streams with{" "}
+              <code>{"{subject,predicate,object}"}</code>
+            </>
+          )}
         </div>
-        {raw && (
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <button
+            className="btn"
+            onClick={() => setAppMode("single")}
+            aria-pressed={appMode === "single"}
+          >
+            Single
+          </button>
+          <button
+            className="btn"
+            onClick={() => setAppMode("compare")}
+            aria-pressed={appMode === "compare"}
+          >
+            Compare
+          </button>
+        </div>
+        {appMode === "single" && raw && (
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <button className="btn" onClick={() => setMode("canvas")} aria-pressed={mode === "canvas"}>
+              Canvas
+            </button>
+            <button className="btn" onClick={() => setMode("spo")} aria-pressed={mode === "spo"}>
+              SPO
+            </button>
+          </div>
+        )}
+        {appMode === "single" && raw && (
           <button className="btn" onClick={() => setRaw(null)}>
             Clear
           </button>
@@ -55,36 +250,155 @@ export function App() {
       <div className="sidebar">
         <h3 style={{ marginTop: 0 }}>Corpus</h3>
         <div style={{ color: "var(--muted)", fontSize: 13 }}>
-          This starter UI renders the event stream deterministically (sort by
-          node/edge id). It does not mutate canonical state.
+          This starter UI renders deterministically (stable ordering by id). It
+          does not mutate canonical state.
         </div>
         {error && (
           <pre style={{ whiteSpace: "pre-wrap", color: "#ff8a8a" }}>
             {error}
           </pre>
         )}
-        {scene && (
+        {compareError && (
+          <pre style={{ whiteSpace: "pre-wrap", color: "#ff8a8a" }}>
+            {compareError}
+          </pre>
+        )}
+        {mode === "canvas" && scene && (
           <div style={{ marginTop: 12, fontSize: 13, color: "var(--muted)" }}>
             <div>Nodes: {scene.nodes.length}</div>
             <div>Edges: {scene.edges.length}</div>
           </div>
         )}
+        {mode === "spo" && spo && (
+          <div style={{ marginTop: 12, fontSize: 13, color: "var(--muted)" }}>
+            <div>Triples: {spo.triples.length}</div>
+            <div>Nodes: {spo.tree.stats.total_nodes}</div>
+            <div>Edges: {spo.tree.stats.total_edges}</div>
+          </div>
+        )}
       </div>
 
       <div className="main">
-        {!scene ? (
-          <div className="drop">
-            Drop a Canvas NDJSON event stream here.
+        {appMode === "compare" ? (
+          <div className="compare">
+            <div
+              className="compareDrop"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => onDropCompare("A", e)}
+            >
+              <div style={{ fontSize: 12, color: "var(--muted)" }}>A</div>
+              <div style={{ fontSize: 13 }}>
+                Drop canon NDJSON (e.g. <code>build/docs/ndjson/all.ndjson</code>)
+              </div>
+              {rawA && (
+                <div style={{ marginTop: 8, fontSize: 12, color: "var(--muted)" }}>
+                  Loaded ({(parsedA?.length ?? 0).toLocaleString()} records)
+                </div>
+              )}
+            </div>
+            <div
+              className="compareDrop"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => onDropCompare("B", e)}
+            >
+              <div style={{ fontSize: 12, color: "var(--muted)" }}>B</div>
+              <div style={{ fontSize: 13 }}>
+                Drop canon NDJSON (e.g. <code>build/docs/ndjson/all.ndjson</code>)
+              </div>
+              {rawB && (
+                <div style={{ marginTop: 8, fontSize: 12, color: "var(--muted)" }}>
+                  Loaded ({(parsedB?.length ?? 0).toLocaleString()} records)
+                </div>
+              )}
+            </div>
+            <div className="compareBody">
+              {parsedA && parsedB && spoA && spoB ? (
+                <div style={{ padding: 12, overflow: "auto", height: "100%" }}>
+                  <ComparePanel valuesA={parsedA} triplesA={spoA} valuesB={parsedB} triplesB={spoB} />
+                </div>
+              ) : (
+                <div className="drop" style={{ position: "relative", margin: 12 }}>
+                  <div style={{ display: "grid", gap: 10, justifyItems: "center" }}>
+                    <div>Load A and B to compute deterministic deltas.</div>
+                    <button className="btn" onClick={loadCompareSample}>
+                      Load compare samples
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : !raw ? (
+          <div className="boot">
+            <BootstrapPanel
+              onPickFile={() => fileInputRef.current?.click()}
+              onLoadSampleCanvas={loadSampleCanvas}
+              onLoadSampleCanon={loadSampleCanon}
+            />
+          </div>
+        ) : mode === "canvas" ? (
+          <div
+            className="pane"
+            ref={canvasHostRef}
+            style={{ height: "100%", position: "relative" }}
+          >
+            <div className="paneHeader">
+              {viewMode === "diagram" ? "Blackboard (diagram)" : "Whiteboard (SVG explorer)"}
+            </div>
+            {scene ? (
+              viewMode === "diagram" ? (
+                <BlackboardView
+                  scene={scene}
+                  camera={diagramCamera}
+                  onCameraChange={setDiagramCamera}
+                  onSelectNodeId={(id) => setSelectedNodeId(id)}
+                />
+              ) : (
+                <WhiteboardView
+                  scene={scene}
+                  camera={svgCamera}
+                  onCameraChange={setSvgCamera}
+                  onSelectNodeId={(id) => setSelectedNodeId(id)}
+                />
+              )
+            ) : (
+              <div className="drop" style={{ fontSize: 13 }}>
+                Not a Canvas event stream (no <code>op:addNode</code>/<code>op:addEdge</code> records).
+              </div>
+            )}
+
+            {scene && (
+              <MiniMap
+                scene={scene}
+                activeViewMode={viewMode}
+                scopeMode={scopeMode}
+                activeLayerId={activeLayerId}
+                selectedNodeId={selectedNodeId}
+                metaByNodeId={canvasMeta ?? new Map()}
+                svgCamera={svgCamera}
+                diagramCamera={diagramCamera}
+                viewportPx={viewportPx}
+                onSetViewMode={setViewMode}
+                onSetScopeMode={setScopeMode}
+                onSetActiveLayerId={setActiveLayerId}
+                onSetSelectedNodeId={setSelectedNodeId}
+                onSetSvgCamera={setSvgCamera}
+                onSetDiagramCamera={setDiagramCamera}
+              />
+            )}
           </div>
         ) : (
-          <div className="split">
-            <div className="pane">
-              <div className="paneHeader">Blackboard (diagram)</div>
-              <BlackboardView scene={scene} />
-            </div>
-            <div className="pane">
-              <div className="paneHeader">Whiteboard (SVG explorer)</div>
-              <WhiteboardView scene={scene} />
+          <div className="pane" style={{ height: "100%" }}>
+            <div className="paneHeader">SPO Tree (shadow analysis)</div>
+            <div style={{ padding: 12, overflow: "auto", height: "100%" }}>
+              {spo ? (
+                <SPOTreePanel triples={spo.triples} tree={spo.tree} />
+              ) : (
+                <div style={{ color: "var(--muted)", fontSize: 13 }}>
+                  No <code>{"{subject,predicate,object}"}</code> records detected
+                  in this NDJSON stream.
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -93,11 +407,41 @@ export function App() {
       <div className="sidebar right">
         <h3 style={{ marginTop: 0 }}>Inspector</h3>
         <div style={{ color: "var(--muted)", fontSize: 13 }}>
-          Placeholder panel (timeline/search/WinkNLP can be layered here without
-          altering canonical data).
+          {appMode === "compare" ? (
+            <div>
+              Compare mode: deltas are computed from canon SPO records only. No
+              canonical mutation.
+            </div>
+          ) : mode === "canvas" ? (
+            <div>
+              <div>
+                View: <code>{viewMode}</code>
+              </div>
+              <div>
+                Scope: <code>{scopeMode}</code>
+              </div>
+              {activeLayerId && (
+                <div>
+                  Layer: <code>{activeLayerId}</code>
+                </div>
+              )}
+              <div>
+                Selected:{" "}
+                <code>{selectedNodeId ?? "∅"}</code>
+              </div>
+              {scene && selectedNodeId && (
+                <pre style={{ whiteSpace: "pre-wrap", fontSize: 12, marginTop: 10 }}>
+                  {JSON.stringify(scene.nodesById.get(selectedNodeId), null, 2)}
+                </pre>
+              )}
+            </div>
+          ) : (
+            <div>
+              SPO shadow analysis; no canonical mutation.
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
-

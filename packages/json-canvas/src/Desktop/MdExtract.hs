@@ -43,15 +43,16 @@ data ExtractConfig = ExtractConfig
   , ecAggregate :: Bool
   , ecLooseNdjson :: Bool
   , ecCanonFilter :: Bool
+  , ecEmitProseEvents :: Bool
   , ecEmitCanvasPointers :: Bool
   } deriving (Eq, Show)
 
 -- | Extract NDJSON records from fenced blocks in a Markdown file.
 -- Output is canonicalized NDJSON: each emitted record is parsed as JSON then re-encoded with aeson.
-extractNdjsonFromMarkdown :: Bool -> Bool -> Bool -> [Text] -> FilePath -> Text -> Either Text BL.ByteString
-extractNdjsonFromMarkdown strictMode looseNdjson canonFilter allowedLangs relPath markdown =
+extractNdjsonFromMarkdown :: Bool -> Bool -> Bool -> Bool -> [Text] -> FilePath -> Text -> Either Text BL.ByteString
+extractNdjsonFromMarkdown strictMode looseNdjson canonFilter emitProseEvents allowedLangs relPath markdown =
   fmap (\(ndjsonOut, _canvasBlocks, _canvasPointers) -> ndjsonOut) $
-    extractNdjsonFromBytes strictMode looseNdjson canonFilter allowedLangs relPath (TE.encodeUtf8 markdown)
+    extractNdjsonFromBytes strictMode looseNdjson canonFilter emitProseEvents allowedLangs relPath (TE.encodeUtf8 markdown)
 
 -- | Walk ecRoot and extract from all *.md files. Writes:
 --   <out>/ndjson/all.ndjson (if ecAggregate)
@@ -71,7 +72,7 @@ extractNdjsonFromTree ExtractConfig{..} = do
   canvasPointersAcc <- fmap concat $ forM mdFiles $ \absPath -> do
     let rel = makeRelative ecRoot absPath
     rawBytes <- BS.readFile absPath
-    case extractNdjsonFromBytes ecStrict ecLooseNdjson ecCanonFilter langsToUse rel rawBytes of
+    case extractNdjsonFromBytes ecStrict ecLooseNdjson ecCanonFilter ecEmitProseEvents langsToUse rel rawBytes of
       Left err ->
         if ecStrict
           then ioError (userError (T.unpack err))
@@ -158,8 +159,8 @@ data CanvasBlock = CanvasBlock
   , cbRawBytes :: BS.ByteString
   } deriving (Eq, Show)
 
-extractNdjsonFromBytes :: Bool -> Bool -> Bool -> [Text] -> FilePath -> BS.ByteString -> Either Text (BL.ByteString, [(Int, Value)], [Value])
-extractNdjsonFromBytes strictMode looseNdjson canonFilter allowedLangs relPath rawBytes = do
+extractNdjsonFromBytes :: Bool -> Bool -> Bool -> Bool -> [Text] -> FilePath -> BS.ByteString -> Either Text (BL.ByteString, [(Int, Value)], [Value])
+extractNdjsonFromBytes strictMode looseNdjson canonFilter emitProseEvents allowedLangs relPath rawBytes = do
   let docBytes = BS.length rawBytes
       lineInfos = splitLines relPath rawBytes
       docLines = length lineInfos
@@ -171,6 +172,10 @@ extractNdjsonFromBytes strictMode looseNdjson canonFilter allowedLangs relPath r
     if looseNdjson
       then extractLooseNdjsonRecords strictMode relPath docBytes docLines lineInfos inFenceLines
       else Right []
+  proseRecs <-
+    if emitProseEvents
+      then extractProseEventRecords relPath docBytes docLines lineInfos inFenceLines
+      else Right []
 
   canvasBlocks <-
     if "canvas" `elem` langs
@@ -179,7 +184,7 @@ extractNdjsonFromBytes strictMode looseNdjson canonFilter allowedLangs relPath r
   let canvasValues = [(cbBlockIndex cb, cbValue cb) | cb <- canvasBlocks]
       canvasPointers = [mkCanvasPointer relPath docBytes docLines cb | cb <- canvasBlocks]
 
-  let allRecords = applyCanonFilter canonFilter (extracted <> looseRecs)
+  let allRecords = applyCanonFilter canonFilter (extracted <> looseRecs <> proseRecs)
       ndjsonOut = BL.unlines (map A.encode allRecords)
   pure (ndjsonOut, canvasValues, canvasPointers)
 
@@ -392,6 +397,71 @@ extractLooseNdjsonRecords strictMode relPath docBytes docLines lis inFenceFlags 
 
 blockBytes :: [LineInfo] -> BS.ByteString
 blockBytes ls = BS.intercalate "\n" (map liBytes ls)
+
+extractProseEventRecords :: FilePath -> Int -> Int -> [LineInfo] -> [Bool] -> Either Text [Value]
+extractProseEventRecords relPath docBytes docLines lis inFenceFlags =
+  Right (go 1 (zip lis inFenceFlags))
+  where
+    seriesName = detectSeries relPath
+    articleName = T.pack (takeBaseName relPath)
+
+    go _ [] = []
+    go n xs =
+      case dropWhile shouldSkip xs of
+        [] -> []
+        rest ->
+          let (para, tail') = span isParaLine rest
+          in if null para
+               then go n tail'
+               else mkPara n para : go (n + 1) tail'
+
+    shouldSkip (li, inFence) =
+      inFence || T.null (T.strip (liText li))
+
+    isParaLine (li, inFence) =
+      (not inFence) && (not (T.null (T.strip (liText li))))
+
+    mkPara idx para =
+      let ls0 = map fst para
+          startLi = head ls0
+          endLi = last ls0
+          spanStart = liStart startLi
+          spanEnd = liStart endLi + liLen endLi
+          spanLen = spanEnd - spanStart
+          txt = T.intercalate "\n" (map (T.stripEnd . liText) ls0)
+          v =
+            A.object
+              [ "event" .= ("paragraph" :: Text)
+              , "text" .= txt
+              , "doc" .= relPath
+              , "series" .= seriesName
+              , "article" .= articleName
+              , "id" .= ("p" <> T.pack (show idx))
+              , "order" .= idx
+              , "parser_version" .= ("md.prose.v1" :: Text)
+              ]
+          ev =
+            mkEvidence
+              relPath
+              docBytes
+              docLines
+              "prose"
+              (-2)
+              (liNo startLi)
+              (liNo endLi)
+              (Just idx)
+              Nothing
+              spanStart
+              spanLen
+      in case attachEvidence ev v of
+          Left _ -> v
+          Right o -> o
+
+detectSeries :: FilePath -> Text
+detectSeries rel =
+  case dropWhile (/= "narrative-series") (splitDirectories rel) of
+    ("narrative-series" : series : _) -> T.pack series
+    _ -> ""
 
 mkEvidence
   :: FilePath

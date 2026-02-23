@@ -6,6 +6,7 @@ export type SceneNode = {
   y: number;
   w: number;
   h: number;
+  raw: CanvasNode;
 };
 
 export type SceneEdge = {
@@ -16,11 +17,13 @@ export type SceneEdge = {
   y1: number;
   x2: number;
   y2: number;
+  raw: CanvasEdge;
 };
 
 export type Scene = {
   nodes: SceneNode[];
   edges: SceneEdge[];
+  nodesById: Map<string, CanvasNode>;
 };
 
 export function buildScene(events: CanvasEvent[]): Scene {
@@ -42,7 +45,8 @@ export function buildScene(events: CanvasEvent[]): Scene {
       x: n.x,
       y: n.y,
       w: n.width,
-      h: n.height
+      h: n.height,
+      raw: n
     }))
     .sort((a, b) => a.id.localeCompare(b.id));
 
@@ -62,11 +66,11 @@ export function buildScene(events: CanvasEvent[]): Scene {
         x1: a.cx,
         y1: a.cy,
         x2: b.cx,
-        y2: b.cy
+        y2: b.cy,
+        raw: e
       };
     })
     .sort((a, b) => a.id.localeCompare(b.id));
 
-  return { nodes, edges: sceneEdges };
+  return { nodes, edges: sceneEdges, nodesById };
 }
-
