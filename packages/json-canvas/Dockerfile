@@ -14,10 +14,14 @@ COPY json-canvas-cli.cabal /src/json-canvas-cli.cabal
 # Copy source
 COPY src /src/src
 COPY app /src/app
+COPY test /src/test
 
 # Build the executable
 RUN cabal update
 RUN cabal build exe:json-canvas
+
+FROM build AS test
+RUN cabal test all
 
 FROM debian:bookworm-slim AS runtime
 RUN apt-get update && apt-get install -y --no-install-recommends \

@@ -1,7 +1,10 @@
-.PHONY: build-image extract emit
+.PHONY: build-image test-image extract emit
 
 build-image:
 	docker compose build json-canvas
+
+test-image:
+	docker build --target test -t json-canvas:test ./packages/json-canvas
 
 extract:
 	docker compose run --rm json-canvas md extract \

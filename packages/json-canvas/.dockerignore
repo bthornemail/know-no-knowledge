@@ -3,5 +3,4 @@ build
 .git
 .gitignore
 *.md
-test
-
+!test/vectors/*.md
