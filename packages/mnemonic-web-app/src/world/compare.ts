@@ -1,10 +1,11 @@
 import type { SPOTriple } from "../types/spo";
 import { lemmaOf } from "../spo/simpleNlp";
+import { relationSynsetId } from "../spo/relationSynset";
 
 export type CorpusStats = {
   records: number;
   spo_triples: number;
-  by_predicate: Array<{ k: string; n: number }>;
+  by_face: Array<{ k: string; n: number }>;
   by_subject: Array<{ k: string; n: number }>;
   by_object: Array<{ k: string; n: number }>;
   by_world: Array<{ k: string; n: number }>;
@@ -42,7 +43,7 @@ function countBy(items: string[]): Array<{ k: string; n: number }> {
 }
 
 export function computeCorpusStats(values: unknown[], triples: SPOTriple[]): CorpusStats {
-  const predicates = triples.map((t) => lemmaOf(t.predicate));
+  const faces = triples.map((t) => relationSynsetId(t));
   const subjects = triples.map((t) => lemmaOf(t.subject));
   const objects = triples.map((t) => lemmaOf(t.object));
   const worlds = triples.map((t) => keyOfWorld(docPathOfTriple(t)));
@@ -51,7 +52,7 @@ export function computeCorpusStats(values: unknown[], triples: SPOTriple[]): Cor
   return {
     records: values.length,
     spo_triples: triples.length,
-    by_predicate: countBy(predicates).slice(0, 40),
+    by_face: countBy(faces).slice(0, 40),
     by_subject: countBy(subjects).slice(0, 40),
     by_object: countBy(objects).slice(0, 40),
     by_world: countBy(worlds),
@@ -86,11 +87,10 @@ function deltaRows(
 
 export function computeCorpusDelta(a: CorpusStats, b: CorpusStats): CorpusDelta {
   return {
-    predicates: deltaRows(a.by_predicate, b.by_predicate, 30),
+    predicates: deltaRows(a.by_face, b.by_face, 30),
     subjects: deltaRows(a.by_subject, b.by_subject, 30),
     objects: deltaRows(a.by_object, b.by_object, 30),
     worlds: deltaRows(a.by_world, b.by_world, 30),
     layers: deltaRows(a.by_layer, b.by_layer, 30)
   };
 }
-

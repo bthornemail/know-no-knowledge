@@ -161,6 +161,12 @@ verifyOne docBytes recObj EvidenceInfo{..} = do
           let got = T.strip (decodeLenient slice)
           in if got == v then Right () else Left "hash evidence slice does not match value"
         _ -> Left "hash record missing value"
+    (Just (A.String "paragraph"), "prose") ->
+      case KM.lookup "text" recObj of
+        Just (A.String t) ->
+          let got = decodeLenient slice
+          in if got == t then Right () else Left "prose evidence slice does not match paragraph text"
+        _ -> Left "paragraph record missing text"
     (Just (A.String "canvas.block"), "canvas") ->
       case KM.lookup "canvas_sha256" recObj of
         Just (A.String t) ->

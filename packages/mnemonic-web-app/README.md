@@ -22,7 +22,18 @@ Then drop one of these onto the app:
 
 - Canvas NDJSON events (e.g. `build/docs/mnemonic-manifold.events.ndjson`)
 - Canon NDJSON with `{subject,predicate,object}` records (renders an SPO tree shadow view)
-- Use **Compare** mode to drop two canon NDJSON streams and view deterministic predicate/entity deltas.
+- Canon NDJSON with prose paragraph events (`{event:"paragraph",text,...}`) also works: the UI derives a deterministic, edge-only SPO overlay from simple patterns (shadow only; no canonical mutation).
+- Use **Compare** mode to drop two canon NDJSON streams and view deterministic face/entity deltas.
+
+## Demo: WWLTT story set
+
+To generate demo outputs from the repo’s story corpus and make them available as one-click loads in the UI:
+
+```bash
+make web-demo-wwltt
+```
+
+Then run the web app and click **Load demo (WWLTT story)** (it also auto-loads if the demo files are present).
 
 ## Optional: WinkNLP
 

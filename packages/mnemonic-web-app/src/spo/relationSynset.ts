@@ -1,5 +1,6 @@
 import type { SPOTriple } from "../types/spo";
 import { lemmaOf } from "./simpleNlp";
+import { sha256HexUtf8 } from "../world/sha256";
 
 export type PosClass = "PRONOUN" | "PROPN" | "NOUN" | "OTHER";
 
@@ -70,3 +71,8 @@ export function relationFaceKey(triple: SPOTriple): string {
   return `rs.v1|p=${p}|s=${s}|o=${o}|sd=${sd}|pd=${pd}|od=${od}`;
 }
 
+export function relationSynsetId(triple: SPOTriple): string {
+  const face = relationFaceKey(triple);
+  const hex = sha256HexUtf8(face);
+  return `RS:${hex}`;
+}

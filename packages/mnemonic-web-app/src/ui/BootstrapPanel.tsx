@@ -3,10 +3,12 @@ import React from "react";
 export function BootstrapPanel({
   onLoadSampleCanvas,
   onLoadSampleCanon,
+  onLoadDemoWwltt,
   onPickFile
 }: {
   onLoadSampleCanvas: () => void;
   onLoadSampleCanon: () => void;
+  onLoadDemoWwltt: () => void;
   onPickFile: () => void;
 }) {
   return (
@@ -21,6 +23,9 @@ export function BootstrapPanel({
       <div style={{ display: "flex", gap: 10, marginTop: 14, flexWrap: "wrap" }}>
         <button className="btn" onClick={onPickFile}>
           Open NDJSON…
+        </button>
+        <button className="btn" onClick={onLoadDemoWwltt}>
+          Load demo (WWLTT story)
         </button>
         <button className="btn" onClick={onLoadSampleCanvas}>
           Load sample (Canvas events)
@@ -42,9 +47,13 @@ export function BootstrapPanel({
           <li>
             Manifest: <code>build/docs/manifest.json</code> (for build identity / integrity)
           </li>
+          <li>
+            Demo (WWLTT articles): run <code>make demo-wwltt demo-wwltt-emit</code> then open{" "}
+            <code>build/demo/wwltt/mnemonic-manifold.events.ndjson</code>. For one-click loading in the web UI, also run{" "}
+            <code>make web-demo-wwltt</code>.
+          </li>
         </ul>
       </div>
     </div>
   );
 }
-

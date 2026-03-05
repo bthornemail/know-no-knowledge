@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import type { SPOTriple } from "../types/spo";
 import type { CorpusDelta, CorpusStats } from "../world/compare";
 import { computeCorpusDelta, computeCorpusStats } from "../world/compare";
+import { buildRelationOverlays, downloadText, overlaysToNdjson } from "../world/overlays";
 
 function Table({
   title,
@@ -50,14 +51,18 @@ export function ComparePanel({
   valuesA,
   triplesA,
   valuesB,
-  triplesB
+  triplesB,
+  buildRootA,
+  buildRootB
 }: {
   valuesA: unknown[];
   triplesA: SPOTriple[];
   valuesB: unknown[];
   triplesB: SPOTriple[];
+  buildRootA?: string;
+  buildRootB?: string;
 }) {
-  const [tab, setTab] = useState<"predicates" | "subjects" | "objects" | "worlds" | "layers">("predicates");
+  const [tab, setTab] = useState<"faces" | "subjects" | "objects" | "worlds" | "layers">("faces");
 
   const statsA: CorpusStats = useMemo(
     () => computeCorpusStats(valuesA, triplesA),
@@ -73,7 +78,7 @@ export function ComparePanel({
   );
 
   const rows =
-    tab === "predicates"
+    tab === "faces"
       ? delta.predicates
       : tab === "subjects"
         ? delta.subjects
@@ -86,8 +91,26 @@ export function ComparePanel({
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-        <button className="btn" onClick={() => setTab("predicates")} aria-pressed={tab === "predicates"}>
-          Predicates
+        <button
+          className="btn"
+          onClick={() => {
+            const overlays = buildRelationOverlays(triplesA, buildRootA);
+            downloadText("overlay.relation.A.ndjson", overlaysToNdjson(overlays));
+          }}
+        >
+          Export faces A
+        </button>
+        <button
+          className="btn"
+          onClick={() => {
+            const overlays = buildRelationOverlays(triplesB, buildRootB);
+            downloadText("overlay.relation.B.ndjson", overlaysToNdjson(overlays));
+          }}
+        >
+          Export faces B
+        </button>
+        <button className="btn" onClick={() => setTab("faces")} aria-pressed={tab === "faces"}>
+          Faces
         </button>
         <button className="btn" onClick={() => setTab("subjects")} aria-pressed={tab === "subjects"}>
           Subjects
@@ -111,4 +134,3 @@ export function ComparePanel({
     </div>
   );
 }
-

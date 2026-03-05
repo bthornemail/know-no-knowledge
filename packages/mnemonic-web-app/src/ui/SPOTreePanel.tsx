@@ -1,13 +1,16 @@
 import React, { useMemo, useState } from "react";
 import type { SPOTriple, SPOTree } from "../types/spo";
 import { analyzeTree } from "../spo/analyzer";
+import { buildRelationOverlays, downloadText, overlaysToNdjson } from "../world/overlays";
 
 export function SPOTreePanel({
   triples,
-  tree
+  tree,
+  buildRootSha256
 }: {
   triples: SPOTriple[];
   tree: SPOTree;
+  buildRootSha256?: string;
 }) {
   const [mode, setMode] = useState<"insights" | "roles" | "relations">("insights");
   const [query, setQuery] = useState("");
@@ -43,6 +46,16 @@ export function SPOTreePanel({
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <button
+          className="btn"
+          onClick={() => {
+            const overlays = buildRelationOverlays(triples, buildRootSha256);
+            const ndjson = overlaysToNdjson(overlays);
+            downloadText("overlay.relation.ndjson", ndjson);
+          }}
+        >
+          Export faces
+        </button>
         <button
           className="btn"
           onClick={() => setMode("insights")}
@@ -186,4 +199,3 @@ export function SPOTreePanel({
     </div>
   );
 }
-

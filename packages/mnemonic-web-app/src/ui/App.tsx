@@ -3,7 +3,7 @@ import { parseCanvasEventsNdjson, parseNdjsonObjects } from "../world/ndjson";
 import { buildScene } from "../world/scene";
 import { BlackboardView } from "./BlackboardView";
 import { WhiteboardView } from "./WhiteboardView";
-import { extractSPOTriples } from "../world/canon";
+import { extractCanonTriples } from "../world/canon";
 import { classifyTriples } from "../spo/tripleClassifier";
 import { SPOTreeBuilder } from "../spo/treeBuilder";
 import { SPOTreePanel } from "./SPOTreePanel";
@@ -33,6 +33,13 @@ export function App() {
   const [rawB, setRawB] = useState<string | null>(null);
   const [compareError, setCompareError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const manifestInputRef = useRef<HTMLInputElement>(null);
+  const manifestAInputRef = useRef<HTMLInputElement>(null);
+  const manifestBInputRef = useRef<HTMLInputElement>(null);
+  const [buildRoot, setBuildRoot] = useState<string | null>(null);
+  const [buildRootA, setBuildRootA] = useState<string | null>(null);
+  const [buildRootB, setBuildRootB] = useState<string | null>(null);
+  const [autoBootTried, setAutoBootTried] = useState(false);
 
   useEffect(() => {
     setViewportPx(canvasSize);
@@ -67,7 +74,7 @@ export function App() {
 
   const spo = useMemo(() => {
     if (!parsed) return null;
-    const triples = extractSPOTriples(parsed);
+    const triples = extractCanonTriples(parsed);
     if (triples.length === 0) return null;
     const classified = classifyTriples(triples);
     const tree = new SPOTreeBuilder().build(classified);
@@ -94,12 +101,12 @@ export function App() {
 
   const spoA = useMemo(() => {
     if (!parsedA) return null;
-    return extractSPOTriples(parsedA);
+    return extractCanonTriples(parsedA);
   }, [parsedA]);
 
   const spoB = useMemo(() => {
     if (!parsedB) return null;
-    return extractSPOTriples(parsedB);
+    return extractCanonTriples(parsedB);
   }, [parsedB]);
 
   async function onDrop(ev: React.DragEvent) {
@@ -121,7 +128,7 @@ export function App() {
     setRaw(text);
     const values = parseNdjsonObjects(text);
     const hasCanvas = values.some((v) => (v as any)?.op === "addNode" || (v as any)?.op === "addEdge");
-    const hasSPO = extractSPOTriples(values).length > 0;
+    const hasSPO = extractCanonTriples(values).length > 0;
     if (hasSPO && !hasCanvas) setMode("spo");
     else setMode("canvas");
     setSelectedNodeId(null);
@@ -181,6 +188,55 @@ export function App() {
     }
   }
 
+  async function loadDemoWwltt() {
+    setError(null);
+    try {
+      const [events, manifest] = await Promise.all([
+        fetch("/demo/wwltt/mnemonic-manifold.events.ndjson").then((r) => {
+          if (!r.ok) throw new Error("WWLTT demo not found. Run `make web-demo-wwltt`.");
+          return r.text();
+        }),
+        fetch("/demo/wwltt/manifest.json").then((r) => (r.ok ? r.json() : null))
+      ]);
+      await loadSingleText(events);
+      setMode("canvas");
+      const root = typeof (manifest as any)?.root_sha256 === "string" ? (manifest as any).root_sha256 : null;
+      setBuildRoot(root);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    }
+  }
+
+  async function loadManifestFile(
+    f: File,
+    setRoot: (v: string | null) => void,
+    setErr: (v: string | null) => void
+  ) {
+    try {
+      const text = await f.text();
+      const j = JSON.parse(text);
+      const root = typeof j?.root_sha256 === "string" ? j.root_sha256 : null;
+      if (!root) throw new Error("manifest.json missing `root_sha256`");
+      setRoot(root);
+      setErr(null);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+      setRoot(null);
+    }
+  }
+
+  useEffect(() => {
+    if (autoBootTried) return;
+    if (raw) return;
+    if (appMode !== "single") return;
+    setAutoBootTried(true);
+    fetch("/demo/wwltt/mnemonic-manifold.events.ndjson", { method: "HEAD" })
+      .then((r) => {
+        if (r.ok) loadDemoWwltt();
+      })
+      .catch(() => {});
+  }, [autoBootTried, raw, appMode]);
+
   return (
     <div
       className="app"
@@ -200,6 +256,42 @@ export function App() {
           e.target.value = "";
         }}
       />
+      <input
+        ref={manifestInputRef}
+        type="file"
+        accept=".json,application/json"
+        style={{ display: "none" }}
+        onChange={async (e) => {
+          const f = e.target.files?.[0];
+          if (!f) return;
+          await loadManifestFile(f, setBuildRoot, setError);
+          e.target.value = "";
+        }}
+      />
+      <input
+        ref={manifestAInputRef}
+        type="file"
+        accept=".json,application/json"
+        style={{ display: "none" }}
+        onChange={async (e) => {
+          const f = e.target.files?.[0];
+          if (!f) return;
+          await loadManifestFile(f, setBuildRootA, setCompareError);
+          e.target.value = "";
+        }}
+      />
+      <input
+        ref={manifestBInputRef}
+        type="file"
+        accept=".json,application/json"
+        style={{ display: "none" }}
+        onChange={async (e) => {
+          const f = e.target.files?.[0];
+          if (!f) return;
+          await loadManifestFile(f, setBuildRootB, setCompareError);
+          e.target.value = "";
+        }}
+      />
       <div className="topbar">
         <div className="title">Mnemonic Manifold</div>
         <div className="hint">
@@ -209,8 +301,9 @@ export function App() {
             </>
           ) : (
             <>
-              Compare: drop two canon NDJSON streams with{" "}
-              <code>{"{subject,predicate,object}"}</code>
+              Compare: drop two canon NDJSON streams (explicit{" "}
+              <code>{"{subject,predicate,object}"}</code> and/or prose{" "}
+              <code>{"{event:\"paragraph\",text,...}"}</code>)
             </>
           )}
         </div>
@@ -253,6 +346,29 @@ export function App() {
           This starter UI renders deterministically (stable ordering by id). It
           does not mutate canonical state.
         </div>
+        {appMode === "single" && raw && (
+          <div style={{ marginTop: 10, display: "flex", gap: 8, alignItems: "center" }}>
+            <button className="btn" onClick={() => manifestInputRef.current?.click()}>
+              Load manifest…
+            </button>
+            <div style={{ fontSize: 12, color: "var(--muted)" }}>
+              build.root: <code>{buildRoot ?? "∅"}</code>
+            </div>
+          </div>
+        )}
+        {appMode === "compare" && (
+          <div style={{ marginTop: 10, display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <button className="btn" onClick={() => manifestAInputRef.current?.click()}>
+              Manifest A…
+            </button>
+            <button className="btn" onClick={() => manifestBInputRef.current?.click()}>
+              Manifest B…
+            </button>
+            <div style={{ fontSize: 12, color: "var(--muted)" }}>
+              A: <code>{buildRootA ?? "∅"}</code> · B: <code>{buildRootB ?? "∅"}</code>
+            </div>
+          </div>
+        )}
         {error && (
           <pre style={{ whiteSpace: "pre-wrap", color: "#ff8a8a" }}>
             {error}
@@ -290,6 +406,9 @@ export function App() {
               <div style={{ fontSize: 13 }}>
                 Drop canon NDJSON (e.g. <code>build/docs/ndjson/all.ndjson</code>)
               </div>
+              <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 6 }}>
+                Manifest: <code>{buildRootA ?? "∅"}</code>
+              </div>
               {rawA && (
                 <div style={{ marginTop: 8, fontSize: 12, color: "var(--muted)" }}>
                   Loaded ({(parsedA?.length ?? 0).toLocaleString()} records)
@@ -305,6 +424,9 @@ export function App() {
               <div style={{ fontSize: 13 }}>
                 Drop canon NDJSON (e.g. <code>build/docs/ndjson/all.ndjson</code>)
               </div>
+              <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 6 }}>
+                Manifest: <code>{buildRootB ?? "∅"}</code>
+              </div>
               {rawB && (
                 <div style={{ marginTop: 8, fontSize: 12, color: "var(--muted)" }}>
                   Loaded ({(parsedB?.length ?? 0).toLocaleString()} records)
@@ -314,7 +436,14 @@ export function App() {
             <div className="compareBody">
               {parsedA && parsedB && spoA && spoB ? (
                 <div style={{ padding: 12, overflow: "auto", height: "100%" }}>
-                  <ComparePanel valuesA={parsedA} triplesA={spoA} valuesB={parsedB} triplesB={spoB} />
+                  <ComparePanel
+                    valuesA={parsedA}
+                    triplesA={spoA}
+                    valuesB={parsedB}
+                    triplesB={spoB}
+                    buildRootA={buildRootA ?? undefined}
+                    buildRootB={buildRootB ?? undefined}
+                  />
                 </div>
               ) : (
                 <div className="drop" style={{ position: "relative", margin: 12 }}>
@@ -332,6 +461,7 @@ export function App() {
           <div className="boot">
             <BootstrapPanel
               onPickFile={() => fileInputRef.current?.click()}
+              onLoadDemoWwltt={loadDemoWwltt}
               onLoadSampleCanvas={loadSampleCanvas}
               onLoadSampleCanon={loadSampleCanon}
             />
@@ -392,7 +522,7 @@ export function App() {
             <div className="paneHeader">SPO Tree (shadow analysis)</div>
             <div style={{ padding: 12, overflow: "auto", height: "100%" }}>
               {spo ? (
-                <SPOTreePanel triples={spo.triples} tree={spo.tree} />
+                <SPOTreePanel triples={spo.triples} tree={spo.tree} buildRootSha256={buildRoot ?? undefined} />
               ) : (
                 <div style={{ color: "var(--muted)", fontSize: 13 }}>
                   No <code>{"{subject,predicate,object}"}</code> records detected
@@ -409,8 +539,9 @@ export function App() {
         <div style={{ color: "var(--muted)", fontSize: 13 }}>
           {appMode === "compare" ? (
             <div>
-              Compare mode: deltas are computed from canon SPO records only. No
-              canonical mutation.
+              Compare mode: deltas are computed deterministically from explicit
+              SPO records plus a shadow SPO overlay derived from prose paragraph
+              events (when present). No canonical mutation.
             </div>
           ) : mode === "canvas" ? (
             <div>
